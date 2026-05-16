@@ -1,0 +1,36 @@
+<section class="about-section py-5">
+  <div class="container">
+    <div class="text-center mb-5" appScrollReveal="reveal-up">
+      <h2 class="display-5 fw-bold mb-3">About <span class="text-gradient">Me</span></h2>
+      <div class="divider mx-auto"></div>
+    </div>
+
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-6" appScrollReveal="reveal-right">
+        <div class="glass-card p-4 p-md-5 h-100">
+          <h3 class="h4 mb-4 fw-bold">My Journey</h3>
+          <p class="text-muted mb-4" style="line-height: 1.8;">
+            I am Raviselva T, a passionate software engineer based in Salem, Tamil Nadu. My journey in tech is driven by a constant desire to learn and solve complex problems. I specialize in the .NET ecosystem and modern frontend frameworks like Angular.
+          </p>
+          <p class="text-muted mb-0" style="line-height: 1.8;">
+            Whether it's building scalable backend architectures with SQL Server and ASP.NET, or crafting beautiful, intuitive user interfaces, I focus on writing clean, maintainable code and delivering high-quality digital experiences.
+          </p>
+        </div>
+      </div>
+      
+      <div class="col-lg-6" appScrollReveal="reveal-left">
+        <div class="row g-4 reveal-stagger" appScrollReveal>
+          <div class="col-sm-6" *ngFor="let stat of stats">
+            <div class="stat-card glass-card p-4 text-center h-100">
+              <div class="stat-icon mb-3">
+                <i class="bi {{ stat.icon }}"></i>
+              </div>
+              <h4 class="display-6 fw-bold text-gradient mb-2">{{ stat.value }}</h4>
+              <p class="text-muted mb-0 fw-medium">{{ stat.label }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

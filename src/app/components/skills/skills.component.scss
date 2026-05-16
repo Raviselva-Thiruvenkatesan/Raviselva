@@ -1,0 +1,95 @@
+.bg-gradient-subtle {
+  background: linear-gradient(180deg, transparent, rgba(139, 92, 246, 0.03), transparent);
+}
+
+.divider {
+  width: 60px;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+}
+
+.skill-card {
+  transition: all 0.4s ease;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-neon);
+  }
+}
+
+.circular-progress {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(var(--purple) var(--progress), var(--border-color) 0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 1s ease-in-out;
+}
+
+.inner-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  z-index: 1;
+}
+
+/* Marquee */
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+  
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 100px;
+    height: 100%;
+    z-index: 2;
+  }
+  
+  &::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-main), transparent);
+  }
+  
+  &::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-main), transparent);
+  }
+}
+
+.marquee-content {
+  display: inline-block;
+  animation: marquee 30s linear infinite;
+  
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.marquee-item {
+  display: inline-block;
+  margin: 0 15px;
+  padding: 10px 25px;
+  font-weight: 600;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    color: var(--purple);
+    border-color: var(--purple);
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

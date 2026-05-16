@@ -1,0 +1,137 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+  background: transparent;
+
+  &.scrolled {
+    padding: 1rem 0;
+    background: var(--bg-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-sm);
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+.navbar-brand {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.nav-menu {
+  gap: 2rem;
+
+  .nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    transition: color 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background: var(--gradient-primary);
+      transition: width 0.3s ease;
+      border-radius: 2px;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+    
+    &:hover {
+      color: var(--purple);
+    }
+  }
+}
+
+.theme-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: var(--border-color);
+    color: var(--purple);
+    transform: rotate(15deg);
+  }
+}
+
+/* Hamburger */
+.hamburger {
+  display: block;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  .bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    transition: all 0.3s ease-in-out;
+    background-color: var(--text-main);
+    border-radius: 3px;
+  }
+
+  &.active {
+    .bar:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .bar:nth-child(2) {
+      opacity: 0;
+    }
+    .bar:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+  }
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-main);
+  z-index: 999;
+  transition: 0.4s ease-in-out;
+  opacity: 0;
+
+  &.open {
+    left: 0;
+    opacity: 1;
+  }
+
+  ul {
+    gap: 2rem;
+  }
+
+  .nav-link {
+    font-size: 1.5rem;
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+}

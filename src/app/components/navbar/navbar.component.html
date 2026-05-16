@@ -1,0 +1,45 @@
+<nav class="navbar" [ngClass]="{ 'scrolled': isScrolled }">
+  <div class="container d-flex justify-content-between align-items-center">
+    <!-- Logo -->
+    <a href="#home" class="navbar-brand text-gradient" (click)="closeMenu()">Raviselva T.</a>
+
+    <!-- Desktop Menu -->
+    <ul class="nav-menu d-none d-md-flex align-items-center">
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#experience" class="nav-link">Experience</a></li>
+      <li><a href="#projects" class="nav-link">Projects</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+      
+      <!-- Theme Toggle -->
+      <li class="ms-3">
+        <button class="theme-toggle-btn" (click)="themeService.toggleTheme()">
+          <i class="bi" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+        </button>
+      </li>
+    </ul>
+
+    <!-- Mobile Menu Button -->
+    <div class="d-flex align-items-center d-md-none" style="z-index: 1001;">
+      <button class="theme-toggle-btn me-3" (click)="themeService.toggleTheme()">
+        <i class="bi" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+      </button>
+      <button class="hamburger" [ngClass]="{ 'active': isMenuOpen }" (click)="toggleMenu()">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" [ngClass]="{ 'open': isMenuOpen }">
+    <ul class="d-flex flex-column align-items-center justify-content-center h-100">
+      <li><a href="#about" class="nav-link" (click)="closeMenu()">About</a></li>
+      <li><a href="#skills" class="nav-link" (click)="closeMenu()">Skills</a></li>
+      <li><a href="#experience" class="nav-link" (click)="closeMenu()">Experience</a></li>
+      <li><a href="#projects" class="nav-link" (click)="closeMenu()">Projects</a></li>
+      <li><a href="#contact" class="nav-link" (click)="closeMenu()">Contact</a></li>
+    </ul>
+  </div>
+</nav>

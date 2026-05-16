@@ -1,0 +1,63 @@
+<section class="contact-section py-5 position-relative">
+  <div class="container">
+    <div class="text-center mb-5" appScrollReveal="reveal-up">
+      <h2 class="display-5 fw-bold mb-3">Get In <span class="text-gradient">Touch</span></h2>
+      <div class="divider mx-auto"></div>
+    </div>
+
+    <div class="row g-5 align-items-center">
+      <!-- Contact Form -->
+      <div class="col-lg-7" appScrollReveal="reveal-right">
+        <form class="contact-form glass-card p-4 p-md-5" (submit)="onSubmit($event)">
+          <h3 class="h4 fw-bold mb-4">Send a Message</h3>
+          
+          <div class="form-floating mb-4 position-relative custom-input">
+            <input type="text" class="form-control bg-transparent border-0 border-bottom rounded-0 px-0" id="nameInput" placeholder="Name" required>
+            <label for="nameInput" class="px-0 text-muted">Your Name</label>
+            <div class="input-line"></div>
+          </div>
+          
+          <div class="form-floating mb-4 position-relative custom-input">
+            <input type="email" class="form-control bg-transparent border-0 border-bottom rounded-0 px-0" id="emailInput" placeholder="Email" required>
+            <label for="emailInput" class="px-0 text-muted">Your Email</label>
+            <div class="input-line"></div>
+          </div>
+          
+          <div class="form-floating mb-5 position-relative custom-input">
+            <textarea class="form-control bg-transparent border-0 border-bottom rounded-0 px-0" id="messageInput" placeholder="Message" style="height: 120px" required></textarea>
+            <label for="messageInput" class="px-0 text-muted">Your Message</label>
+            <div class="input-line"></div>
+          </div>
+          
+          <button type="submit" class="btn-magnetic btn-primary-custom w-100 py-3 text-uppercase fw-bold tracking-wide">
+            Send Message <i class="bi bi-send ms-2"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact Info -->
+      <div class="col-lg-5" appScrollReveal="reveal-left">
+        <!-- Location Card -->
+        <div class="location-card glass-card p-4 mb-4 d-flex align-items-center">
+          <div class="icon-circle me-3">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div>
+            <h4 class="h6 fw-bold mb-1">Location</h4>
+            <p class="text-muted mb-0">Salem, Tamil Nadu, India</p>
+          </div>
+        </div>
+
+        <!-- Social Links Grid -->
+        <div class="row g-3">
+          <div class="col-6" *ngFor="let social of socialLinks; let i = index">
+            <a [href]="social.url" class="social-card glass-card p-4 text-center d-block h-100" [style.transition-delay]="(i * 0.1) + 's'">
+              <i class="bi {{ social.icon }} mb-2 d-block"></i>
+              <span class="fw-medium">{{ social.name }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
