@@ -34,6 +34,22 @@ export class ProjectsComponent {
       imageClass: 'bg-gradient-3',
       demoLink: '#',
       githubLink: '#'
+    },
+    {
+      title: 'Vision Political Strategy Website',
+      description: 'Modern responsive political strategy website developed using Angular with clean UI, smooth animations, and mobile-friendly design.',
+      tech: ['Angular', 'TypeScript', 'Bootstrap 5', 'SCSS'],
+      imageClass: 'bg-gradient-2',
+      demoLink: 'https://thevisionind.co.in/',
+      githubLink: '#'
+    },
+    {
+      title: 'BIM Software Development',
+      description: 'Developing BIM and engineering desktop applications including ViskarSteelLight and ViskarSteelChecker using modern WPF MVVM architecture.',
+      tech: ['C#', '.NET', 'WPF', 'MVVM', 'XAML'],
+      imageClass: 'bg-gradient-1',
+      demoLink: '#',
+      githubLink: '#'
     }
   ];
 }

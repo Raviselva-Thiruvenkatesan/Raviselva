@@ -13,8 +13,12 @@ export class SkillsComponent {
   skills = [
     { name: 'C# / .NET', percent: 90 },
     { name: 'Angular', percent: 85 },
-    { name: 'SQL Server', percent: 80 },
-    { name: 'JavaScript / TS', percent: 85 }
+    { name: 'Xaml / WPF / Mvvm', percent: 92 },
+    { name: 'JavaScript / TS', percent: 85 },
+    { name: 'SQL Server / Sqlite', percent: 85 },
+    { name: 'Git', percent: 90 },
+    { name: 'Bootstrap', percent: 85 },
+    { name: 'Html / CSS', percent: 85 }
   ];
 
   marqueeItems = [

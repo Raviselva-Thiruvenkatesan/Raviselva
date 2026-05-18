@@ -15,7 +15,7 @@ export class ExperienceComponent {
       title: '.NET Developer',
       company: 'RGS Construction Technology Pvt Ltd',
       date: 'Nov 2024 - Present',
-      description: 'Developing scalable web applications and desktop solutions using C#, ASP.NET, and SQL Server. Implementing responsive UIs with Angular and Bootstrap.',
+      description: 'Developing BIM and engineering desktop applications using C#, WPF, MVVM, XAML. Working on scalable software architecture, responsive UI design, and modern engineering solutions.',
       icon: 'bi-laptop'
     },
     {
