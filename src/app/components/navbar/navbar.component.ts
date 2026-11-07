@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, HostListener, NgZone, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme.service';
 
@@ -12,7 +12,7 @@ import { ThemeService } from '../../services/theme.service';
 export class NavbarComponent implements AfterViewInit, OnDestroy {
   isScrolled = false;
   isMenuOpen = false;
-  activeSection = 'home';
+  activeSection = signal('home');
 
   links = [
     { id: 'about', label: 'About' },
@@ -25,7 +25,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
 
   private observer?: IntersectionObserver;
 
-  constructor(public themeService: ThemeService, private zone: NgZone) {}
+  constructor(public themeService: ThemeService) {}
 
   ngAfterViewInit() {
     if (!('IntersectionObserver' in window)) return;
@@ -33,8 +33,7 @@ export class NavbarComponent implements AfterViewInit, OnDestroy {
     this.observer = new IntersectionObserver(entries => {
       const visible = entries.filter(e => e.isIntersecting);
       if (!visible.length) return;
-      const id = visible[0].target.id;
-      if (id !== this.activeSection) this.zone.run(() => (this.activeSection = id));
+      this.activeSection.set(visible[0].target.id);
     }, { rootMargin: '-45% 0px -50% 0px' });
 
     ['home', ...this.links.map(l => l.id)].forEach(id => {

@@ -108,6 +108,25 @@ html {
   scroll-padding-top: 80px; /* keep section titles clear of the fixed navbar */
 }
 
+/* Nothing may widen the page sideways (phones zoom out to fit wide content). */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@supports (overflow-x: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
+main {
+  position: relative;
+  overflow-x: clip;
+}
+
 .skip-link {
   position: fixed;
   top: 12px;
@@ -295,6 +314,8 @@ main:focus {
   z-index: -1;
   opacity: 0.4;
   animation: float-blob 10s infinite ease-in-out alternate;
+  max-width: 80vw;
+  max-height: 80vw;
 }
 @keyframes float-blob {
   0% { transform: translate(0, 0) scale(1); }

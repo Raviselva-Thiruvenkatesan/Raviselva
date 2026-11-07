@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+import { HeroSceneComponent } from '../hero-scene/hero-scene.component';
 
 @Component({
   selector: 'app-hero',
   standalone: true,
-  imports: [CommonModule, ScrollRevealDirective],
+  imports: [CommonModule, ScrollRevealDirective, HeroSceneComponent],
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.scss']
 })
@@ -18,7 +19,8 @@ export class HeroComponent implements OnInit, OnDestroy {
    */
   resumeUrl = '';
 
-  currentRole = '';
+  // A signal so the view updates from setTimeout (this app runs without Zone.js).
+  currentRole = signal('');
   roleIndex = 0;
   charIndex = 0;
   isDeleting = false;
@@ -27,7 +29,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      this.currentRole = this.roles[0];
+      this.currentRole.set(this.roles[0]);
       return;
     }
     this.typeEffect();
@@ -37,10 +39,10 @@ export class HeroComponent implements OnInit, OnDestroy {
     const current = this.roles[this.roleIndex];
 
     if (this.isDeleting) {
-      this.currentRole = current.substring(0, this.charIndex - 1);
+      this.currentRole.set(current.substring(0, this.charIndex - 1));
       this.charIndex--;
     } else {
-      this.currentRole = current.substring(0, this.charIndex + 1);
+      this.currentRole.set(current.substring(0, this.charIndex + 1));
       this.charIndex++;
     }
 

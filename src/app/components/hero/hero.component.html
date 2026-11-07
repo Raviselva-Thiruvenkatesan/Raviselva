@@ -1,5 +1,7 @@
 <section class="hero min-vh-100 d-flex align-items-center position-relative" aria-labelledby="hero-title">
-  <div class="container">
+  <app-hero-scene></app-hero-scene>
+
+  <div class="container hero-content">
     <div class="row align-items-center">
       <!-- Left Content -->
       <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start" appScrollReveal="reveal-right">
@@ -13,7 +15,7 @@
         <h2 class="h3 fw-normal mb-4 text-muted">
           I am a
           <span class="visually-hidden">{{ roles.join(', ') }}</span>
-          <span class="typing-text text-gradient fw-bold" aria-hidden="true">{{ currentRole }}<span class="cursor">|</span></span>
+          <span class="typing-text text-gradient fw-bold" aria-hidden="true">{{ currentRole() }}<span class="cursor">|</span></span>
         </h2>
         <p class="lead mb-5 max-w-lg mx-auto mx-lg-0">
           Passionate software engineer specializing in .NET development, Angular, SQL Server, and modern web
