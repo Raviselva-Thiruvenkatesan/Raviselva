@@ -1,7 +1,8 @@
-<section class="hero min-vh-100 d-flex align-items-center position-relative" aria-labelledby="hero-title">
-  <app-hero-scene></app-hero-scene>
+<section class="hero min-vh-100 d-flex align-items-center position-relative" aria-labelledby="hero-title"
+  [class.exploring]="exploring()">
+  <app-hero-scene #scene [exploring]="exploring()" (exitExplore)="closeExplore()"></app-hero-scene>
 
-  <div class="container hero-content">
+  <div class="container hero-content" [attr.inert]="exploring() ? '' : null">
     <div class="row align-items-center">
       <!-- Left Content -->
       <div class="col-lg-6 mb-5 mb-lg-0 text-center text-lg-start" appScrollReveal="reveal-right">
@@ -60,7 +61,16 @@
     </div>
   </div>
 
-  <a href="#about" class="scroll-cue d-none d-md-flex" aria-label="Scroll to About section">
+  <a href="#about" class="scroll-cue d-none d-md-flex" aria-label="Scroll to About section"
+    [attr.inert]="exploring() ? '' : null">
     <span class="mouse" aria-hidden="true"><span class="wheel"></span></span>
   </a>
+
+  @if (scene.ready()) {
+    <button #exploreBtn type="button" class="explore-btn" (click)="openExplore()"
+      [attr.inert]="exploring() ? '' : null">
+      <i class="bi bi-badge-3d" aria-hidden="true"></i>
+      <span>Explore 3D model</span>
+    </button>
+  }
 </section>

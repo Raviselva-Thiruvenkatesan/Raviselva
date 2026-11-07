@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { MotionService } from '../../services/motion.service';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
@@ -25,6 +25,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   roleIndex = 0;
   charIndex = 0;
   isDeleting = false;
+
+  /** Interactive 3D model takes over the hero while true. */
+  exploring = signal(false);
+  @ViewChild('exploreBtn') exploreBtn?: ElementRef<HTMLButtonElement>;
 
   private timer?: ReturnType<typeof setTimeout>;
   private motion = inject(MotionService);
@@ -62,7 +66,38 @@ export class HeroComponent implements OnInit, OnDestroy {
     this.timer = setTimeout(() => this.typeEffect(), typeSpeed);
   }
 
+  openExplore() {
+    this.exploring.set(true);
+    this.lockScroll(true);
+  }
+
+  closeExplore() {
+    this.exploring.set(false);
+    this.lockScroll(false);
+    // Return keyboard focus to the button that opened the model, once Angular has removed `inert`.
+    const btn = this.exploreBtn?.nativeElement;
+    if (!btn) return;
+    const focus = () => btn.focus({ preventScroll: true });
+    if (!btn.hasAttribute('inert')) {
+      focus();
+      return;
+    }
+    const mo = new MutationObserver(() => {
+      if (btn.hasAttribute('inert')) return;
+      mo.disconnect();
+      focus();
+    });
+    mo.observe(btn, { attributes: true, attributeFilter: ['inert'] });
+    setTimeout(() => mo.disconnect(), 3000);   // safety net
+  }
+
+  /** The viewer is full-screen: keep the page behind it from scrolling. */
+  private lockScroll(lock: boolean) {
+    document.documentElement.style.overflow = lock ? 'hidden' : '';
+  }
+
   ngOnDestroy() {
     clearTimeout(this.timer);
+    if (this.exploring()) this.lockScroll(false);
   }
 }

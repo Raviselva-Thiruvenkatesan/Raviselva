@@ -5,6 +5,61 @@
 .hero-content {
   position: relative;
   z-index: 1;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+/* Explore mode: the 3D model takes over the hero */
+.hero.exploring {
+  .hero-content,
+  .scroll-cue,
+  .explore-btn {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+.explore-btn {
+  position: absolute;
+  z-index: 1;
+  right: clamp(16px, 4vw, 48px);
+  bottom: 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: opacity 0.45s ease, visibility 0.45s ease, transform 0.25s ease, box-shadow 0.25s ease;
+
+  i {
+    font-size: 1.15rem;
+    color: var(--purple);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-neon);
+  }
+}
+
+@media (max-width: 767px) {
+  .explore-btn {
+    right: 50%;
+    bottom: 1.25rem;
+    transform: translateX(50%);
+
+    &:hover {
+      transform: translateX(50%) translateY(-2px);
+    }
+  }
 }
 
 .greeting {
