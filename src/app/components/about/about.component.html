@@ -26,10 +26,10 @@
         <div class="row g-4 reveal-stagger" appScrollReveal>
           <div class="col-sm-6" *ngFor="let stat of stats">
             <div class="stat-card glass-card p-4 text-center h-100">
-              <div class="stat-icon mb-3">
+              <div class="stat-icon mb-3" aria-hidden="true">
                 <i class="bi {{ stat.icon }}"></i>
               </div>
-              <h4 class="display-6 fw-bold text-gradient mb-2">{{ stat.value }}</h4>
+              <p class="display-6 fw-bold text-gradient mb-2" [appCountUp]="stat.value">{{ stat.value }}</p>
               <p class="text-muted mb-0 fw-medium">{{ stat.label }}</p>
             </div>
           </div>

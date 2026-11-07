@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 
@@ -9,20 +9,33 @@ import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive'
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.scss']
 })
-export class HeroComponent implements OnInit {
+export class HeroComponent implements OnInit, OnDestroy {
   roles = ['Software Engineer', '.NET Developer', 'Angular Enthusiast', 'Problem Solver'];
+
+  /**
+   * Put your CV in the `public/` folder (e.g. public/Raviselva_Resume.pdf) and set the
+   * file name here. The "Download Resume" button only shows when this is set.
+   */
+  resumeUrl = '';
+
   currentRole = '';
   roleIndex = 0;
   charIndex = 0;
   isDeleting = false;
 
+  private timer?: ReturnType<typeof setTimeout>;
+
   ngOnInit() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.currentRole = this.roles[0];
+      return;
+    }
     this.typeEffect();
   }
 
   typeEffect() {
     const current = this.roles[this.roleIndex];
-    
+
     if (this.isDeleting) {
       this.currentRole = current.substring(0, this.charIndex - 1);
       this.charIndex--;
@@ -42,6 +55,10 @@ export class HeroComponent implements OnInit {
       typeSpeed = 500;
     }
 
-    setTimeout(() => this.typeEffect(), typeSpeed);
+    this.timer = setTimeout(() => this.typeEffect(), typeSpeed);
+  }
+
+  ngOnDestroy() {
+    clearTimeout(this.timer);
   }
 }

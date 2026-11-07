@@ -1,6 +1,6 @@
 @use "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+/* Fonts are loaded from index.html (<link> with preconnect) so they don't block CSS parsing. */
 
 /* =========================================
    THEME VARIABLES
@@ -85,12 +85,87 @@ ul {
 ========================================= */
 
 .text-gradient {
-  background: var(--gradient-text);
+  background: linear-gradient(120deg, var(--purple), var(--indigo), var(--blue-neon), var(--purple));
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
   display: inline-block;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* =========================================
+   ACCESSIBILITY
+========================================= */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* keep section titles clear of the fixed navbar */
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 2000;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-weight: 600;
+  transform: translateY(-150%);
+  transition: transform 0.2s ease;
+
+  &:focus {
+    transform: none;
+    color: #fff;
+  }
+}
+
+main:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue-neon);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Bootstrap's muted grey is too faint on the dark background */
+[data-theme="dark"] .text-muted {
+  color: var(--text-muted) !important;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal-up,
+  .reveal-left,
+  .reveal-right,
+  .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 .glass-card {

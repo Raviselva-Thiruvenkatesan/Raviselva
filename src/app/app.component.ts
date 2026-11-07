@@ -12,9 +12,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { AchievementsComponent } from './components/achievements/achievements.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
-
-// Directives
-import { ScrollRevealDirective } from './directives/scroll-reveal.directive';
+import { ScrollFxComponent } from './components/scroll-fx/scroll-fx.component';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +27,8 @@ import { ScrollRevealDirective } from './directives/scroll-reveal.directive';
     ProjectsComponent,
     AchievementsComponent,
     ContactComponent,
-    FooterComponent
+    FooterComponent,
+    ScrollFxComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

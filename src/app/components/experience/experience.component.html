@@ -8,7 +8,7 @@
     <div class="timeline">
       <div class="timeline-item" *ngFor="let exp of experiences; let i = index" 
            [appScrollReveal]="i % 2 === 0 ? 'reveal-left' : 'reveal-right'">
-        <div class="timeline-dot">
+        <div class="timeline-dot" aria-hidden="true">
           <i class="bi {{ exp.icon }}"></i>
         </div>
         <div class="timeline-content glass-card p-4">

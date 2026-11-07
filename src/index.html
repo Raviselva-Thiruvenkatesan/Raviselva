@@ -3,9 +3,78 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Raviselva Thiruvenkatesan</title>
+  <title>Raviselva Thiruvenkatesan | .NET &amp; Angular Developer</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- SEO -->
+  <meta name="description"
+    content="Raviselva Thiruvenkatesan – Software Engineer from Salem, Tamil Nadu building BIM desktop apps with C#, .NET, WPF and MVVM, and modern web apps with Angular and SQL Server.">
+  <meta name="keywords"
+    content="Raviselva Thiruvenkatesan, Raviselva T, .NET Developer, C# Developer, WPF, MVVM, Angular Developer, BIM Software Developer, Salem, Tamil Nadu, Portfolio">
+  <meta name="author" content="Raviselva Thiruvenkatesan">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#f8fafc">
+  <meta name="color-scheme" content="light dark">
+
+  <!-- Link previews (LinkedIn, WhatsApp, X, Facebook) -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Raviselva Thiruvenkatesan | .NET &amp; Angular Developer">
+  <meta property="og:description"
+    content="BIM software developer building desktop apps with C#, .NET and WPF, and modern web apps with Angular.">
+  <meta property="og:site_name" content="Raviselva Thiruvenkatesan">
+  <meta property="og:locale" content="en_IN">
+  <meta property="profile:first_name" content="Raviselva">
+  <meta property="profile:last_name" content="Thiruvenkatesan">
+  <!--
+    Once the site has a live domain, add these (they must be full https:// URLs):
+    <link rel="canonical" href="https://YOUR-DOMAIN/">
+    <meta property="og:url" content="https://YOUR-DOMAIN/">
+    <meta property="og:image" content="https://YOUR-DOMAIN/ravi.jpeg">
+  -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Raviselva Thiruvenkatesan | .NET &amp; Angular Developer">
+  <meta name="twitter:description"
+    content="BIM software developer building desktop apps with C#, .NET and WPF, and modern web apps with Angular.">
+
+  <!-- Structured data for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Raviselva Thiruvenkatesan",
+    "alternateName": "Raviselva T",
+    "jobTitle": ".NET Developer",
+    "worksFor": { "@type": "Organization", "name": "RGS Construction Technology Pvt Ltd" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Salem", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
+    "knowsAbout": ["C#", ".NET", "WPF", "MVVM", "XAML", "Angular", "TypeScript", "SQL Server", "BIM"],
+    "sameAs": [
+      "https://www.linkedin.com/in/raviselva/",
+      "https://github.com/Raviselva-Thiruvenkatesan",
+      "https://www.instagram.com/raviselva.thiruvenkatesan"
+    ]
+  }
+  </script>
+
+  <!-- Apply the saved / system theme before first paint to avoid a light-to-dark flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      } catch (e) { }
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
+  <link rel="preload" as="image" href="ravi-700.webp" type="image/webp" fetchpriority="high">
+
   <link rel="icon" href='data:image/svg+xml,
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
       <rect width="100" height="100" rx="15" fill="black"/>
@@ -21,6 +90,11 @@
 
 <body>
   <app-root></app-root>
+  <noscript>
+    <p style="padding:2rem;font-family:sans-serif">Raviselva Thiruvenkatesan – .NET &amp; Angular Developer.
+      Please enable JavaScript to view this portfolio, or contact me at
+      <a href="mailto:raviselva.t@gmail.com">raviselva.t@gmail.com</a>.</p>
+  </noscript>
 </body>
 
 </html>

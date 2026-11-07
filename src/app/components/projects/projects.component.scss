@@ -9,27 +9,83 @@
   border-radius: 2px;
 }
 
+/* Filter chips */
+.filter-chip {
+  border: 1px solid var(--border-color);
+  background: var(--bg-glass);
+  color: var(--text-main);
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  .count {
+    display: inline-block;
+    margin-left: 0.35rem;
+    min-width: 1.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    background: rgba(139, 92, 246, 0.12);
+    color: var(--purple);
+  }
+
+  &:hover {
+    border-color: var(--purple);
+  }
+
+  &.active {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: var(--shadow-neon);
+
+    .count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+    }
+  }
+}
+
+.project-col {
+  animation: card-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
 .project-card {
   position: relative;
   overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   transform-style: preserve-3d;
-  
-  &:hover {
-    transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+  will-change: transform;
+
+  &:hover,
+  &:focus-within {
     box-shadow: var(--shadow-neon);
-    
+
     .project-image {
-      transform: scale(1.05);
       border-radius: 0;
     }
-    
+
+    .project-icon {
+      transform: scale(1.15) rotate(-6deg);
+    }
+
     .overlay {
       opacity: 1;
     }
-    
+
     .shiny-effect {
       left: 100%;
+    }
+
+    .glare {
+      opacity: 1;
     }
   }
 }
@@ -37,32 +93,68 @@
 .project-image {
   height: 200px;
   border-radius: 20px 20px 0 0;
-  transition: transform 0.5s ease;
   overflow: hidden;
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   &.bg-gradient-1 { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
   &.bg-gradient-2 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
   &.bg-gradient-3 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
 }
 
+.project-icon {
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.9);
+  filter: drop-shadow(0 8px 16px rgba(15, 23, 42, 0.25));
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.category-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(6px);
+}
+
 .overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(15, 23, 42, 0.7);
   backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.tech-stack .badge {
-  background: rgba(139, 92, 246, 0.1);
-  color: var(--purple);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  font-weight: 500;
-  padding: 6px 12px;
+/* Touch devices can't hover, so keep the buttons visible there. */
+@media (hover: none) {
+  .overlay {
+    opacity: 1;
+    inset: auto 0 0 0;
+    padding: 0.75rem;
+    background: linear-gradient(transparent, rgba(15, 23, 42, 0.75));
+    backdrop-filter: none;
+  }
+}
+
+.tech-stack {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .badge {
+    background: rgba(139, 92, 246, 0.1);
+    color: var(--purple);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    font-weight: 500;
+    padding: 6px 12px;
+  }
 }
 
 /* Shiny Hover Effect */
@@ -72,9 +164,20 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
   transform: skewX(-20deg);
-  transition: all 0.7s ease;
+  transition: left 0.7s ease;
   z-index: 10;
   pointer-events: none;
+}
+
+/* Pointer-following glare (position set by the tilt directive) */
+.glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgba(255, 255, 255, 0.18), transparent 55%);
+  z-index: 11;
 }

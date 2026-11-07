@@ -1,30 +1,34 @@
-<nav class="navbar" [ngClass]="{ 'scrolled': isScrolled }">
+<nav class="navbar" [ngClass]="{ 'scrolled': isScrolled }" aria-label="Main navigation">
   <div class="container d-flex justify-content-between align-items-center">
     <!-- Logo -->
-    <a href="#home" class="navbar-brand text-gradient" (click)="closeMenu()">Raviselva T.</a>
+    <a href="#home" class="navbar-brand text-gradient" (click)="closeMenu()" aria-label="Raviselva T. – back to top">Raviselva T.</a>
 
     <!-- Desktop Menu -->
-    <ul class="nav-menu d-none d-md-flex align-items-center">
-      <li><a href="#about" class="nav-link">About</a></li>
-      <li><a href="#skills" class="nav-link">Skills</a></li>
-      <li><a href="#experience" class="nav-link">Experience</a></li>
-      <li><a href="#projects" class="nav-link">Projects</a></li>
-      <li><a href="#contact" class="nav-link">Contact</a></li>
-      
+    <ul class="nav-menu d-none d-lg-flex align-items-center">
+      <li *ngFor="let link of links">
+        <a [href]="'#' + link.id" class="nav-link"
+          [class.active]="activeSection === link.id"
+          [attr.aria-current]="activeSection === link.id ? 'location' : null">{{ link.label }}</a>
+      </li>
+
       <!-- Theme Toggle -->
-      <li class="ms-3">
-        <button class="theme-toggle-btn" (click)="themeService.toggleTheme()">
-          <i class="bi" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+      <li class="ms-2">
+        <button type="button" class="theme-toggle-btn" (click)="themeService.toggleTheme()"
+          [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'">
+          <i class="bi" aria-hidden="true" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
         </button>
       </li>
     </ul>
 
     <!-- Mobile Menu Button -->
-    <div class="d-flex align-items-center d-md-none" style="z-index: 1001;">
-      <button class="theme-toggle-btn me-3" (click)="themeService.toggleTheme()">
-        <i class="bi" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+    <div class="d-flex align-items-center d-lg-none" style="z-index: 1001;">
+      <button type="button" class="theme-toggle-btn me-3" (click)="themeService.toggleTheme()"
+        [attr.aria-label]="themeService.isDarkMode() ? 'Switch to light theme' : 'Switch to dark theme'">
+        <i class="bi" aria-hidden="true" [ngClass]="themeService.isDarkMode() ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
       </button>
-      <button class="hamburger" [ngClass]="{ 'active': isMenuOpen }" (click)="toggleMenu()">
+      <button type="button" class="hamburger" [ngClass]="{ 'active': isMenuOpen }" (click)="toggleMenu()"
+        aria-controls="mobile-menu" [attr.aria-expanded]="isMenuOpen"
+        [attr.aria-label]="isMenuOpen ? 'Close menu' : 'Open menu'">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
@@ -33,13 +37,12 @@
   </div>
 
   <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu" [ngClass]="{ 'open': isMenuOpen }">
+  <div id="mobile-menu" class="mobile-menu" [ngClass]="{ 'open': isMenuOpen }" [attr.inert]="isMenuOpen ? null : ''">
     <ul class="d-flex flex-column align-items-center justify-content-center h-100">
-      <li><a href="#about" class="nav-link" (click)="closeMenu()">About</a></li>
-      <li><a href="#skills" class="nav-link" (click)="closeMenu()">Skills</a></li>
-      <li><a href="#experience" class="nav-link" (click)="closeMenu()">Experience</a></li>
-      <li><a href="#projects" class="nav-link" (click)="closeMenu()">Projects</a></li>
-      <li><a href="#contact" class="nav-link" (click)="closeMenu()">Contact</a></li>
+      <li *ngFor="let link of links">
+        <a [href]="'#' + link.id" class="nav-link" [class.active]="activeSection === link.id"
+          (click)="closeMenu()">{{ link.label }}</a>
+      </li>
     </ul>
   </div>
 </nav>

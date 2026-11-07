@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+import { CountUpDirective } from '../../directives/count-up.directive';
 
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [CommonModule, ScrollRevealDirective],
+  imports: [CommonModule, ScrollRevealDirective, CountUpDirective],
   templateUrl: './about.component.html',
   styleUrls: ['./about.component.scss']
 })

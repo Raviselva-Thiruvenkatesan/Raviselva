@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
+
+type FormStatus = 'idle' | 'sending' | 'success' | 'error';
 
 @Component({
   selector: 'app-contact',
@@ -18,11 +20,22 @@ export class ContactComponent {
     { name: 'Instagram', icon: 'bi-instagram', url: 'https://www.instagram.com/raviselva.thiruvenkatesan?igsh=MW8yb24yMTk1a213Zw%3D%3D&utm_source=qr' }
   ];
 
-  onSubmit(event: Event) {
+  status = signal<FormStatus>('idle');
 
+  isExternal(url: string) {
+    return url.startsWith('http');
+  }
+
+  onSubmit(event: Event) {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    this.status.set('sending');
 
     emailjs.sendForm(
       'YOUR_SERVICE_ID',
@@ -31,12 +44,12 @@ export class ContactComponent {
       'YOUR_PUBLIC_KEY'
     ).then(
       () => {
-        alert('Message Sent Successfully!');
+        this.status.set('success');
         form.reset();
       },
       (error: EmailJSResponseStatus) => {
-        console.log(error);
-        alert('Failed to Send Message');
+        console.error(error);
+        this.status.set('error');
       }
     );
   }

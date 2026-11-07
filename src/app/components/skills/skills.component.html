@@ -8,7 +8,8 @@
     <div class="row g-4 mb-5">
       <div class="col-md-6 col-lg-3" *ngFor="let skill of skills; let i = index" appScrollReveal="reveal-up">
         <div class="skill-card glass-card text-center p-4 h-100" [style.transition-delay]="(i * 0.1) + 's'">
-          <div class="circular-progress mb-3 mx-auto" [style.--progress]="skill.percent + '%'">
+          <div class="circular-progress mb-3 mx-auto" [style.--progress]="skill.percent + '%'"
+            role="img" [attr.aria-label]="skill.name + ' proficiency ' + skill.percent + ' percent'">
             <div class="inner-circle d-flex align-items-center justify-content-center">
               <span class="fs-4 fw-bold text-gradient">{{ skill.percent }}%</span>
             </div>
@@ -22,8 +23,8 @@
     <div class="marquee-container mt-5" appScrollReveal="reveal-up">
       <div class="marquee-content">
         <span class="marquee-item glass-card" *ngFor="let item of marqueeItems">{{ item }}</span>
-        <!-- Duplicate for infinite effect -->
-        <span class="marquee-item glass-card" *ngFor="let item of marqueeItems">{{ item }}</span>
+        <!-- Duplicate for infinite effect (hidden from screen readers) -->
+        <span class="marquee-item glass-card" aria-hidden="true" *ngFor="let item of marqueeItems">{{ item }}</span>
       </div>
     </div>
   </div>

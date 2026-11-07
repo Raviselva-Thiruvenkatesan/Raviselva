@@ -1,41 +1,56 @@
-<section class="projects-section py-5">
+<section class="projects-section py-5" aria-labelledby="projects-title">
   <div class="container">
-    <div class="text-center mb-5" appScrollReveal="reveal-up">
-      <h2 class="display-5 fw-bold mb-3">Featured <span class="text-gradient">Projects</span></h2>
+    <div class="text-center mb-4" appScrollReveal="reveal-up">
+      <h2 id="projects-title" class="display-5 fw-bold mb-3">Featured <span class="text-gradient">Projects</span></h2>
       <div class="divider mx-auto"></div>
     </div>
 
+    <!-- Filters -->
+    <div class="filter-bar d-flex flex-wrap justify-content-center gap-2 mb-5" role="group" aria-label="Filter projects"
+      appScrollReveal="reveal-up">
+      <button type="button" *ngFor="let f of filters" class="filter-chip"
+        [class.active]="activeFilter === f" [attr.aria-pressed]="activeFilter === f"
+        (click)="activeFilter = f">
+        {{ f }} <span class="count">{{ countFor(f) }}</span>
+      </button>
+    </div>
+
     <div class="row g-4">
-      <div class="col-lg-4 col-md-6" *ngFor="let project of projects; let i = index" 
-           [appScrollReveal]="'reveal-up'">
-        <div class="project-card glass-card h-100 d-flex flex-column" [style.transition-delay]="(i * 0.1) + 's'">
+      <div class="col-lg-4 col-md-6 project-col" *ngFor="let project of visibleProjects; trackBy: trackByTitle">
+        <article class="project-card glass-card h-100 d-flex flex-column" appTilt>
           <!-- Project Image / Placeholder -->
           <div class="project-image position-relative {{ project.imageClass }}">
-            <div class="overlay d-flex align-items-center justify-content-center">
-              <a [href]="project.demoLink" class="btn-magnetic btn-primary-custom btn-sm me-2 text-white">
-                <i class="bi bi-box-arrow-up-right me-1"></i> Demo
+            <i class="bi {{ project.icon }} project-icon" aria-hidden="true"></i>
+            <span class="category-badge">{{ project.category }}</span>
+            <div class="overlay d-flex align-items-center justify-content-center"
+              *ngIf="hasLink(project.demoLink) || hasLink(project.githubLink)">
+              <a *ngIf="hasLink(project.demoLink)" [href]="project.demoLink" target="_blank" rel="noopener noreferrer"
+                class="btn-magnetic btn-primary-custom btn-sm me-2 text-white"
+                [attr.aria-label]="'Live demo of ' + project.title + ' (opens in new tab)'">
+                <i class="bi bi-box-arrow-up-right me-1" aria-hidden="true"></i> Demo
               </a>
-              <a [href]="project.githubLink" class="btn-magnetic btn-outline-custom bg-white text-dark border-0 btn-sm">
-                <i class="bi bi-github me-1"></i> Code
+              <a *ngIf="hasLink(project.githubLink)" [href]="project.githubLink" target="_blank" rel="noopener noreferrer"
+                class="btn-magnetic btn-outline-custom bg-white text-dark border-0 btn-sm"
+                [attr.aria-label]="'Source code of ' + project.title + ' (opens in new tab)'">
+                <i class="bi bi-github me-1" aria-hidden="true"></i> Code
               </a>
             </div>
           </div>
-          
+
           <!-- Project Info -->
           <div class="p-4 d-flex flex-column flex-grow-1">
             <h3 class="h5 fw-bold mb-3">{{ project.title }}</h3>
-            <p class="text-muted text-sm mb-4 flex-grow-1" style="font-size: 0.95rem; line-height: 1.6;">
+            <p class="text-muted mb-4 flex-grow-1" style="font-size: 0.95rem; line-height: 1.6;">
               {{ project.description }}
             </p>
-            <div class="tech-stack d-flex flex-wrap gap-2 mt-auto">
-              <span class="badge" *ngFor="let tech of project.tech">
-                {{ tech }}
-              </span>
-            </div>
+            <ul class="tech-stack d-flex flex-wrap gap-2 mt-auto" aria-label="Technologies used">
+              <li class="badge" *ngFor="let tech of project.tech">{{ tech }}</li>
+            </ul>
           </div>
-          
-          <div class="shiny-effect"></div>
-        </div>
+
+          <div class="shiny-effect" aria-hidden="true"></div>
+          <div class="glare" aria-hidden="true"></div>
+        </article>
       </div>
     </div>
   </div>
