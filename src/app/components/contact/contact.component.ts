@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import emailjs, { EmailJSResponseStatus } from '@emailjs/browser';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 
 @Component({
@@ -18,7 +19,25 @@ export class ContactComponent {
   ];
 
   onSubmit(event: Event) {
+
     event.preventDefault();
-    alert('Thank you for your message!');
+
+    const form = event.target as HTMLFormElement;
+
+    emailjs.sendForm(
+      'YOUR_SERVICE_ID',
+      'YOUR_TEMPLATE_ID',
+      form,
+      'YOUR_PUBLIC_KEY'
+    ).then(
+      () => {
+        alert('Message Sent Successfully!');
+        form.reset();
+      },
+      (error: EmailJSResponseStatus) => {
+        console.log(error);
+        alert('Failed to Send Message');
+      }
+    );
   }
 }
