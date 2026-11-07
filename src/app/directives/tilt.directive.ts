@@ -1,48 +1,62 @@
-import { Directive, ElementRef, HostListener, Input, NgZone } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { MotionService } from '../services/motion.service';
+
+// Keep the card's own CSS transitions (shadow/background) alongside the transform easing.
+const BASE_TRANSITION = 'box-shadow 0.3s ease, background 0.4s ease';
 
 /** Subtle 3D tilt that follows the pointer. Disabled for touch and reduced-motion users. */
 @Directive({
   selector: '[appTilt]',
   standalone: true
 })
-export class TiltDirective {
+export class TiltDirective implements OnInit, OnDestroy {
   @Input() tiltMax = 8;
 
-  private readonly enabled =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+  private el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private motion = inject(MotionService);
   private frame = 0;
+  private resetTimer?: ReturnType<typeof setTimeout>;
 
-  constructor(private el: ElementRef<HTMLElement>, private zone: NgZone) {}
-
-  @HostListener('pointermove', ['$event'])
-  onMove(event: PointerEvent) {
-    if (!this.enabled) return;
-    const el = this.el.nativeElement;
+  // Plain DOM listeners: a @HostListener would trigger change detection on every pointer move.
+  private readonly onMove = (event: PointerEvent) => {
+    if (!this.enabled()) return;
+    clearTimeout(this.resetTimer);
     cancelAnimationFrame(this.frame);
-    this.zone.runOutsideAngular(() => {
-      this.frame = requestAnimationFrame(() => {
-        const rect = el.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
-        el.style.transition = 'transform 0.1s ease-out';
-        el.style.transform =
-          `perspective(900px) rotateX(${(-y * this.tiltMax).toFixed(2)}deg) ` +
-          `rotateY(${(x * this.tiltMax).toFixed(2)}deg) translateY(-6px)`;
-        el.style.setProperty('--glare-x', `${(x + 0.5) * 100}%`);
-        el.style.setProperty('--glare-y', `${(y + 0.5) * 100}%`);
-      });
+    this.frame = requestAnimationFrame(() => {
+      const rect = this.el.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      this.el.style.transition = `transform 0.1s ease-out, ${BASE_TRANSITION}`;
+      this.el.style.transform =
+        `perspective(900px) rotateX(${(-y * this.tiltMax).toFixed(2)}deg) ` +
+        `rotateY(${(x * this.tiltMax).toFixed(2)}deg) translateY(-6px)`;
+      this.el.style.setProperty('--glare-x', `${(x + 0.5) * 100}%`);
+      this.el.style.setProperty('--glare-y', `${(y + 0.5) * 100}%`);
     });
+  };
+
+  private readonly onLeave = () => {
+    cancelAnimationFrame(this.frame);
+    if (!this.el.style.transform) return;
+    this.el.style.transition = `transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), ${BASE_TRANSITION}`;
+    this.el.style.transform = '';
+    // Hand control back to the stylesheet once the reset has eased out.
+    this.resetTimer = setTimeout(() => (this.el.style.transition = ''), 550);
+  };
+
+  ngOnInit() {
+    this.el.addEventListener('pointermove', this.onMove, { passive: true });
+    this.el.addEventListener('pointerleave', this.onLeave, { passive: true });
   }
 
-  @HostListener('pointerleave')
-  onLeave() {
-    if (!this.enabled) return;
+  private enabled() {
+    return this.motion.finePointer() && !this.motion.reducedMotion();
+  }
+
+  ngOnDestroy() {
+    this.el.removeEventListener('pointermove', this.onMove);
+    this.el.removeEventListener('pointerleave', this.onLeave);
     cancelAnimationFrame(this.frame);
-    const el = this.el.nativeElement;
-    el.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-    el.style.transform = '';
+    clearTimeout(this.resetTimer);
   }
 }

@@ -22,6 +22,7 @@
           <div class="project-image position-relative {{ project.imageClass }}">
             <i class="bi {{ project.icon }} project-icon" aria-hidden="true"></i>
             <span class="category-badge">{{ project.category }}</span>
+            <span class="ribbon" *ngIf="project.ribbon">{{ project.ribbon }}</span>
             <div class="overlay d-flex align-items-center justify-content-center"
               *ngIf="hasLink(project.demoLink) || hasLink(project.githubLink)">
               <a *ngIf="hasLink(project.demoLink)" [href]="project.demoLink" target="_blank" rel="noopener noreferrer"
@@ -39,7 +40,8 @@
 
           <!-- Project Info -->
           <div class="p-4 d-flex flex-column flex-grow-1">
-            <h3 class="h5 fw-bold mb-3">{{ project.title }}</h3>
+            <h3 class="h5 fw-bold mb-1">{{ project.title }}</h3>
+            <p class="project-meta mb-3">{{ project.meta }}</p>
             <p class="text-muted mb-4 flex-grow-1" style="font-size: 0.95rem; line-height: 1.6;">
               {{ project.description }}
             </p>

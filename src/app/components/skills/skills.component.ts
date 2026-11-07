@@ -22,6 +22,8 @@ export class SkillsComponent {
   ];
 
   marqueeItems = [
-    'HTML5', 'CSS3', 'SCSS', 'Bootstrap', 'WPF MVVM', 'jQuery', 'Git', 'REST APIs', 'Entity Framework', 'ASP.NET Core', 'C#', 'Angular', 'TypeScript'
+    'C#', 'WPF MVVM', 'VTK', '3D Rendering', 'Performance Tuning', 'Multithreading', 'Windows Forms',
+    'ASP.NET Core', 'Entity Framework', 'Stored Procedures', 'REST APIs', 'Angular', 'TypeScript',
+    'HTML5', 'SCSS', 'Bootstrap', 'jQuery', 'Git'
   ];
 }

@@ -14,7 +14,7 @@
           <div class="form-floating mb-4 position-relative custom-input">
             <input type="text" name="from_name"
               class="form-control bg-transparent border-0 border-bottom rounded-0 px-0" id="nameInput"
-              placeholder="Name" required>
+              placeholder="Name" required maxlength="100" autocomplete="name">
             <label for="nameInput" class="px-0 text-muted">Your Name</label>
             <div class="input-line"></div>
           </div>
@@ -22,14 +22,20 @@
           <div class="form-floating mb-4 position-relative custom-input">
             <input type="email" name="from_email"
               class="form-control bg-transparent border-0 border-bottom rounded-0 px-0" id="emailInput"
-              placeholder="Email" required>
+              placeholder="Email" required maxlength="254" autocomplete="email">
             <label for="emailInput" class="px-0 text-muted">Your Email</label>
             <div class="input-line"></div>
           </div>
 
+          <!-- Honeypot: hidden from people and screen readers; bots that fill it are ignored. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="websiteInput">Website</label>
+            <input type="text" name="website" id="websiteInput" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="form-floating mb-5 position-relative custom-input">
             <textarea name="message" class="form-control bg-transparent border-0 border-bottom rounded-0 px-0"
-              id="messageInput" placeholder="Message" style="height: 120px" required></textarea>
+              id="messageInput" placeholder="Message" style="height: 120px" required minlength="10" maxlength="5000"></textarea>
             <label for="messageInput" class="px-0 text-muted">Your Message</label>
             <div class="input-line"></div>
           </div>
@@ -49,7 +55,15 @@
               <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i>Thanks! Your message has been sent. I'll get back to you soon.
             </p>
             <p *ngIf="status() === 'error'" class="status-msg error mb-0">
-              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>Sorry, something went wrong. Please try again or email me directly.
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>Sorry, something went wrong. Please try again or
+              email me at <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
+            </p>
+            <p *ngIf="status() === 'cooldown'" class="status-msg error mb-0">
+              <i class="bi bi-hourglass-split me-2" aria-hidden="true"></i>Please wait a minute before sending another message.
+            </p>
+            <p *ngIf="status() === 'mailto'" class="status-msg success mb-0">
+              <i class="bi bi-envelope-check-fill me-2" aria-hidden="true"></i>Your email app should open with the message ready to send.
+              If it doesn't, email me at <a [href]="'mailto:' + contactEmail">{{ contactEmail }}</a>.
             </p>
           </div>
         </form>

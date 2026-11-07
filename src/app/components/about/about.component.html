@@ -14,10 +14,16 @@
             modern engineering and software solutions. I specialize in technologies like C#, .NET, WPF, MVVM, XAML,
             Angular, and SQL Server, and I enjoy creating clean, scalable, and user-friendly applications.
           </p>
+          <p class="text-muted mb-4" style="line-height: 1.8;">
+            At RGS Construction Technology I build the Viskar suite of Windows applications: ViskarSteel Light,
+            ViskarBIM, and the BIM supporting products DigiLenz and GreenPdf, powered by Viskar. I have also worked on a 3D render engine built on the VTK toolkit,
+            and I am currently focused on software performance, using GPU rendering and multithreading to make our
+            applications faster.
+          </p>
           <p class="text-muted mb-0" style="line-height: 1.8;">
-            Currently, I am focused on developing a BIM Engine in C# using advanced concepts such as GPU rendering,
-            multithreading, and 3D visualization. I always aim to improve my technical skills, learn new technologies,
-            and build innovative software solutions with modern UI and high performance.
+            I also bring strong database skills: schema design and normalisation, SQL queries, indexes, views, stored
+            procedures, triggers and user-defined functions. I enjoy turning new business requirements into practical
+            technical solutions, and I keep learning new technologies.
           </p>
         </div>
       </div>
@@ -29,7 +35,10 @@
               <div class="stat-icon mb-3" aria-hidden="true">
                 <i class="bi {{ stat.icon }}"></i>
               </div>
-              <p class="display-6 fw-bold text-gradient mb-2" [appCountUp]="stat.value">{{ stat.value }}</p>
+              <p class="display-6 fw-bold text-gradient mb-2">
+                <span class="visually-hidden">{{ stat.value }}</span>
+                <span aria-hidden="true" [appCountUp]="stat.value">{{ stat.value }}</span>
+              </p>
               <p class="text-muted mb-0 fw-medium">{{ stat.label }}</p>
             </div>
           </div>

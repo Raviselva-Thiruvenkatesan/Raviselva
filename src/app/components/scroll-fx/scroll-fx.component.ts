@@ -1,4 +1,5 @@
-import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, effect, inject, signal } from '@angular/core';
+import { MotionService } from '../../services/motion.service';
 
 /** Page-level effects: reading-progress bar, floating back-to-top button and a pointer glow. */
 @Component({
@@ -58,55 +59,58 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
 
   showTop = signal(false);
 
+  private motion = inject(MotionService);
   private frame = 0;
   private cleanup: Array<() => void> = [];
 
-  constructor(private zone: NgZone) {}
+  private readonly onScroll = () => {
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(() => this.update());
+  };
+
+  private readonly onMove = (e: PointerEvent) => {
+    const glow = this.glow.nativeElement;
+    glow.style.opacity = '1';
+    glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+  };
+
+  private readonly onLeave = () => (this.glow.nativeElement.style.opacity = '0');
+
+  constructor() {
+    // Pointer glow only for mouse users who haven't asked for reduced motion — re-evaluated live.
+    effect(onCleanup => {
+      if (!this.motion.finePointer() || this.motion.reducedMotion()) {
+        this.onLeave();
+        return;
+      }
+      window.addEventListener('pointermove', this.onMove, { passive: true });
+      document.addEventListener('pointerleave', this.onLeave);
+      onCleanup(() => {
+        window.removeEventListener('pointermove', this.onMove);
+        document.removeEventListener('pointerleave', this.onLeave);
+      });
+    });
+  }
 
   ngOnInit() {
-    this.zone.runOutsideAngular(() => {
-      const onScroll = () => {
-        cancelAnimationFrame(this.frame);
-        this.frame = requestAnimationFrame(() => this.update());
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-      this.cleanup.push(() => {
-        window.removeEventListener('scroll', onScroll);
-        window.removeEventListener('resize', onScroll);
-      });
-      this.update();
-
-      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (finePointer && !reduced) {
-        const glow = this.glow.nativeElement;
-        const onMove = (e: PointerEvent) => {
-          glow.style.opacity = '1';
-          glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-        };
-        const onLeave = () => (glow.style.opacity = '0');
-        window.addEventListener('pointermove', onMove, { passive: true });
-        document.addEventListener('pointerleave', onLeave);
-        this.cleanup.push(() => {
-          window.removeEventListener('pointermove', onMove);
-          document.removeEventListener('pointerleave', onLeave);
-        });
-      }
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    window.addEventListener('resize', this.onScroll, { passive: true });
+    this.cleanup.push(() => {
+      window.removeEventListener('scroll', this.onScroll);
+      window.removeEventListener('resize', this.onScroll);
     });
+    this.update();
   }
 
   private update() {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const progress = max > 0 ? window.scrollY / max : 0;
     this.bar.nativeElement.style.transform = `scaleX(${progress})`;
-    const show = window.scrollY > 600;
-    if (show !== this.showTop()) this.zone.run(() => this.showTop.set(show));
+    this.showTop.set(window.scrollY > 600);   // signals ignore same-value sets
   }
 
   toTop() {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    window.scrollTo({ top: 0, behavior: this.motion.reducedMotion() ? 'auto' : 'smooth' });
     document.getElementById('main-content')?.focus({ preventScroll: true });
   }
 

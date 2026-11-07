@@ -1,8 +1,10 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { MotionService } from '../services/motion.service';
 
 /**
  * Animates a value like "5+" or "100%" from 0 when it scrolls into view.
- * The final text is set immediately for screen readers and no-JS crawlers via aria-label.
+ * Put it on an aria-hidden element and give screen readers the real value in a
+ * visually-hidden sibling, so they never hear an in-between number.
  */
 @Directive({
   selector: '[appCountUp]',
@@ -12,18 +14,16 @@ export class CountUpDirective implements OnInit, OnDestroy {
   @Input('appCountUp') value = '';
   @Input() countDuration = 1600;
 
+  private el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private motion = inject(MotionService);
   private observer?: IntersectionObserver;
   private frame = 0;
 
-  constructor(private el: ElementRef<HTMLElement>) {}
-
   ngOnInit() {
-    const el = this.el.nativeElement;
+    const el = this.el;
     const match = this.value.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
-    el.setAttribute('aria-label', this.value);
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!match || reduced || !('IntersectionObserver' in window)) {
+    if (!match || this.motion.reducedMotion() || !('IntersectionObserver' in window)) {
       el.textContent = this.value;
       return;
     }

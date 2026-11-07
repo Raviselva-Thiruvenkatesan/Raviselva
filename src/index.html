@@ -7,11 +7,30 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!--
+    Content Security Policy. Production builds also get a strict script policy with hashes
+    added automatically (angular.json → security.autoCsp); both policies must pass.
+    If you add a new third-party service (analytics, embeds…), allow its host here.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://api.emailjs.com;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+    frame-src 'none';
+    worker-src 'self' blob:">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
   <!-- SEO -->
   <meta name="description"
-    content="Raviselva Thiruvenkatesan – Software Engineer from Salem, Tamil Nadu building BIM desktop apps with C#, .NET, WPF and MVVM, and modern web apps with Angular and SQL Server.">
+    content="Raviselva Thiruvenkatesan – .NET developer from Salem, Tamil Nadu working on the Viskar BIM suite (ViskarSteel Light, ViskarBIM), a VTK-based 3D render engine and software performance, with C#, WPF, Angular and SQL Server.">
   <meta name="keywords"
-    content="Raviselva Thiruvenkatesan, Raviselva T, .NET Developer, C# Developer, WPF, MVVM, Angular Developer, BIM Software Developer, Salem, Tamil Nadu, Portfolio">
+    content="Raviselva Thiruvenkatesan, Raviselva T, .NET Developer, C# Developer, WPF, MVVM, VTK, ViskarSteel, ViskarBIM, Angular Developer, BIM Software Developer, Salem, Tamil Nadu, Portfolio">
   <meta name="author" content="Raviselva Thiruvenkatesan">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#f8fafc">
@@ -47,7 +66,8 @@
     "jobTitle": ".NET Developer",
     "worksFor": { "@type": "Organization", "name": "RGS Construction Technology Pvt Ltd" },
     "address": { "@type": "PostalAddress", "addressLocality": "Salem", "addressRegion": "Tamil Nadu", "addressCountry": "IN" },
-    "knowsAbout": ["C#", ".NET", "WPF", "MVVM", "XAML", "Angular", "TypeScript", "SQL Server", "BIM"],
+    "knowsAbout": ["C#", ".NET", "WPF", "MVVM", "XAML", "VTK", "3D Rendering", "Software Performance", "Angular", "TypeScript", "SQL Server", "BIM"],
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "Velalar College of Engineering and Technology" },
     "sameAs": [
       "https://www.linkedin.com/in/raviselva/",
       "https://github.com/Raviselva-Thiruvenkatesan",

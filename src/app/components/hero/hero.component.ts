@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import { MotionService } from '../../services/motion.service';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
 import { HeroSceneComponent } from '../hero-scene/hero-scene.component';
@@ -11,7 +12,7 @@ import { HeroSceneComponent } from '../hero-scene/hero-scene.component';
   styleUrls: ['./hero.component.scss']
 })
 export class HeroComponent implements OnInit, OnDestroy {
-  roles = ['Software Engineer', '.NET Developer', 'Angular Enthusiast', 'Problem Solver'];
+  roles = ['Software Engineer', '.NET Developer', 'BIM Software Developer', '3D & Performance Engineer'];
 
   /**
    * Put your CV in the `public/` folder (e.g. public/Raviselva_Resume.pdf) and set the
@@ -26,9 +27,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   isDeleting = false;
 
   private timer?: ReturnType<typeof setTimeout>;
+  private motion = inject(MotionService);
 
   ngOnInit() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (this.motion.reducedMotion()) {
       this.currentRole.set(this.roles[0]);
       return;
     }

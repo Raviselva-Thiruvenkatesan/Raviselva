@@ -1,7 +1,8 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, NgZone, OnDestroy, ViewChild, signal
+  AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, ViewChild, inject, signal
 } from '@angular/core';
 import type * as THREE_NS from 'three';
+import { MotionService } from '../../services/motion.service';
 
 type Three = typeof THREE_NS;
 
@@ -104,8 +105,10 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private pointer = { x: 0, y: 0 };
   private tilt = { x: 0, y: 0 };
 
-  private readonly reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  private readonly isSmall = window.matchMedia('(max-width: 768px)').matches;
+  private readonly motion = inject(MotionService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  /** Read once at build time: sets particle count and pixel ratio. */
+  private readonly isSmall = this.motion.small();
   private cleanup: Array<() => void> = [];
 
   // scratch objects
@@ -113,11 +116,9 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private v3?: THREE_NS.Vector3;
   private s3?: THREE_NS.Vector3;
 
-  constructor(private host: ElementRef<HTMLElement>, private zone: NgZone) {}
-
   ngAfterViewInit() {
     if (!this.supportsWebGL()) return;
-    const start = () => this.zone.runOutsideAngular(() => this.init());
+    const start = () => this.init();
     if ('requestIdleCallback' in window) {
       (window as any).requestIdleCallback(start, { timeout: 1200 });
     } else {
@@ -184,9 +185,9 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     this.resize();
     this.bindEvents();
 
-    if (this.reducedMotion) this.elapsed = this.buildDuration + 1;
+    if (this.motion.reducedMotion()) this.elapsed = this.buildDuration + 1;
     this.renderFrame(0);
-    this.zone.run(() => this.ready.set(true));
+    this.ready.set(true);
     this.start();
   }
 
@@ -376,6 +377,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     // Site grid under the building
     this.grid = new THREE.GridHelper(15, 15);
     const gm = this.grid.material as THREE_NS.LineBasicMaterial;
+    gm.vertexColors = false;   // GridHelper ships grey vertex colours that would tint the accent
     gm.transparent = true;
     gm.depthWrite = false;
     this.grid.position.y = -height / 2;
@@ -470,6 +472,25 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     if (!this.running) this.renderFrame(0);
   }
 
+  /**
+   * The element's box without the translate of in-progress CSS transforms on it or its
+   * ancestors (e.g. the scroll-reveal slide-in), so placement matches where it will settle.
+   */
+  private layoutRect(el: HTMLElement): { left: number; top: number; width: number; height: number } {
+    const r = el.getBoundingClientRect();
+    let left = r.left, top = r.top;
+    const stop = this.host.nativeElement.parentElement;
+    for (let node: HTMLElement | null = el; node && node !== stop; node = node.parentElement) {
+      const t = getComputedStyle(node).transform;
+      if (t && t !== 'none') {
+        const m = new DOMMatrixReadOnly(t);
+        left -= m.m41;
+        top -= m.m42;
+      }
+    }
+    return { left, top, width: r.width, height: r.height };
+  }
+
   /** Centre the structure behind the anchor element (the profile photo) and size it to frame it. */
   private resize() {
     if (!this.renderer || !this.camera || !this.pivot) return;
@@ -488,7 +509,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     let cx = w * 0.72, cy = h * 0.5, size = Math.min(w, h) * 0.45;
     if (anchor) {
       // offsetWidth/Height ignore the scroll-reveal transform
-      const r = anchor.getBoundingClientRect();
+      const r = this.layoutRect(anchor);
       cx = r.left + r.width / 2 - hostRect.left;
       cy = r.top + r.height / 2 - hostRect.top;
       size = Math.max(anchor.offsetWidth, anchor.offsetHeight);
@@ -531,9 +552,16 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     ro.observe(hostEl);
     this.cleanup.push(() => ro.disconnect());
 
-    // The photo slides in with a reveal animation; re-centre once it has settled.
-    const settle = setTimeout(() => this.resize(), 1200);
-    this.cleanup.push(() => clearTimeout(settle));
+    // Layout around the photo can still shift (fonts loading, reveal animations finishing).
+    // The structure is placed from untransformed layout, so re-centre whenever a transition ends.
+    const section = hostEl.parentElement;
+    const onTransitionEnd = (e: TransitionEvent) => {
+      if (e.propertyName !== 'transform') return;
+      this.resize();
+      if (!this.running) this.renderFrame(0);
+    };
+    section?.addEventListener('transitionend', onTransitionEnd);
+    this.cleanup.push(() => section?.removeEventListener('transitionend', onTransitionEnd));
 
     const io = new IntersectionObserver(([entry]) => {
       this.inView = entry.isIntersecting;
@@ -562,7 +590,8 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
 
   private start() {
     if (this.running || !this.inView || document.hidden || !this.renderer) return;
-    if (this.reducedMotion) {
+    if (this.motion.reducedMotion()) {
+      this.elapsed = Math.max(this.elapsed, this.buildDuration + 1);
       this.renderFrame(0);
       return;
     }
@@ -570,6 +599,12 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     this.lastTime = performance.now();
     const loop = (now: number) => {
       if (!this.running) return;
+      if (this.motion.reducedMotion()) {
+        // Setting turned on while animating: jump to the finished frame and hold still.
+        this.stop();
+        this.start();
+        return;
+      }
       // Real elapsed time (capped) so the build finishes on schedule even on slow devices.
       const dt = Math.min((now - this.lastTime) / 1000, 0.5);
       this.lastTime = now;
