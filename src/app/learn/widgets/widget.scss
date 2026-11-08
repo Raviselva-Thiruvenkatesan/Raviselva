@@ -129,6 +129,26 @@
   }
 }
 
+/* A bare input that carries the class itself (no label wrapper). */
+input.w-field {
+  display: inline-block;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 6px 10px;
+  min-width: 0;
+
+  &:focus {
+    outline: 2px solid rgba(139, 92, 246, 0.45);
+    outline-offset: 1px;
+    border-color: var(--purple);
+  }
+}
+
 .mono {
   font-family: 'Cascadia Code', Consolas, 'Courier New', monospace;
   font-variant-ligatures: none;
@@ -212,3 +232,34 @@
     animation: none !important;
   }
 }
+
+/* ---- Graph drawings and small tables shared by the graph widgets ---- */
+.gsvg { width: 100%; max-width: 460px; display: block; margin: 0 auto; }
+.g-edge { stroke: var(--border-color); stroke-width: 2; transition: stroke 0.2s, opacity 0.2s; }
+.g-edge.on { stroke: #8b5cf6; stroke-width: 3.5; }
+.g-edge.hot { stroke: #f59e0b; stroke-width: 3.5; }
+.g-edge.ok { stroke: #10b981; stroke-width: 4; }
+.g-edge.bad { stroke: #ef4444; stroke-width: 2.5; stroke-dasharray: 5 4; }
+.g-edge.dim { opacity: 0.3; }
+.g-w { font-size: 10px; font-weight: 700; fill: var(--text-muted); paint-order: stroke; stroke: var(--bg-secondary); stroke-width: 4px; }
+.g-node circle, .g-node rect { fill: var(--bg-main); stroke: rgba(139, 92, 246, 0.55); stroke-width: 1.5; transition: all 0.2s; }
+.g-node text { font-size: 12px; font-weight: 700; fill: var(--text-main); }
+.g-node .g-sub { font-size: 9px; font-weight: 600; fill: var(--text-muted); }
+.g-node.on circle, .g-node.on rect { fill: rgba(139, 92, 246, 0.25); stroke: #8b5cf6; }
+.g-node.wait circle, .g-node.wait rect { stroke: #0891b2; stroke-width: 2.5; }
+.g-node.done circle, .g-node.done rect { fill: rgba(16, 185, 129, 0.3); stroke: #10b981; }
+.g-node.cur circle, .g-node.cur rect { fill: rgba(245, 158, 11, 0.4); stroke: #f59e0b; stroke-width: 3; }
+.g-node.bad circle, .g-node.bad rect { fill: rgba(239, 68, 68, 0.2); stroke: #ef4444; }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; min-height: 1.8rem; align-items: center; }
+.chip { padding: 2px 8px; border-radius: 7px; border: 1.5px solid rgba(139, 92, 246, 0.45); background: var(--bg-main); font-weight: 700; font-size: 0.82rem; }
+.chip.ok { border-color: #10b981; background: rgba(16, 185, 129, 0.2); }
+.chip.wait { border-color: #0891b2; background: rgba(6, 182, 212, 0.12); }
+.chip.cur { border-color: #f59e0b; background: rgba(245, 158, 11, 0.22); }
+.chip.bad { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.wtable { border-collapse: collapse; font-size: 0.8rem; width: 100%; }
+.wtable th, .wtable td { border: 1px solid var(--border-color); padding: 3px 5px; text-align: center; }
+.wtable th { color: var(--text-muted); font-weight: 600; background: var(--bg-main); }
+.wtable td.hl { background: rgba(245, 158, 11, 0.25); font-weight: 800; }
+.wtable td.ok { background: rgba(16, 185, 129, 0.2); }
+.wtable tr.hl td { background: rgba(139, 92, 246, 0.12); }
+.tscroll { overflow-x: auto; max-width: 100%; }

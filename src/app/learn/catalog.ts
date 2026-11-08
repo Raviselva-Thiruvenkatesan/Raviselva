@@ -116,6 +116,107 @@ const CSHARP_MODULES: Module[] = [
   }
 ];
 
+const DSA_MODULES: Module[] = [
+  {
+    title: 'Foundations',
+    level: 'Beginner',
+    topics: [
+      { slug: 'what-is-dsa', title: 'What are data structures and algorithms?', ready: true },
+      { slug: 'big-o', title: 'Measuring speed: Big-O notation', ready: true },
+      { slug: 'analysing-code', title: 'Counting steps in real code', ready: true },
+      { slug: 'space-complexity', title: 'Memory cost: space complexity', ready: true },
+      { slug: 'recursion-for-dsa', title: 'Recursion, call trees and memoisation', ready: true }
+    ]
+  },
+  {
+    title: 'Linear data structures',
+    level: 'Beginner',
+    topics: [
+      { slug: 'arrays-in-memory', title: 'Arrays in memory', ready: true },
+      { slug: 'dynamic-arrays', title: 'Dynamic arrays: how List<T> grows', ready: true },
+      { slug: 'linked-lists', title: 'Singly linked lists', ready: true },
+      { slug: 'doubly-linked-lists', title: 'Doubly and circular linked lists', ready: true },
+      { slug: 'stacks', title: 'Stacks and their uses', ready: true },
+      { slug: 'queues', title: 'Queues, circular buffers and deques', ready: true }
+    ]
+  },
+  {
+    title: 'Searching and sorting',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'linear-binary-search', title: 'Linear search and binary search', ready: true },
+      { slug: 'binary-search-variants', title: 'Binary search: bounds and searching for answers', ready: true },
+      { slug: 'simple-sorts', title: 'Bubble, selection and insertion sort', ready: true },
+      { slug: 'merge-sort', title: 'Merge sort', ready: true },
+      { slug: 'quick-sort', title: 'Quick sort', ready: true },
+      { slug: 'counting-radix-sort', title: 'Counting sort and radix sort', ready: true },
+      { slug: 'sorting-in-dotnet', title: 'Sorting in .NET: stability and comparers', ready: true }
+    ]
+  },
+  {
+    title: 'Hashing and problem-solving techniques',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'hash-tables', title: 'How hash tables work', ready: true },
+      { slug: 'hashing-problems', title: 'Solving problems with HashSet and Dictionary', ready: true },
+      { slug: 'two-pointers', title: 'Two pointers', ready: true },
+      { slug: 'sliding-window', title: 'Sliding window', ready: true },
+      { slug: 'prefix-sums', title: 'Prefix sums and difference arrays', ready: true },
+      { slug: 'bit-manipulation', title: 'Bit manipulation', ready: true }
+    ]
+  },
+  {
+    title: 'Trees',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'trees-basics', title: 'Trees and binary trees', ready: true },
+      { slug: 'tree-traversals', title: 'Tree traversals: pre, in, post and level order', ready: true },
+      { slug: 'binary-search-trees', title: 'Binary search trees', ready: true },
+      { slug: 'balanced-trees', title: 'Balanced trees: AVL, red-black and B-trees', ready: true },
+      { slug: 'heaps-priority-queues', title: 'Heaps and priority queues', ready: true },
+      { slug: 'tries', title: 'Tries (prefix trees)', ready: true }
+    ]
+  },
+  {
+    title: 'Graphs',
+    level: 'Advanced',
+    topics: [
+      { slug: 'graph-basics', title: 'Graphs and how to store them', ready: true },
+      { slug: 'bfs', title: 'Breadth-first search', ready: true },
+      { slug: 'dfs', title: 'Depth-first search', ready: true },
+      { slug: 'topological-sort', title: 'Topological sort', ready: true },
+      { slug: 'dijkstra', title: 'Shortest paths: Dijkstra', ready: true },
+      { slug: 'bellman-ford-floyd', title: 'Bellman-Ford and Floyd-Warshall', ready: true },
+      { slug: 'minimum-spanning-trees', title: 'Minimum spanning trees', ready: true },
+      { slug: 'union-find', title: 'Union-find (disjoint sets)', ready: true }
+    ]
+  },
+  {
+    title: 'Algorithm design',
+    level: 'Advanced',
+    topics: [
+      { slug: 'greedy', title: 'Greedy algorithms', ready: true },
+      { slug: 'divide-and-conquer', title: 'Divide and conquer', ready: true },
+      { slug: 'backtracking', title: 'Backtracking', ready: true },
+      { slug: 'dp-intro', title: 'Dynamic programming: the idea', ready: true },
+      { slug: 'dp-classic', title: 'Dynamic programming: grids and sequences', ready: true },
+      { slug: 'dp-advanced', title: 'Dynamic programming: knapsack, LCS and edit distance', ready: true }
+    ]
+  },
+  {
+    title: 'Master level',
+    level: 'Master',
+    topics: [
+      { slug: 'segment-fenwick-trees', title: 'Segment trees and Fenwick trees', ready: true },
+      { slug: 'string-matching', title: 'String matching: KMP and Rabin-Karp', ready: true },
+      { slug: 'spatial-indexes', title: 'Spatial indexes: grids, quadtrees and BVH', ready: true },
+      { slug: 'computational-geometry', title: 'Computational geometry basics', ready: true },
+      { slug: 'np-complete', title: 'Hard problems: P, NP and approximation', ready: true },
+      { slug: 'problem-solving-strategy', title: 'How to solve any DSA problem', ready: true }
+    ]
+  }
+];
+
 export const TRACKS: Track[] = [
   {
     slug: 'csharp',
@@ -133,9 +234,11 @@ export const TRACKS: Track[] = [
     title: 'Data Structures & Algorithms',
     short: 'DSA',
     icon: 'bi-diagram-3',
-    description: 'Arrays, linked lists, trees, graphs, sorting and searching, explained with step-by-step visuals in C#.',
-    live: false,
-    modules: []
+    description:
+      'Arrays, linked lists, trees, graphs, sorting, searching and dynamic programming, from Big-O basics to ' +
+      'master-level structures. Every algorithm explained with step-by-step visuals and C# code.',
+    live: true,
+    modules: DSA_MODULES
   },
   {
     slug: 'bim-math',

@@ -63,6 +63,56 @@ import { BenchmarkLabWidget } from '../widgets/benchmark-lab.widget';
 import { PointerMemoryWidget } from '../widgets/pointer-memory.widget';
 import { SourceGenWidget } from '../widgets/source-gen.widget';
 import { ArchitectureLayersWidget } from '../widgets/architecture-layers.widget';
+import { LookupRaceWidget } from '../widgets/lookup-race.widget';
+import { GrowthChartWidget } from '../widgets/growth-chart.widget';
+import { StepCounterWidget } from '../widgets/step-counter.widget';
+import { SpaceMeterWidget } from '../widgets/space-meter.widget';
+import { CallTreeWidget } from '../widgets/call-tree.widget';
+import { ArrayMemoryWidget } from '../widgets/array-memory.widget';
+import { ListGrowthWidget } from '../widgets/list-growth.widget';
+import { LinkedListWidget } from '../widgets/linked-list.widget';
+import { DllRewireWidget } from '../widgets/dll-rewire.widget';
+import { BracketCheckerWidget } from '../widgets/bracket-checker.widget';
+import { RingBufferWidget } from '../widgets/ring-buffer.widget';
+import { BinarySearchWidget } from '../widgets/binary-search.widget';
+import { BoundsFinderWidget } from '../widgets/bounds-finder.widget';
+import { SortStepperWidget } from '../widgets/sort-stepper.widget';
+import { MergeVizWidget } from '../widgets/merge-viz.widget';
+import { QuickVizWidget } from '../widgets/quick-viz.widget';
+import { CountingSortWidget } from '../widgets/counting-sort.widget';
+import { SortKeysWidget } from '../widgets/sort-keys.widget';
+import { HashBucketsWidget } from '../widgets/hash-buckets.widget';
+import { PairFinderWidget } from '../widgets/pair-finder.widget';
+import { TwoPointersWidget } from '../widgets/two-pointers.widget';
+import { SlidingWindowWidget } from '../widgets/sliding-window.widget';
+import { PrefixSumsWidget } from '../widgets/prefix-sums.widget';
+import { BitLabWidget } from '../widgets/bit-lab.widget';
+import { TreeAnatomyWidget } from '../widgets/tree-anatomy.widget';
+import { TraversalStepperWidget } from '../widgets/traversal-stepper.widget';
+import { BstLabWidget } from '../widgets/bst-lab.widget';
+import { AvlVizWidget } from '../widgets/avl-viz.widget';
+import { HeapVizWidget } from '../widgets/heap-viz.widget';
+import { TrieVizWidget } from '../widgets/trie-viz.widget';
+import { GraphStoreWidget } from '../widgets/graph-store.widget';
+import { BfsGridWidget } from '../widgets/bfs-grid.widget';
+import { DfsStepperWidget } from '../widgets/dfs-stepper.widget';
+import { TopoSortWidget } from '../widgets/topo-sort.widget';
+import { DijkstraVizWidget } from '../widgets/dijkstra-viz.widget';
+import { BellmanFloydWidget } from '../widgets/bellman-floyd.widget';
+import { MstVizWidget } from '../widgets/mst-viz.widget';
+import { UnionFindWidget } from '../widgets/union-find.widget';
+import { IntervalSchedulerWidget } from '../widgets/interval-scheduler.widget';
+import { RecurrenceTreeWidget } from '../widgets/recurrence-tree.widget';
+import { NQueensWidget } from '../widgets/n-queens.widget';
+import { DpTableWidget } from '../widgets/dp-table.widget';
+import { GridPathsWidget } from '../widgets/grid-paths.widget';
+import { LcsTableWidget } from '../widgets/lcs-table.widget';
+import { SegmentTreeWidget } from '../widgets/segment-tree.widget';
+import { StringMatchWidget } from '../widgets/string-match.widget';
+import { QuadtreeWidget } from '../widgets/quadtree.widget';
+import { ConvexHullWidget } from '../widgets/convex-hull.widget';
+import { TspExplorerWidget } from '../widgets/tsp-explorer.widget';
+import { PatternPickerWidget } from '../widgets/pattern-picker.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -81,7 +131,15 @@ import { ArchitectureLayersWidget } from '../widgets/architecture-layers.widget'
     PatternMatchWidget, TupleLabWidget, GcSimWidget, UsingScopeWidget, YieldStepperWidget,
     AsyncTimelineWidget, ParallelCoresWidget, RaceConditionWidget, ReflectionInspectorWidget, SpanSliceWidget,
     SolidImpactWidget, PatternLabWidget, DiLifetimesWidget, TestRunnerWidget, BenchmarkLabWidget,
-    PointerMemoryWidget, SourceGenWidget, ArchitectureLayersWidget
+    PointerMemoryWidget, SourceGenWidget, ArchitectureLayersWidget,
+    LookupRaceWidget, GrowthChartWidget, StepCounterWidget, SpaceMeterWidget, CallTreeWidget,
+    ArrayMemoryWidget, ListGrowthWidget, LinkedListWidget, DllRewireWidget, BracketCheckerWidget, RingBufferWidget,
+    BinarySearchWidget, BoundsFinderWidget, SortStepperWidget, MergeVizWidget, QuickVizWidget, CountingSortWidget, SortKeysWidget,
+    HashBucketsWidget, PairFinderWidget, TwoPointersWidget, SlidingWindowWidget, PrefixSumsWidget, BitLabWidget,
+    TreeAnatomyWidget, TraversalStepperWidget, BstLabWidget, AvlVizWidget, HeapVizWidget, TrieVizWidget,
+    GraphStoreWidget, BfsGridWidget, DfsStepperWidget, TopoSortWidget, DijkstraVizWidget, BellmanFloydWidget, MstVizWidget, UnionFindWidget,
+    IntervalSchedulerWidget, RecurrenceTreeWidget, NQueensWidget, DpTableWidget, GridPathsWidget, LcsTableWidget,
+    SegmentTreeWidget, StringMatchWidget, QuadtreeWidget, ConvexHullWidget, TspExplorerWidget, PatternPickerWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -179,6 +237,56 @@ import { ArchitectureLayersWidget } from '../widgets/architecture-layers.widget'
             @case ('pointer-memory') { <w-pointer-memory /> }
             @case ('source-gen') { <w-source-gen /> }
             @case ('architecture-layers') { <w-architecture-layers /> }
+            @case ('lookup-race') { <w-lookup-race /> }
+            @case ('growth-chart') { <w-growth-chart /> }
+            @case ('step-counter') { <w-step-counter /> }
+            @case ('space-meter') { <w-space-meter /> }
+            @case ('call-tree') { <w-call-tree /> }
+            @case ('array-memory') { <w-array-memory /> }
+            @case ('list-growth') { <w-list-growth /> }
+            @case ('linked-list') { <w-linked-list /> }
+            @case ('dll-rewire') { <w-dll-rewire /> }
+            @case ('bracket-checker') { <w-bracket-checker /> }
+            @case ('ring-buffer') { <w-ring-buffer /> }
+            @case ('binary-search') { <w-binary-search /> }
+            @case ('bounds-finder') { <w-bounds-finder /> }
+            @case ('sort-stepper') { <w-sort-stepper /> }
+            @case ('merge-viz') { <w-merge-viz /> }
+            @case ('quick-viz') { <w-quick-viz /> }
+            @case ('counting-sort') { <w-counting-sort /> }
+            @case ('sort-keys') { <w-sort-keys /> }
+            @case ('hash-buckets') { <w-hash-buckets /> }
+            @case ('pair-finder') { <w-pair-finder /> }
+            @case ('two-pointers') { <w-two-pointers /> }
+            @case ('sliding-window') { <w-sliding-window /> }
+            @case ('prefix-sums') { <w-prefix-sums /> }
+            @case ('bit-lab') { <w-bit-lab /> }
+            @case ('tree-anatomy') { <w-tree-anatomy /> }
+            @case ('traversal-stepper') { <w-traversal-stepper /> }
+            @case ('bst-lab') { <w-bst-lab /> }
+            @case ('avl-viz') { <w-avl-viz /> }
+            @case ('heap-viz') { <w-heap-viz /> }
+            @case ('trie-viz') { <w-trie-viz /> }
+            @case ('graph-store') { <w-graph-store /> }
+            @case ('bfs-grid') { <w-bfs-grid /> }
+            @case ('dfs-stepper') { <w-dfs-stepper /> }
+            @case ('topo-sort') { <w-topo-sort /> }
+            @case ('dijkstra-viz') { <w-dijkstra-viz /> }
+            @case ('bellman-floyd') { <w-bellman-floyd /> }
+            @case ('mst-viz') { <w-mst-viz /> }
+            @case ('union-find') { <w-union-find /> }
+            @case ('interval-scheduler') { <w-interval-scheduler /> }
+            @case ('recurrence-tree') { <w-recurrence-tree /> }
+            @case ('n-queens') { <w-n-queens /> }
+            @case ('dp-table') { <w-dp-table /> }
+            @case ('grid-paths') { <w-grid-paths /> }
+            @case ('lcs-table') { <w-lcs-table /> }
+            @case ('segment-tree') { <w-segment-tree /> }
+            @case ('string-match') { <w-string-match /> }
+            @case ('quadtree') { <w-quadtree /> }
+            @case ('convex-hull') { <w-convex-hull /> }
+            @case ('tsp-explorer') { <w-tsp-explorer /> }
+            @case ('pattern-picker') { <w-pattern-picker /> }
           }
         }
       }

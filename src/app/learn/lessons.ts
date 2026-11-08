@@ -11,10 +11,19 @@ import { PATTERNS_MEMORY } from './csharp/patterns-memory';
 import { ADVANCED } from './csharp/advanced';
 import { MASTER } from './csharp/master';
 import { EXPERT } from './csharp/expert';
+import { FOUNDATIONS } from './dsa/foundations';
+import { LINEAR } from './dsa/linear';
+import { SEARCH_SORT } from './dsa/search-sort';
+import { TECHNIQUES } from './dsa/techniques';
+import { TREES } from './dsa/trees';
+import { GRAPHS } from './dsa/graphs';
+import { DESIGN } from './dsa/design';
+import { MASTER as DSA_MASTER } from './dsa/master';
 
 /** Written lessons per track. Only the lesson page imports this, so lesson text stays out of other pages. */
 const LESSONS: Record<string, Lesson[]> = {
-  csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED, ...MASTER, ...EXPERT]
+  csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED, ...MASTER, ...EXPERT],
+  dsa: [...FOUNDATIONS, ...LINEAR, ...SEARCH_SORT, ...TECHNIQUES, ...TREES, ...GRAPHS, ...DESIGN, ...DSA_MASTER]
 };
 
 export function findLesson(track: string, slug: string): Lesson | undefined {
