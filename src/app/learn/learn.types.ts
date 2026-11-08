@@ -117,7 +117,25 @@ export type WidgetName =
   | 'quadtree'
   | 'convex-hull'
   | 'tsp-explorer'
-  | 'pattern-picker';
+  | 'pattern-picker'
+  // BIM Math
+  | 'wall-anatomy'
+  | 'axes-3d'
+  | 'tolerance-lab'
+  | 'angle-dial'
+  | 'roof-pitch'
+  | 'point-vector'
+  | 'vector-add'
+  | 'unit-vector'
+  | 'dot-product'
+  | 'cross-product'
+  | 'vec3-calc'
+  | 'param-line'
+  | 'closest-point'
+  | 'line-intersect'
+  | 'three-point-arc'
+  | 'polyline-lab'
+  | 'bezier';
 
 export type Block =
   | { type: 'p'; text: string }

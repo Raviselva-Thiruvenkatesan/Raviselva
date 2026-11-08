@@ -113,6 +113,23 @@ import { QuadtreeWidget } from '../widgets/quadtree.widget';
 import { ConvexHullWidget } from '../widgets/convex-hull.widget';
 import { TspExplorerWidget } from '../widgets/tsp-explorer.widget';
 import { PatternPickerWidget } from '../widgets/pattern-picker.widget';
+import { WallAnatomyWidget } from '../widgets/wall-anatomy.widget';
+import { Axes3dWidget } from '../widgets/axes-3d.widget';
+import { ToleranceLabWidget } from '../widgets/tolerance-lab.widget';
+import { AngleDialWidget } from '../widgets/angle-dial.widget';
+import { RoofPitchWidget } from '../widgets/roof-pitch.widget';
+import { PointVectorWidget } from '../widgets/point-vector.widget';
+import { VectorAddWidget } from '../widgets/vector-add.widget';
+import { UnitVectorWidget } from '../widgets/unit-vector.widget';
+import { DotProductWidget } from '../widgets/dot-product.widget';
+import { CrossProductWidget } from '../widgets/cross-product.widget';
+import { Vec3CalcWidget } from '../widgets/vec3-calc.widget';
+import { ParamLineWidget } from '../widgets/param-line.widget';
+import { ClosestPointWidget } from '../widgets/closest-point.widget';
+import { LineIntersectWidget } from '../widgets/line-intersect.widget';
+import { ThreePointArcWidget } from '../widgets/three-point-arc.widget';
+import { PolylineLabWidget } from '../widgets/polyline-lab.widget';
+import { BezierWidget } from '../widgets/bezier.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -139,7 +156,10 @@ import { PatternPickerWidget } from '../widgets/pattern-picker.widget';
     TreeAnatomyWidget, TraversalStepperWidget, BstLabWidget, AvlVizWidget, HeapVizWidget, TrieVizWidget,
     GraphStoreWidget, BfsGridWidget, DfsStepperWidget, TopoSortWidget, DijkstraVizWidget, BellmanFloydWidget, MstVizWidget, UnionFindWidget,
     IntervalSchedulerWidget, RecurrenceTreeWidget, NQueensWidget, DpTableWidget, GridPathsWidget, LcsTableWidget,
-    SegmentTreeWidget, StringMatchWidget, QuadtreeWidget, ConvexHullWidget, TspExplorerWidget, PatternPickerWidget
+    SegmentTreeWidget, StringMatchWidget, QuadtreeWidget, ConvexHullWidget, TspExplorerWidget, PatternPickerWidget,
+    WallAnatomyWidget, Axes3dWidget, ToleranceLabWidget, AngleDialWidget, RoofPitchWidget,
+    PointVectorWidget, VectorAddWidget, UnitVectorWidget, DotProductWidget, CrossProductWidget, Vec3CalcWidget,
+    ParamLineWidget, ClosestPointWidget, LineIntersectWidget, ThreePointArcWidget, PolylineLabWidget, BezierWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -287,6 +307,23 @@ import { PatternPickerWidget } from '../widgets/pattern-picker.widget';
             @case ('convex-hull') { <w-convex-hull /> }
             @case ('tsp-explorer') { <w-tsp-explorer /> }
             @case ('pattern-picker') { <w-pattern-picker /> }
+            @case ('wall-anatomy') { <w-wall-anatomy /> }
+            @case ('axes-3d') { <w-axes-3d /> }
+            @case ('tolerance-lab') { <w-tolerance-lab /> }
+            @case ('angle-dial') { <w-angle-dial /> }
+            @case ('roof-pitch') { <w-roof-pitch /> }
+            @case ('point-vector') { <w-point-vector /> }
+            @case ('vector-add') { <w-vector-add /> }
+            @case ('unit-vector') { <w-unit-vector /> }
+            @case ('dot-product') { <w-dot-product /> }
+            @case ('cross-product') { <w-cross-product /> }
+            @case ('vec3-calc') { <w-vec3-calc /> }
+            @case ('param-line') { <w-param-line /> }
+            @case ('closest-point') { <w-closest-point /> }
+            @case ('line-intersect') { <w-line-intersect /> }
+            @case ('three-point-arc') { <w-three-point-arc /> }
+            @case ('polyline-lab') { <w-polyline-lab /> }
+            @case ('bezier') { <w-bezier /> }
           }
         }
       }

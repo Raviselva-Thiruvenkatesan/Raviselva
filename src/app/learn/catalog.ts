@@ -217,6 +217,101 @@ const DSA_MODULES: Module[] = [
   }
 ];
 
+const BIM_MODULES: Module[] = [
+  {
+    title: 'Foundations',
+    level: 'Beginner',
+    topics: [
+      { slug: 'why-bim-math', title: 'Why BIM software runs on maths', ready: true },
+      { slug: 'coordinate-systems', title: 'Coordinate systems: 2D, 3D, right-handed, Z-up', ready: true },
+      { slug: 'units-precision-tolerance', title: 'Units, precision and tolerance', ready: true },
+      { slug: 'angles-atan2', title: 'Angles: degrees, radians and Atan2', ready: true },
+      { slug: 'trigonometry-on-site', title: 'Trigonometry on site: slopes, pitches, rise and run', ready: true }
+    ]
+  },
+  {
+    title: 'Vectors',
+    level: 'Beginner',
+    topics: [
+      { slug: 'points-vs-vectors', title: 'Points vs vectors', ready: true },
+      { slug: 'vector-arithmetic', title: 'Adding, subtracting and scaling vectors', ready: true },
+      { slug: 'length-unit-vectors', title: 'Length, distance and unit vectors', ready: true },
+      { slug: 'dot-product', title: 'The dot product: angles, projection, facing', ready: true },
+      { slug: 'cross-product', title: 'The cross product: normals, area, left or right', ready: true },
+      { slug: 'vec3-struct', title: 'Building a Vec3 struct in C#', ready: true }
+    ]
+  },
+  {
+    title: 'Lines and curves',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'parametric-lines', title: 'Lines, rays and segments in parametric form', ready: true },
+      { slug: 'closest-point', title: 'Closest point and distance to a line or segment', ready: true },
+      { slug: 'line-intersections', title: 'Line intersections in 2D, and skew lines in 3D', ready: true },
+      { slug: 'circles-arcs', title: 'Circles and arcs: 3-point arcs and tangents', ready: true },
+      { slug: 'polylines', title: 'Polylines: length, offsetting and fillets', ready: true },
+      { slug: 'bezier-splines', title: 'Bézier curves and splines', ready: true }
+    ]
+  },
+  {
+    title: 'Planes and polygons',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'planes', title: 'Planes: point and normal, ax + by + cz + d' },
+      { slug: 'point-plane', title: 'Point-to-plane distance and projection' },
+      { slug: 'plane-intersections', title: 'Line–plane and plane–plane intersection' },
+      { slug: 'polygon-area-normal', title: 'Polygon area, normal and winding' },
+      { slug: 'point-in-polygon-triangulation', title: 'Point in polygon and triangulation' },
+      { slug: 'polygon-offsets-booleans', title: 'Polygon offsets and boolean operations' }
+    ]
+  },
+  {
+    title: 'Matrices and transforms',
+    level: 'Advanced',
+    topics: [
+      { slug: 'matrices', title: 'Matrices and matrix multiplication' },
+      { slug: 'rotation', title: 'Rotation in 2D, 3D and about any axis' },
+      { slug: 'homogeneous-transforms', title: 'Homogeneous coordinates and 4×4 transforms' },
+      { slug: 'composing-transforms', title: 'Composing transforms: order and inverses' },
+      { slug: 'local-world', title: 'Local vs world: families, instances and nested placement' },
+      { slug: 'mirroring-handedness', title: 'Mirroring and handedness' }
+    ]
+  },
+  {
+    title: 'Rotations in depth',
+    level: 'Advanced',
+    topics: [
+      { slug: 'euler-gimbal-lock', title: 'Euler angles and gimbal lock' },
+      { slug: 'quaternions', title: 'Quaternions without fear' },
+      { slug: 'slerp', title: 'Interpolating rotations: lerp vs slerp' }
+    ]
+  },
+  {
+    title: '3D geometry and solids',
+    level: 'Advanced',
+    topics: [
+      { slug: 'bounding-boxes', title: 'Bounding boxes: AABB and OBB' },
+      { slug: 'meshes', title: 'Meshes: vertices, faces and normals' },
+      { slug: 'ray-triangle', title: 'Ray–triangle intersection' },
+      { slug: 'clash-detection', title: 'Clash detection and the separating-axis theorem' },
+      { slug: 'volumes-areas', title: 'Volumes and surface areas of solids' },
+      { slug: 'sections', title: 'Sections: cutting a mesh with a plane' }
+    ]
+  },
+  {
+    title: 'Master level',
+    level: 'Master',
+    topics: [
+      { slug: 'robust-geometry', title: 'Robust geometry: epsilons, snapping and exact predicates' },
+      { slug: 'georeferencing', title: 'Survey points, true north and georeferencing' },
+      { slug: 'cameras-projection', title: 'Cameras: view matrices, perspective and section boxes' },
+      { slug: 'brep-nurbs', title: 'B-rep and NURBS: how BIM kernels store solids' },
+      { slug: 'spatial-queries-scale', title: 'Spatial queries at scale' },
+      { slug: 'mini-geometry-engine', title: 'Putting it together: a mini room-and-wall geometry engine' }
+    ]
+  }
+];
+
 export const TRACKS: Track[] = [
   {
     slug: 'csharp',
@@ -245,9 +340,11 @@ export const TRACKS: Track[] = [
     title: 'BIM Math',
     short: 'BIM Math',
     icon: 'bi-rulers',
-    description: 'The maths behind 3D and BIM software: vectors, matrices, transforms, planes and intersections.',
-    live: false,
-    modules: []
+    description:
+      'The maths behind 3D and BIM software: coordinates, vectors, lines, planes, transforms, rotations and solids, ' +
+      'up to clash detection and georeferencing. Every idea drawn interactively and coded in C#.',
+    live: true,
+    modules: BIM_MODULES
   },
   {
     slug: 'sql',

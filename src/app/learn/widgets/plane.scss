@@ -1,0 +1,22 @@
+/* Shared look for the draggable-point widgets built on DragPlane (Lines and curves module). */
+.plane { width: 100%; max-width: 360px; display: block; margin: 0 auto; touch-action: none; user-select: none; }
+.grid { stroke: var(--border-color); stroke-width: 1; opacity: 0.55; }
+.grid.axis { stroke: var(--text-muted); opacity: 0.8; }
+.handle { cursor: grab; outline: none; }
+.handle .hit { fill: transparent; }
+.handle .dot { fill: var(--bg-main); stroke: #10b981; stroke-width: 3; }
+.handle .dot.alt { stroke: #8b5cf6; }
+.handle .dot.ctl { stroke: #f59e0b; }
+.handle:focus-visible .dot, .handle.active .dot { fill: rgba(16, 185, 129, 0.35); }
+.hl-t { font-size: 11px; font-weight: 800; fill: var(--text-main); paint-order: stroke; stroke: var(--bg-secondary); stroke-width: 3px; }
+.lbl { font-size: 10px; font-weight: 700; fill: var(--text-muted); paint-order: stroke; stroke: var(--bg-secondary); stroke-width: 3px; }
+.ext { stroke: var(--text-muted); stroke-width: 1.5; stroke-dasharray: 5 4; opacity: 0.7; fill: none; }
+.main { stroke: #3b82f6; stroke-width: 3.5; stroke-linecap: round; fill: none; }
+.main.alt { stroke: #8b5cf6; }
+.res { fill: #10b981; stroke: var(--bg-main); stroke-width: 2; }
+.res.bad { fill: #ef4444; }
+.res.warn { fill: #f59e0b; }
+.wtable th { text-align: left; white-space: nowrap; }
+.wtable td { text-align: left; }
+.w-field { display: flex; flex-direction: column; gap: 4px; }
+.w-field input[type='range'] { width: 100%; }
