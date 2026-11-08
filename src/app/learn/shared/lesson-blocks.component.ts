@@ -14,6 +14,11 @@ import { SwitchMatchWidget } from '../widgets/switch-match.widget';
 import { LoopStepperWidget } from '../widgets/loop-stepper.widget';
 import { ArrayVizWidget } from '../widgets/array-viz.widget';
 import { CallStackWidget } from '../widgets/call-stack.widget';
+import { LoopControlWidget } from '../widgets/loop-control.widget';
+import { Grid2dWidget } from '../widgets/grid-2d.widget';
+import { ParamPassingWidget } from '../widgets/param-passing.widget';
+import { RecursionWidget } from '../widgets/recursion.widget';
+import { DebuggerWidget } from '../widgets/debugger.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -22,7 +27,8 @@ import { CallStackWidget } from '../widgets/call-stack.widget';
   imports: [
     RichTextComponent, CodeViewComponent, QuizComponent,
     PipelineWidget, CodeAnatomyWidget, VariableBoxesWidget, ConversionLabWidget, OperatorLabWidget, StringLabWidget,
-    IfFlowWidget, SwitchMatchWidget, LoopStepperWidget, ArrayVizWidget, CallStackWidget
+    IfFlowWidget, SwitchMatchWidget, LoopStepperWidget, ArrayVizWidget, CallStackWidget,
+    LoopControlWidget, Grid2dWidget, ParamPassingWidget, RecursionWidget, DebuggerWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -71,6 +77,11 @@ import { CallStackWidget } from '../widgets/call-stack.widget';
             @case ('loop-stepper') { <w-loop-stepper /> }
             @case ('array-viz') { <w-array-viz /> }
             @case ('call-stack') { <w-call-stack /> }
+            @case ('loop-control') { <w-loop-control /> }
+            @case ('grid-2d') { <w-grid-2d /> }
+            @case ('param-passing') { <w-param-passing /> }
+            @case ('recursion') { <w-recursion /> }
+            @case ('debugger') { <w-debugger /> }
           }
         }
       }

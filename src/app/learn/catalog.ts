@@ -25,7 +25,7 @@ const CSHARP_MODULES: Module[] = [
       { slug: 'if-else', title: 'Decisions with if / else', ready: true },
       { slug: 'switch', title: 'switch statements and expressions', ready: true },
       { slug: 'loops', title: 'Loops: for, while, do-while, foreach', ready: true },
-      { slug: 'break-continue', title: 'break, continue and nested loops' }
+      { slug: 'break-continue', title: 'break, continue and nested loops', ready: true }
     ]
   },
   {
@@ -33,11 +33,11 @@ const CSHARP_MODULES: Module[] = [
     level: 'Beginner',
     topics: [
       { slug: 'arrays', title: 'Arrays', ready: true },
-      { slug: 'multidimensional-arrays', title: 'Multi-dimensional and jagged arrays' },
+      { slug: 'multidimensional-arrays', title: 'Multi-dimensional and jagged arrays', ready: true },
       { slug: 'methods', title: 'Methods and the call stack', ready: true },
-      { slug: 'method-parameters', title: 'Parameters: ref, out, in, params, optional, named' },
-      { slug: 'recursion', title: 'Recursion' },
-      { slug: 'debugging', title: 'Debugging in Visual Studio' }
+      { slug: 'method-parameters', title: 'Parameters: ref, out, in, params, optional, named', ready: true },
+      { slug: 'recursion', title: 'Recursion', ready: true },
+      { slug: 'debugging', title: 'Debugging in Visual Studio', ready: true }
     ]
   },
   {

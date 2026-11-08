@@ -17,7 +17,12 @@ export type WidgetName =
   | 'switch-match'
   | 'loop-stepper'
   | 'array-viz'
-  | 'call-stack';
+  | 'call-stack'
+  | 'loop-control'
+  | 'grid-2d'
+  | 'param-passing'
+  | 'recursion'
+  | 'debugger';
 
 export type Block =
   | { type: 'p'; text: string }

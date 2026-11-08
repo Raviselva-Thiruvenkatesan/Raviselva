@@ -43,8 +43,8 @@ const sq = (x: string, r = '?'): Frame => ({ name: `Square(${x})`, vars: [['x', 
 
       <div class="w-controls mt-3 mb-0">
         <button type="button" class="w-btn" (click)="pos.set(0)" [disabled]="pos() === 0"><i class="bi bi-skip-backward" aria-hidden="true"></i> Reset</button>
-        <button type="button" class="w-btn" (click)="pos.set(pos() - 1)" [disabled]="pos() === 0"><i class="bi bi-chevron-left" aria-hidden="true"></i> Back</button>
-        <button type="button" class="w-btn primary" (click)="pos.set(pos() + 1)" [disabled]="pos() === steps.length - 1">Step <i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+        <button type="button" class="w-btn" (click)="go(pos() - 1)" [disabled]="pos() === 0"><i class="bi bi-chevron-left" aria-hidden="true"></i> Back</button>
+        <button type="button" class="w-btn primary" (click)="go(pos() + 1)" [disabled]="pos() === steps.length - 1">Step <i class="bi bi-chevron-right" aria-hidden="true"></i></button>
       </div>
     </div>
   `,
@@ -98,4 +98,8 @@ export class CallStackWidget {
   pos = signal(0);
   step = computed(() => this.steps[this.pos()]);
   framesTopFirst = computed(() => [...this.step().frames].reverse());
+
+  go(p: number) {
+    this.pos.set(Math.max(0, Math.min(this.steps.length - 1, p)));
+  }
 }
