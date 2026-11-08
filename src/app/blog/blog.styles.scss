@@ -1,0 +1,147 @@
+.blog-page {
+  padding: 130px 0 90px;
+  min-height: 80vh;
+}
+
+.lead-sm {
+  max-width: 34rem;
+  font-size: 1.05rem;
+}
+
+/* ---- list ---- */
+.post-card {
+  padding: 1.75rem;
+  color: var(--text-main);
+  text-decoration: none;
+
+  &:hover h2 {
+    color: var(--purple);
+  }
+}
+
+.post-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--purple);
+  background: rgba(139, 92, 246, 0.12);
+}
+
+.post-meta {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+
+  li {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 999px;
+    color: var(--purple);
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+  }
+}
+
+/* ---- article ---- */
+.article-wrap {
+  max-width: 760px;
+}
+
+.back-link {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    color: var(--purple);
+  }
+}
+
+.article-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.article-body {
+  font-size: 1.05rem;
+  line-height: 1.8;
+
+  h2 {
+    font-size: 1.4rem;
+    margin: 2.25rem 0 0.75rem;
+  }
+
+  p,
+  ul {
+    margin-bottom: 1.1rem;
+  }
+
+  ul {
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+
+  li {
+    margin-bottom: 0.4rem;
+  }
+
+  pre {
+    background: #0b1020;
+    color: #e2e8f0;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 1.25rem 0;
+  }
+}
+
+.note {
+  display: flex;
+  gap: 12px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  border-left: 4px solid var(--purple);
+  background: rgba(139, 92, 246, 0.08);
+
+  i {
+    color: var(--purple);
+    font-size: 1.2rem;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.next-post {
+  margin-top: 3rem;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  a:hover {
+    color: var(--purple);
+  }
+}

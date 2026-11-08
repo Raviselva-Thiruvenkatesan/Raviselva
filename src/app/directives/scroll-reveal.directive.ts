@@ -1,4 +1,5 @@
-import { Directive, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Directive({
   selector: '[appScrollReveal]',
@@ -6,32 +7,32 @@ import { Directive, ElementRef, OnInit, OnDestroy, Input } from '@angular/core';
 })
 export class ScrollRevealDirective implements OnInit, OnDestroy {
   @Input('appScrollReveal') animationClass: string = 'reveal-up';
-  
-  private observer!: IntersectionObserver;
 
-  constructor(private el: ElementRef) {}
+  private el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private observer?: IntersectionObserver;
 
   ngOnInit() {
-    // We add the animation class (e.g. reveal-up)
-    if (this.animationClass) {
-      this.el.nativeElement.classList.add(this.animationClass);
+    // Added on the server too, so pre-rendered HTML matches the first browser frame (no flash).
+    if (this.animationClass) this.el.classList.add(this.animationClass);
+    if (!this.isBrowser) return;
+
+    if (!('IntersectionObserver' in window)) {
+      this.el.classList.add('in-view');
+      return;
     }
-    
-    this.observer = new IntersectionObserver((entries) => {
+    this.observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          this.el.nativeElement.classList.add('in-view');
-          this.observer.unobserve(this.el.nativeElement);
+          this.el.classList.add('in-view');
+          this.observer?.unobserve(this.el);
         }
       });
-    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
-    
-    this.observer.observe(this.el.nativeElement);
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    this.observer.observe(this.el);
   }
 
   ngOnDestroy() {
-    if (this.observer) {
-      this.observer.disconnect();
-    }
+    this.observer?.disconnect();
   }
 }

@@ -1,10 +1,17 @@
-import { Injectable, signal, effect } from '@angular/core';
+import { Injectable, PLATFORM_ID, effect, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   isDarkMode = signal<boolean>(false);
 
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
   constructor() {
+    // Pre-rendering has no saved preference; the inline script in index.html applies the
+    // visitor's theme before first paint, and this service takes over once the app starts.
+    if (!this.isBrowser) return;
+
     let savedTheme: string | null = null;
     try {
       savedTheme = localStorage.getItem('theme');

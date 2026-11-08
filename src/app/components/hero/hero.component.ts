@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, PLATFORM_ID, ViewChild, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MotionService } from '../../services/motion.service';
 import { CommonModule } from '@angular/common';
 import { ScrollRevealDirective } from '../../directives/scroll-reveal.directive';
@@ -18,7 +19,7 @@ export class HeroComponent implements OnInit, OnDestroy {
    * Put your CV in the `public/` folder (e.g. public/Raviselva_Resume.pdf) and set the
    * file name here. The "Download Resume" button only shows when this is set.
    */
-  resumeUrl = '';
+  resumeUrl = 'Raviselva_T_Resume.pdf';
 
   // A signal so the view updates from setTimeout (this app runs without Zone.js).
   currentRole = signal('');
@@ -32,9 +33,11 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   private timer?: ReturnType<typeof setTimeout>;
   private motion = inject(MotionService);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
 
   ngOnInit() {
-    if (this.motion.reducedMotion()) {
+    // Pre-rendered HTML (and reduced-motion visitors) show the first role without typing.
+    if (!this.isBrowser || this.motion.reducedMotion()) {
       this.currentRole.set(this.roles[0]);
       return;
     }
@@ -93,6 +96,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   /** The viewer is full-screen: keep the page behind it from scrolling. */
   private lockScroll(lock: boolean) {
+    if (!this.isBrowser) return;
     document.documentElement.style.overflow = lock ? 'hidden' : '';
   }
 

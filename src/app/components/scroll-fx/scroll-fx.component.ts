@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, effect, inject, signal } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, PLATFORM_ID, ViewChild, effect, inject, signal } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MotionService } from '../../services/motion.service';
 
 /** Page-level effects: reading-progress bar, floating back-to-top button and a pointer glow. */
@@ -60,6 +61,7 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
   showTop = signal(false);
 
   private motion = inject(MotionService);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private frame = 0;
   private cleanup: Array<() => void> = [];
 
@@ -79,6 +81,7 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
   constructor() {
     // Pointer glow only for mouse users who haven't asked for reduced motion — re-evaluated live.
     effect(onCleanup => {
+      if (!this.isBrowser) return;
       if (!this.motion.finePointer() || this.motion.reducedMotion()) {
         this.onLeave();
         return;
@@ -93,6 +96,7 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if (!this.isBrowser) return;
     window.addEventListener('scroll', this.onScroll, { passive: true });
     window.addEventListener('resize', this.onScroll, { passive: true });
     this.cleanup.push(() => {
@@ -115,6 +119,7 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (!this.isBrowser) return;
     cancelAnimationFrame(this.frame);
     this.cleanup.forEach(fn => fn());
   }

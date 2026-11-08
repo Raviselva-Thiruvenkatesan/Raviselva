@@ -1,7 +1,8 @@
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, Output,
-  ViewChild, inject, signal
+  PLATFORM_ID, ViewChild, inject, signal
 } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import type * as THREE_NS from 'three';
 import type { OrbitControls as OrbitControlsT } from 'three/examples/jsm/controls/OrbitControls.js';
 import { MotionService } from '../../services/motion.service';
@@ -271,7 +272,8 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private hoverAt: { x: number; y: number } | null = null;
   private downAt: { x: number; y: number; t: number } | null = null;
   private exploreCleanup: Array<() => void> = [];
-  readonly touch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  readonly touch = this.isBrowser && !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   private frameId = 0;
   private running = false;
@@ -296,7 +298,8 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private s3?: THREE_NS.Vector3;
 
   ngAfterViewInit() {
-    if (!this.supportsWebGL()) return;
+    // WebGL only exists in the browser; pre-rendered HTML just has the empty canvas.
+    if (!this.isBrowser || !this.supportsWebGL()) return;
     const start = () => this.init();
     if ('requestIdleCallback' in window) {
       (window as any).requestIdleCallback(start, { timeout: 1200 });
@@ -1211,6 +1214,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    if (!this.isBrowser) return;   // nothing was started during server rendering
     this.stop();
     this.exploreCleanup.forEach(fn => fn());
     this.controls?.dispose();

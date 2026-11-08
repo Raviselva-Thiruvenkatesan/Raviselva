@@ -1,4 +1,5 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MotionService } from '../services/motion.service';
 
 /**
@@ -16,11 +17,13 @@ export class CountUpDirective implements OnInit, OnDestroy {
 
   private el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private motion = inject(MotionService);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private observer?: IntersectionObserver;
   private frame = 0;
 
   ngOnInit() {
     const el = this.el;
+    if (!this.isBrowser) return;   // pre-rendered HTML keeps the final value
     const match = this.value.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
 
     if (!match || this.motion.reducedMotion() || !('IntersectionObserver' in window)) {
@@ -49,6 +52,7 @@ export class CountUpDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (!this.isBrowser) return;   // no animation frames exist during server rendering
     this.observer?.disconnect();
     cancelAnimationFrame(this.frame);
   }

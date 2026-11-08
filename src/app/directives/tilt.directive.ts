@@ -1,4 +1,5 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, inject } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MotionService } from '../services/motion.service';
 
 // Keep the card's own CSS transitions (shadow/background) alongside the transform easing.
@@ -14,6 +15,7 @@ export class TiltDirective implements OnInit, OnDestroy {
 
   private el = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private motion = inject(MotionService);
+  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
   private frame = 0;
   private resetTimer?: ReturnType<typeof setTimeout>;
 
@@ -45,6 +47,7 @@ export class TiltDirective implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
+    if (!this.isBrowser) return;
     this.el.addEventListener('pointermove', this.onMove, { passive: true });
     this.el.addEventListener('pointerleave', this.onLeave, { passive: true });
   }
@@ -54,6 +57,7 @@ export class TiltDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (!this.isBrowser) return;
     this.el.removeEventListener('pointermove', this.onMove);
     this.el.removeEventListener('pointerleave', this.onLeave);
     cancelAnimationFrame(this.frame);

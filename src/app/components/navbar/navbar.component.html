@@ -1,14 +1,18 @@
 <nav class="navbar" [ngClass]="{ 'scrolled': isScrolled() }" aria-label="Main navigation">
   <div class="container d-flex justify-content-between align-items-center">
     <!-- Logo -->
-    <a href="#home" class="navbar-brand text-gradient" (click)="closeMenu()" aria-label="Raviselva T. – back to top">Raviselva T.</a>
+    <a routerLink="/" fragment="home" class="navbar-brand text-gradient" (click)="closeMenu()" aria-label="Raviselva T. – home">Raviselva T.</a>
 
     <!-- Desktop Menu -->
     <ul class="nav-menu d-none d-lg-flex align-items-center">
       <li *ngFor="let link of links">
-        <a [href]="'#' + link.id" class="nav-link"
+        <a routerLink="/" [fragment]="link.id" class="nav-link"
           [class.active]="activeSection() === link.id"
           [attr.aria-current]="activeSection() === link.id ? 'location' : null">{{ link.label }}</a>
+      </li>
+      <li>
+        <a routerLink="/blog" class="nav-link" [class.active]="activeSection() === 'blog'"
+          [attr.aria-current]="activeSection() === 'blog' ? 'page' : null">Blog</a>
       </li>
 
       <!-- Theme Toggle -->
@@ -40,8 +44,11 @@
   <div id="mobile-menu" class="mobile-menu" [ngClass]="{ 'open': isMenuOpen }" [attr.inert]="isMenuOpen ? null : ''">
     <ul class="d-flex flex-column align-items-center justify-content-center h-100">
       <li *ngFor="let link of links">
-        <a [href]="'#' + link.id" class="nav-link" [class.active]="activeSection() === link.id"
+        <a routerLink="/" [fragment]="link.id" class="nav-link" [class.active]="activeSection() === link.id"
           (click)="closeMenu()">{{ link.label }}</a>
+      </li>
+      <li>
+        <a routerLink="/blog" class="nav-link" [class.active]="activeSection() === 'blog'" (click)="closeMenu()">Blog</a>
       </li>
     </ul>
   </div>
