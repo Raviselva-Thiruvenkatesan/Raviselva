@@ -58,7 +58,15 @@ export type WidgetName =
   | 'parallel-cores'
   | 'race-condition'
   | 'reflection-inspector'
-  | 'span-slice';
+  | 'span-slice'
+  | 'solid-impact'
+  | 'pattern-lab'
+  | 'di-lifetimes'
+  | 'test-runner'
+  | 'benchmark-lab'
+  | 'pointer-memory'
+  | 'source-gen'
+  | 'architecture-layers';
 
 export type Block =
   | { type: 'p'; text: string }

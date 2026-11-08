@@ -55,6 +55,14 @@ import { ParallelCoresWidget } from '../widgets/parallel-cores.widget';
 import { RaceConditionWidget } from '../widgets/race-condition.widget';
 import { ReflectionInspectorWidget } from '../widgets/reflection-inspector.widget';
 import { SpanSliceWidget } from '../widgets/span-slice.widget';
+import { SolidImpactWidget } from '../widgets/solid-impact.widget';
+import { PatternLabWidget } from '../widgets/pattern-lab.widget';
+import { DiLifetimesWidget } from '../widgets/di-lifetimes.widget';
+import { TestRunnerWidget } from '../widgets/test-runner.widget';
+import { BenchmarkLabWidget } from '../widgets/benchmark-lab.widget';
+import { PointerMemoryWidget } from '../widgets/pointer-memory.widget';
+import { SourceGenWidget } from '../widgets/source-gen.widget';
+import { ArchitectureLayersWidget } from '../widgets/architecture-layers.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -71,7 +79,9 @@ import { SpanSliceWidget } from '../widgets/span-slice.widget';
     GenericBoxWidget, NullSafetyWidget, FileSimWidget, JsonLabWidget, DelegatePipeWidget,
     LambdaBuilderWidget, EventBusWidget, ExtensionChainWidget, LinqPipelineWidget, LinqGroupWidget,
     PatternMatchWidget, TupleLabWidget, GcSimWidget, UsingScopeWidget, YieldStepperWidget,
-    AsyncTimelineWidget, ParallelCoresWidget, RaceConditionWidget, ReflectionInspectorWidget, SpanSliceWidget
+    AsyncTimelineWidget, ParallelCoresWidget, RaceConditionWidget, ReflectionInspectorWidget, SpanSliceWidget,
+    SolidImpactWidget, PatternLabWidget, DiLifetimesWidget, TestRunnerWidget, BenchmarkLabWidget,
+    PointerMemoryWidget, SourceGenWidget, ArchitectureLayersWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -161,6 +171,14 @@ import { SpanSliceWidget } from '../widgets/span-slice.widget';
             @case ('race-condition') { <w-race-condition /> }
             @case ('reflection-inspector') { <w-reflection-inspector /> }
             @case ('span-slice') { <w-span-slice /> }
+            @case ('solid-impact') { <w-solid-impact /> }
+            @case ('pattern-lab') { <w-pattern-lab /> }
+            @case ('di-lifetimes') { <w-di-lifetimes /> }
+            @case ('test-runner') { <w-test-runner /> }
+            @case ('benchmark-lab') { <w-benchmark-lab /> }
+            @case ('pointer-memory') { <w-pointer-memory /> }
+            @case ('source-gen') { <w-source-gen /> }
+            @case ('architecture-layers') { <w-architecture-layers /> }
           }
         }
       }

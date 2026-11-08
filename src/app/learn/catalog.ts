@@ -104,14 +104,14 @@ const CSHARP_MODULES: Module[] = [
     title: 'Master level',
     level: 'Master',
     topics: [
-      { slug: 'solid-principles', title: 'SOLID principles' },
-      { slug: 'design-patterns', title: 'Design patterns in C#' },
-      { slug: 'dependency-injection', title: 'Dependency injection' },
-      { slug: 'unit-testing', title: 'Unit testing with xUnit' },
-      { slug: 'performance-profiling', title: 'Performance: profiling and benchmarking' },
-      { slug: 'unsafe-and-interop', title: 'unsafe code, pointers and native interop' },
-      { slug: 'source-generators', title: 'Source generators' },
-      { slug: 'clean-architecture', title: 'Structuring a real application' }
+      { slug: 'solid-principles', title: 'SOLID principles', ready: true },
+      { slug: 'design-patterns', title: 'Design patterns in C#', ready: true },
+      { slug: 'dependency-injection', title: 'Dependency injection', ready: true },
+      { slug: 'unit-testing', title: 'Unit testing with xUnit', ready: true },
+      { slug: 'performance-profiling', title: 'Performance: profiling and benchmarking', ready: true },
+      { slug: 'unsafe-and-interop', title: 'unsafe code, pointers and native interop', ready: true },
+      { slug: 'source-generators', title: 'Source generators', ready: true },
+      { slug: 'clean-architecture', title: 'Structuring a real application', ready: true }
     ]
   }
 ];

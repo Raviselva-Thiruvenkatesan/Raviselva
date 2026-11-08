@@ -9,10 +9,12 @@ import { DATA_AND_DELEGATES } from './csharp/data-and-delegates';
 import { FUNCTIONAL } from './csharp/functional';
 import { PATTERNS_MEMORY } from './csharp/patterns-memory';
 import { ADVANCED } from './csharp/advanced';
+import { MASTER } from './csharp/master';
+import { EXPERT } from './csharp/expert';
 
 /** Written lessons per track. Only the lesson page imports this, so lesson text stays out of other pages. */
 const LESSONS: Record<string, Lesson[]> = {
-  csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED]
+  csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED, ...MASTER, ...EXPERT]
 };
 
 export function findLesson(track: string, slug: string): Lesson | undefined {

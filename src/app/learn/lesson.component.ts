@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { findTrack, readyTopics } from './catalog';
+import { allTopics, findTrack, readyTopics } from './catalog';
 import { findLesson } from './lessons';
 import { LessonBlocksComponent } from './shared/lesson-blocks.component';
 import { RichTextComponent } from './shared/rich-text.component';
@@ -101,7 +101,7 @@ import { SeoService } from '../services/seo.service';
                   @if (next(); as n) {
                     <a class="glass-card next" [routerLink]="['/learn', t.slug, n.slug]" (click)="markDone()"><small>Next lesson <i class="bi bi-arrow-right" aria-hidden="true"></i></small><strong>{{ n.title }}</strong></a>
                   } @else {
-                    <a class="glass-card next" [routerLink]="['/learn', t.slug]" (click)="markDone()"><small>Finished the available lessons</small><strong>Back to the course</strong></a>
+                    <a class="glass-card next" [routerLink]="['/learn', t.slug]" (click)="markDone()"><small>{{ courseComplete() ? 'You finished the course' : 'Finished the available lessons' }}</small><strong>Back to the course</strong></a>
                   }
                 </nav>
               } @else {
@@ -128,6 +128,8 @@ export class LessonComponent {
   t = computed(() => findTrack(this.track()));
   lesson = computed(() => findLesson(this.track(), this.slug()));
   ready = computed(() => (this.t() ? readyTopics(this.t()!) : []));
+  /** Every topic in the syllabus is written. */
+  courseComplete = computed(() => !!this.t() && this.ready().length === allTopics(this.t()!).length);
   index = computed(() => this.ready().findIndex(x => x.slug === this.slug()));
   prev = computed(() => (this.index() > 0 ? this.ready()[this.index() - 1] : undefined));
   next = computed(() => (this.index() >= 0 ? this.ready()[this.index() + 1] : undefined));
