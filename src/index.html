@@ -9,7 +9,7 @@
 
   <!--
     Content Security Policy. Production builds also get a strict script policy with hashes
-    added automatically (angular.json → security.autoCsp); both policies must pass.
+    added automatically after the build (scripts/csp-hashes.mjs replaces 'unsafe-inline').
     If you add a new third-party service (analytics, embeds…), allow its host here.
   -->
   <meta http-equiv="Content-Security-Policy" content="

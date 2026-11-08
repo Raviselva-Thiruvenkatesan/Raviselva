@@ -1,0 +1,11 @@
+# Netlify build settings (Cloudflare Pages: set the same command and output folder in its dashboard).
+[build]
+  command = "npm run build"
+  publish = "dist/portfolio/browser"
+
+# Unknown paths load the client-only app shell, which redirects them home.
+# Not forced, so pre-rendered pages such as /blog/... are still served as files.
+[[redirects]]
+  from = "/*"
+  to = "/index.csr.html"
+  status = 200
