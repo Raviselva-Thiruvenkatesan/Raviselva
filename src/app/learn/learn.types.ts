@@ -22,7 +22,13 @@ export type WidgetName =
   | 'grid-2d'
   | 'param-passing'
   | 'recursion'
-  | 'debugger';
+  | 'debugger'
+  | 'class-objects'
+  | 'constructor-flow'
+  | 'property-guard'
+  | 'access-matrix'
+  | 'static-counter'
+  | 'inheritance-tree';
 
 export type Block =
   | { type: 'p'; text: string }

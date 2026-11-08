@@ -19,6 +19,12 @@ import { Grid2dWidget } from '../widgets/grid-2d.widget';
 import { ParamPassingWidget } from '../widgets/param-passing.widget';
 import { RecursionWidget } from '../widgets/recursion.widget';
 import { DebuggerWidget } from '../widgets/debugger.widget';
+import { ClassObjectsWidget } from '../widgets/class-objects.widget';
+import { ConstructorFlowWidget } from '../widgets/constructor-flow.widget';
+import { PropertyGuardWidget } from '../widgets/property-guard.widget';
+import { AccessMatrixWidget } from '../widgets/access-matrix.widget';
+import { StaticCounterWidget } from '../widgets/static-counter.widget';
+import { InheritanceTreeWidget } from '../widgets/inheritance-tree.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -28,7 +34,8 @@ import { DebuggerWidget } from '../widgets/debugger.widget';
     RichTextComponent, CodeViewComponent, QuizComponent,
     PipelineWidget, CodeAnatomyWidget, VariableBoxesWidget, ConversionLabWidget, OperatorLabWidget, StringLabWidget,
     IfFlowWidget, SwitchMatchWidget, LoopStepperWidget, ArrayVizWidget, CallStackWidget,
-    LoopControlWidget, Grid2dWidget, ParamPassingWidget, RecursionWidget, DebuggerWidget
+    LoopControlWidget, Grid2dWidget, ParamPassingWidget, RecursionWidget, DebuggerWidget,
+    ClassObjectsWidget, ConstructorFlowWidget, PropertyGuardWidget, AccessMatrixWidget, StaticCounterWidget, InheritanceTreeWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -82,6 +89,12 @@ import { DebuggerWidget } from '../widgets/debugger.widget';
             @case ('param-passing') { <w-param-passing /> }
             @case ('recursion') { <w-recursion /> }
             @case ('debugger') { <w-debugger /> }
+            @case ('class-objects') { <w-class-objects /> }
+            @case ('constructor-flow') { <w-constructor-flow /> }
+            @case ('property-guard') { <w-property-guard /> }
+            @case ('access-matrix') { <w-access-matrix /> }
+            @case ('static-counter') { <w-static-counter /> }
+            @case ('inheritance-tree') { <w-inheritance-tree /> }
           }
         }
       }
