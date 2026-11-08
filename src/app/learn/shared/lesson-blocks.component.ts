@@ -25,6 +25,11 @@ import { PropertyGuardWidget } from '../widgets/property-guard.widget';
 import { AccessMatrixWidget } from '../widgets/access-matrix.widget';
 import { StaticCounterWidget } from '../widgets/static-counter.widget';
 import { InheritanceTreeWidget } from '../widgets/inheritance-tree.widget';
+import { VirtualDispatchWidget } from '../widgets/virtual-dispatch.widget';
+import { AbstractShapesWidget } from '../widgets/abstract-shapes.widget';
+import { InterfacePlugWidget } from '../widgets/interface-plug.widget';
+import { ValueRefWidget } from '../widgets/value-ref.widget';
+import { EnumFlagsWidget } from '../widgets/enum-flags.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -35,7 +40,8 @@ import { InheritanceTreeWidget } from '../widgets/inheritance-tree.widget';
     PipelineWidget, CodeAnatomyWidget, VariableBoxesWidget, ConversionLabWidget, OperatorLabWidget, StringLabWidget,
     IfFlowWidget, SwitchMatchWidget, LoopStepperWidget, ArrayVizWidget, CallStackWidget,
     LoopControlWidget, Grid2dWidget, ParamPassingWidget, RecursionWidget, DebuggerWidget,
-    ClassObjectsWidget, ConstructorFlowWidget, PropertyGuardWidget, AccessMatrixWidget, StaticCounterWidget, InheritanceTreeWidget
+    ClassObjectsWidget, ConstructorFlowWidget, PropertyGuardWidget, AccessMatrixWidget, StaticCounterWidget, InheritanceTreeWidget,
+    VirtualDispatchWidget, AbstractShapesWidget, InterfacePlugWidget, ValueRefWidget, EnumFlagsWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -95,6 +101,11 @@ import { InheritanceTreeWidget } from '../widgets/inheritance-tree.widget';
             @case ('access-matrix') { <w-access-matrix /> }
             @case ('static-counter') { <w-static-counter /> }
             @case ('inheritance-tree') { <w-inheritance-tree /> }
+            @case ('virtual-dispatch') { <w-virtual-dispatch /> }
+            @case ('abstract-shapes') { <w-abstract-shapes /> }
+            @case ('interface-plug') { <w-interface-plug /> }
+            @case ('value-ref') { <w-value-ref /> }
+            @case ('enum-flags') { <w-enum-flags /> }
           }
         }
       }

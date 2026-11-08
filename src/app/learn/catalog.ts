@@ -50,11 +50,11 @@ const CSHARP_MODULES: Module[] = [
       { slug: 'access-modifiers', title: 'Access modifiers and encapsulation', ready: true },
       { slug: 'static-members', title: 'Static members and static classes', ready: true },
       { slug: 'inheritance', title: 'Inheritance', ready: true },
-      { slug: 'polymorphism', title: 'Polymorphism: virtual and override' },
-      { slug: 'abstract-classes', title: 'Abstract classes' },
-      { slug: 'interfaces', title: 'Interfaces' },
-      { slug: 'structs-and-records', title: 'Structs, records and value vs reference types' },
-      { slug: 'enums', title: 'Enums' }
+      { slug: 'polymorphism', title: 'Polymorphism: virtual and override', ready: true },
+      { slug: 'abstract-classes', title: 'Abstract classes', ready: true },
+      { slug: 'interfaces', title: 'Interfaces', ready: true },
+      { slug: 'structs-and-records', title: 'Structs, records and value vs reference types', ready: true },
+      { slug: 'enums', title: 'Enums', ready: true }
     ]
   },
   {

@@ -28,7 +28,12 @@ export type WidgetName =
   | 'property-guard'
   | 'access-matrix'
   | 'static-counter'
-  | 'inheritance-tree';
+  | 'inheritance-tree'
+  | 'virtual-dispatch'
+  | 'abstract-shapes'
+  | 'interface-plug'
+  | 'value-ref'
+  | 'enum-flags';
 
 export type Block =
   | { type: 'p'; text: string }
