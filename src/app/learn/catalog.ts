@@ -61,43 +61,43 @@ const CSHARP_MODULES: Module[] = [
     title: 'Working with data',
     level: 'Intermediate',
     topics: [
-      { slug: 'string-builder-formatting', title: 'StringBuilder and string formatting' },
-      { slug: 'date-time', title: 'Dates and times' },
-      { slug: 'exceptions', title: 'Exceptions: try, catch, finally, throw' },
-      { slug: 'list-and-dictionary', title: 'Collections: List and Dictionary' },
-      { slug: 'hashset-queue-stack', title: 'HashSet, Queue and Stack' },
-      { slug: 'generics', title: 'Generics' },
-      { slug: 'nullable-types', title: 'Nullable types and null safety' },
-      { slug: 'file-io', title: 'Files and streams' },
-      { slug: 'json', title: 'JSON serialisation' }
+      { slug: 'string-builder-formatting', title: 'StringBuilder and string formatting', ready: true },
+      { slug: 'date-time', title: 'Dates and times', ready: true },
+      { slug: 'exceptions', title: 'Exceptions: try, catch, finally, throw', ready: true },
+      { slug: 'list-and-dictionary', title: 'Collections: List and Dictionary', ready: true },
+      { slug: 'hashset-queue-stack', title: 'HashSet, Queue and Stack', ready: true },
+      { slug: 'generics', title: 'Generics', ready: true },
+      { slug: 'nullable-types', title: 'Nullable types and null safety', ready: true },
+      { slug: 'file-io', title: 'Files and streams', ready: true },
+      { slug: 'json', title: 'JSON serialisation', ready: true }
     ]
   },
   {
     title: 'Functional C# and LINQ',
     level: 'Intermediate',
     topics: [
-      { slug: 'delegates', title: 'Delegates, Func and Action' },
-      { slug: 'lambdas', title: 'Lambda expressions' },
-      { slug: 'events', title: 'Events' },
-      { slug: 'extension-methods', title: 'Extension methods' },
-      { slug: 'linq-basics', title: 'LINQ basics: Where, Select, OrderBy' },
-      { slug: 'linq-advanced', title: 'LINQ: grouping, joins and deferred execution' },
-      { slug: 'pattern-matching', title: 'Pattern matching' },
-      { slug: 'tuples-deconstruction', title: 'Tuples and deconstruction' }
+      { slug: 'delegates', title: 'Delegates, Func and Action', ready: true },
+      { slug: 'lambdas', title: 'Lambda expressions', ready: true },
+      { slug: 'events', title: 'Events', ready: true },
+      { slug: 'extension-methods', title: 'Extension methods', ready: true },
+      { slug: 'linq-basics', title: 'LINQ basics: Where, Select, OrderBy', ready: true },
+      { slug: 'linq-advanced', title: 'LINQ: grouping, joins and deferred execution', ready: true },
+      { slug: 'pattern-matching', title: 'Pattern matching', ready: true },
+      { slug: 'tuples-deconstruction', title: 'Tuples and deconstruction', ready: true }
     ]
   },
   {
     title: 'Advanced C#',
     level: 'Advanced',
     topics: [
-      { slug: 'memory-and-gc', title: 'Memory: stack, heap and garbage collection' },
-      { slug: 'idisposable', title: 'IDisposable and using' },
-      { slug: 'iterators-yield', title: 'Iterators and yield' },
-      { slug: 'async-await', title: 'async and await' },
-      { slug: 'tasks-parallel', title: 'Tasks and parallel programming' },
-      { slug: 'threads-and-locks', title: 'Threads, locks and thread safety' },
-      { slug: 'reflection-attributes', title: 'Reflection and attributes' },
-      { slug: 'span-memory', title: 'Span<T>, Memory<T> and low-allocation code' }
+      { slug: 'memory-and-gc', title: 'Memory: stack, heap and garbage collection', ready: true },
+      { slug: 'idisposable', title: 'IDisposable and using', ready: true },
+      { slug: 'iterators-yield', title: 'Iterators and yield', ready: true },
+      { slug: 'async-await', title: 'async and await', ready: true },
+      { slug: 'tasks-parallel', title: 'Tasks and parallel programming', ready: true },
+      { slug: 'threads-and-locks', title: 'Threads, locks and thread safety', ready: true },
+      { slug: 'reflection-attributes', title: 'Reflection and attributes', ready: true },
+      { slug: 'span-memory', title: 'Span<T>, Memory<T> and low-allocation code', ready: true }
     ]
   },
   {

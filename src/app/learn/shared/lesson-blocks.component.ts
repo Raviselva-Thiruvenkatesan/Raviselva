@@ -30,6 +30,31 @@ import { AbstractShapesWidget } from '../widgets/abstract-shapes.widget';
 import { InterfacePlugWidget } from '../widgets/interface-plug.widget';
 import { ValueRefWidget } from '../widgets/value-ref.widget';
 import { EnumFlagsWidget } from '../widgets/enum-flags.widget';
+import { FormatLabWidget } from '../widgets/format-lab.widget';
+import { DateLabWidget } from '../widgets/date-lab.widget';
+import { ExceptionFlowWidget } from '../widgets/exception-flow.widget';
+import { ListDictWidget } from '../widgets/list-dict.widget';
+import { StackQueueSetWidget } from '../widgets/stack-queue-set.widget';
+import { GenericBoxWidget } from '../widgets/generic-box.widget';
+import { NullSafetyWidget } from '../widgets/null-safety.widget';
+import { FileSimWidget } from '../widgets/file-sim.widget';
+import { JsonLabWidget } from '../widgets/json-lab.widget';
+import { DelegatePipeWidget } from '../widgets/delegate-pipe.widget';
+import { LambdaBuilderWidget } from '../widgets/lambda-builder.widget';
+import { EventBusWidget } from '../widgets/event-bus.widget';
+import { ExtensionChainWidget } from '../widgets/extension-chain.widget';
+import { LinqPipelineWidget } from '../widgets/linq-pipeline.widget';
+import { LinqGroupWidget } from '../widgets/linq-group.widget';
+import { PatternMatchWidget } from '../widgets/pattern-match.widget';
+import { TupleLabWidget } from '../widgets/tuple-lab.widget';
+import { GcSimWidget } from '../widgets/gc-sim.widget';
+import { UsingScopeWidget } from '../widgets/using-scope.widget';
+import { YieldStepperWidget } from '../widgets/yield-stepper.widget';
+import { AsyncTimelineWidget } from '../widgets/async-timeline.widget';
+import { ParallelCoresWidget } from '../widgets/parallel-cores.widget';
+import { RaceConditionWidget } from '../widgets/race-condition.widget';
+import { ReflectionInspectorWidget } from '../widgets/reflection-inspector.widget';
+import { SpanSliceWidget } from '../widgets/span-slice.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -41,7 +66,12 @@ import { EnumFlagsWidget } from '../widgets/enum-flags.widget';
     IfFlowWidget, SwitchMatchWidget, LoopStepperWidget, ArrayVizWidget, CallStackWidget,
     LoopControlWidget, Grid2dWidget, ParamPassingWidget, RecursionWidget, DebuggerWidget,
     ClassObjectsWidget, ConstructorFlowWidget, PropertyGuardWidget, AccessMatrixWidget, StaticCounterWidget, InheritanceTreeWidget,
-    VirtualDispatchWidget, AbstractShapesWidget, InterfacePlugWidget, ValueRefWidget, EnumFlagsWidget
+    VirtualDispatchWidget, AbstractShapesWidget, InterfacePlugWidget, ValueRefWidget, EnumFlagsWidget,
+    FormatLabWidget, DateLabWidget, ExceptionFlowWidget, ListDictWidget, StackQueueSetWidget,
+    GenericBoxWidget, NullSafetyWidget, FileSimWidget, JsonLabWidget, DelegatePipeWidget,
+    LambdaBuilderWidget, EventBusWidget, ExtensionChainWidget, LinqPipelineWidget, LinqGroupWidget,
+    PatternMatchWidget, TupleLabWidget, GcSimWidget, UsingScopeWidget, YieldStepperWidget,
+    AsyncTimelineWidget, ParallelCoresWidget, RaceConditionWidget, ReflectionInspectorWidget, SpanSliceWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -106,6 +136,31 @@ import { EnumFlagsWidget } from '../widgets/enum-flags.widget';
             @case ('interface-plug') { <w-interface-plug /> }
             @case ('value-ref') { <w-value-ref /> }
             @case ('enum-flags') { <w-enum-flags /> }
+            @case ('format-lab') { <w-format-lab /> }
+            @case ('date-lab') { <w-date-lab /> }
+            @case ('exception-flow') { <w-exception-flow /> }
+            @case ('list-dict') { <w-list-dict /> }
+            @case ('stack-queue-set') { <w-stack-queue-set /> }
+            @case ('generic-box') { <w-generic-box /> }
+            @case ('null-safety') { <w-null-safety /> }
+            @case ('file-sim') { <w-file-sim /> }
+            @case ('json-lab') { <w-json-lab /> }
+            @case ('delegate-pipe') { <w-delegate-pipe /> }
+            @case ('lambda-builder') { <w-lambda-builder /> }
+            @case ('event-bus') { <w-event-bus /> }
+            @case ('extension-chain') { <w-extension-chain /> }
+            @case ('linq-pipeline') { <w-linq-pipeline /> }
+            @case ('linq-group') { <w-linq-group /> }
+            @case ('pattern-match') { <w-pattern-match /> }
+            @case ('tuple-lab') { <w-tuple-lab /> }
+            @case ('gc-sim') { <w-gc-sim /> }
+            @case ('using-scope') { <w-using-scope /> }
+            @case ('yield-stepper') { <w-yield-stepper /> }
+            @case ('async-timeline') { <w-async-timeline /> }
+            @case ('parallel-cores') { <w-parallel-cores /> }
+            @case ('race-condition') { <w-race-condition /> }
+            @case ('reflection-inspector') { <w-reflection-inspector /> }
+            @case ('span-slice') { <w-span-slice /> }
           }
         }
       }

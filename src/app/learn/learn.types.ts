@@ -33,7 +33,32 @@ export type WidgetName =
   | 'abstract-shapes'
   | 'interface-plug'
   | 'value-ref'
-  | 'enum-flags';
+  | 'enum-flags'
+  | 'format-lab'
+  | 'date-lab'
+  | 'exception-flow'
+  | 'list-dict'
+  | 'stack-queue-set'
+  | 'generic-box'
+  | 'null-safety'
+  | 'file-sim'
+  | 'json-lab'
+  | 'delegate-pipe'
+  | 'lambda-builder'
+  | 'event-bus'
+  | 'extension-chain'
+  | 'linq-pipeline'
+  | 'linq-group'
+  | 'pattern-match'
+  | 'tuple-lab'
+  | 'gc-sim'
+  | 'using-scope'
+  | 'yield-stepper'
+  | 'async-timeline'
+  | 'parallel-cores'
+  | 'race-condition'
+  | 'reflection-inspector'
+  | 'span-slice';
 
 export type Block =
   | { type: 'p'; text: string }

@@ -5,6 +5,7 @@
 }
 
 .widget {
+  font-variant-ligatures: none; /* keep => and <= as typed, not arrows */
   border-radius: 18px;
   border: 1px solid rgba(139, 92, 246, 0.28);
   background:
