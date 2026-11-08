@@ -11,6 +11,10 @@
           [attr.aria-current]="activeSection() === link.id ? 'location' : null">{{ link.label }}</a>
       </li>
       <li>
+        <a routerLink="/learn" class="nav-link" [class.active]="activeSection() === 'learn'"
+          [attr.aria-current]="activeSection() === 'learn' ? 'page' : null">Learn</a>
+      </li>
+      <li>
         <a routerLink="/blog" class="nav-link" [class.active]="activeSection() === 'blog'"
           [attr.aria-current]="activeSection() === 'blog' ? 'page' : null">Blog</a>
       </li>
@@ -46,6 +50,9 @@
       <li *ngFor="let link of links">
         <a routerLink="/" [fragment]="link.id" class="nav-link" [class.active]="activeSection() === link.id"
           (click)="closeMenu()">{{ link.label }}</a>
+      </li>
+      <li>
+        <a routerLink="/learn" class="nav-link" [class.active]="activeSection() === 'learn'" (click)="closeMenu()">Learn</a>
       </li>
       <li>
         <a routerLink="/blog" class="nav-link" [class.active]="activeSection() === 'blog'" (click)="closeMenu()">Blog</a>

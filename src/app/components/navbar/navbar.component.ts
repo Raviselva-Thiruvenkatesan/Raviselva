@@ -14,7 +14,7 @@ import { ThemeService } from '../../services/theme.service';
 export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
   isScrolled = signal(false);
   isMenuOpen = false;
-  /** Section id in view on the home page, or 'blog' on blog pages. */
+  /** Section id in view on the home page, or 'blog' / 'learn' on those pages. */
   activeSection = signal('home');
 
   /** Home-page sections (linked as /#id so they work from any page). */
@@ -58,6 +58,10 @@ export class NavbarComponent implements OnInit, AfterViewInit, OnDestroy {
     this.observer?.disconnect();
     if (this.router.url.startsWith('/blog')) {
       this.activeSection.set('blog');
+      return;
+    }
+    if (this.router.url.startsWith('/learn')) {
+      this.activeSection.set('learn');
       return;
     }
     this.activeSection.set('home');
