@@ -1,8 +1,8 @@
 import { Component, computed, input, output, signal } from '@angular/core';
-import { highlight } from './highlight';
+import { CodeLang, highlight } from './highlight';
 
 /**
- * Highlighted C# code with line numbers. Widgets pass `active` (1-based line numbers) to show
+ * Highlighted C# or T-SQL code with line numbers (T-SQL when `lang` is 'sql' or the title ends in .sql). Widgets pass `active` (1-based line numbers) to show
  * which line is running, and `marked` for a softer highlight of a whole block.
  */
 @Component({
@@ -12,7 +12,7 @@ import { highlight } from './highlight';
     <figure class="code-box" [class.compact]="compact()">
       <figcaption class="code-head">
         <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-        <span class="file">{{ title() || 'C#' }}</span>
+        <span class="file">{{ title() || (language() === 'sql' ? 'T-SQL' : 'C#') }}</span>
         @if (copyable()) {
           <button type="button" class="copy" (click)="copy()" [attr.aria-label]="copied() ? 'Copied' : 'Copy code'">
             <i class="bi" [class.bi-check2]="copied()" [class.bi-clipboard]="!copied()" aria-hidden="true"></i>
@@ -28,7 +28,7 @@ import { highlight } from './highlight';
       @if (output()) {
         <div class="out">
           <span class="out-label"><i class="bi bi-terminal" aria-hidden="true"></i> Output</span>
-          <pre>{{ output() }}</pre>
+          <pre [class.grid]="language() === 'sql'">{{ output() }}</pre>
         </div>
       }
     </figure>
@@ -84,11 +84,13 @@ import { highlight } from './highlight';
       padding: 6px 14px 0; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b;
     }
     .out pre { padding: 0.35rem 1rem 0.8rem; font-family: 'Cascadia Code', Consolas, monospace; font-size: 0.86rem; color: #a7f3d0; white-space: pre-wrap; }
+    .out pre.grid { white-space: pre; overflow-x: auto; }
   `]
 })
 export class CodeViewComponent {
   code = input.required<string>();
   title = input<string>('');
+  lang = input<CodeLang | ''>('');
   output = input<string>('');
   active = input<number[]>([]);
   marked = input<number[]>([]);
@@ -97,7 +99,8 @@ export class CodeViewComponent {
   compact = input(false);
   lineClick = output<number>();
 
-  lines = computed(() => highlight(this.code()));
+  language = computed<CodeLang>(() => this.lang() || (/\.sql$/i.test(this.title()) ? 'sql' : 'cs'));
+  lines = computed(() => highlight(this.code(), this.language()));
   copied = signal(false);
 
   async copy() {

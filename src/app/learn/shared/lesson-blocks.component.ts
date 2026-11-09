@@ -2,6 +2,7 @@ import { Component, input } from '@angular/core';
 import { Block } from '../learn.types';
 import { RichTextComponent } from './rich-text.component';
 import { CodeViewComponent } from './code-view.component';
+import { CodeLang } from './highlight';
 import { QuizComponent } from './quiz.component';
 import { PipelineWidget } from '../widgets/pipeline.widget';
 import { CodeAnatomyWidget } from '../widgets/code-anatomy.widget';
@@ -130,6 +131,61 @@ import { LineIntersectWidget } from '../widgets/line-intersect.widget';
 import { ThreePointArcWidget } from '../widgets/three-point-arc.widget';
 import { PolylineLabWidget } from '../widgets/polyline-lab.widget';
 import { BezierWidget } from '../widgets/bezier.widget';
+import { PlaneEqWidget } from '../widgets/plane-eq.widget';
+import { PointPlaneWidget } from '../widgets/point-plane.widget';
+import { LinePlaneWidget } from '../widgets/line-plane.widget';
+import { ShoelaceWidget } from '../widgets/shoelace.widget';
+import { PipTriangulateWidget } from '../widgets/pip-triangulate.widget';
+import { PolyBooleanWidget } from '../widgets/poly-boolean.widget';
+import { Matrix2dWidget } from '../widgets/matrix-2d.widget';
+import { RotationWidget } from '../widgets/rotation.widget';
+import { HomogeneousWidget } from '../widgets/homogeneous.widget';
+import { ComposeWidget } from '../widgets/compose.widget';
+import { LocalWorldWidget } from '../widgets/local-world.widget';
+import { MirrorWidget } from '../widgets/mirror.widget';
+import { GimbalWidget } from '../widgets/gimbal.widget';
+import { QuaternionWidget } from '../widgets/quaternion.widget';
+import { SlerpWidget } from '../widgets/slerp.widget';
+import { BboxWidget } from '../widgets/bbox.widget';
+import { MeshWidget } from '../widgets/mesh.widget';
+import { RayTriangleWidget } from '../widgets/ray-triangle.widget';
+import { SatWidget } from '../widgets/sat.widget';
+import { VolumeWidget } from '../widgets/volume.widget';
+import { SectionWidget } from '../widgets/section.widget';
+import { RobustWidget } from '../widgets/robust.widget';
+import { GeorefWidget } from '../widgets/georef.widget';
+import { CameraWidget } from '../widgets/camera.widget';
+import { NurbsWidget } from '../widgets/nurbs.widget';
+import { SpatialWidget } from '../widgets/spatial.widget';
+import { RoomEngineWidget } from '../widgets/room-engine.widget';
+import { DbAnatomyWidget } from '../widgets/db-anatomy.widget';
+import { TypeFitWidget } from '../widgets/type-fit.widget';
+import { SelectBuilderWidget } from '../widgets/select-builder.widget';
+import { WhereLabWidget } from '../widgets/where-lab.widget';
+import { NullLogicWidget } from '../widgets/null-logic.widget';
+import { SortPageWidget } from '../widgets/sort-page.widget';
+import { TableDesignerWidget } from '../widgets/table-designer.widget';
+import { InsertLabWidget } from '../widgets/insert-lab.widget';
+import { UpdateDeleteWidget } from '../widgets/update-delete.widget';
+import { ConstraintGuardWidget } from '../widgets/constraint-guard.widget';
+import { IdentityGapsWidget } from '../widgets/identity-gaps.widget';
+import { AlterImpactWidget } from '../widgets/alter-impact.widget';
+import { SqlStringWidget } from '../widgets/sql-string.widget';
+import { RoundLabWidget } from '../widgets/round-lab.widget';
+import { DatediffLineWidget } from '../widgets/datediff-line.widget';
+import { CaseFlowWidget } from '../widgets/case-flow.widget';
+import { ConvertMatrixWidget } from '../widgets/convert-matrix.widget';
+import { KeyFollowWidget } from '../widgets/key-follow.widget';
+import { JoinLabWidget } from '../widgets/join-lab.widget';
+import { PairMatrixWidget } from '../widgets/pair-matrix.widget';
+import { SetVennWidget } from '../widgets/set-venn.widget';
+import { NormalFormsWidget } from '../widgets/normal-forms.widget';
+import { AggNullWidget } from '../widgets/agg-null.widget';
+import { GroupBucketsWidget } from '../widgets/group-buckets.widget';
+import { CorrelatedWidget } from '../widgets/correlated.widget';
+import { ExistsProbeWidget } from '../widgets/exists-probe.widget';
+import { CteChainWidget } from '../widgets/cte-chain.widget';
+import { BomExplodeWidget } from '../widgets/bom-explode.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -159,7 +215,16 @@ import { BezierWidget } from '../widgets/bezier.widget';
     SegmentTreeWidget, StringMatchWidget, QuadtreeWidget, ConvexHullWidget, TspExplorerWidget, PatternPickerWidget,
     WallAnatomyWidget, Axes3dWidget, ToleranceLabWidget, AngleDialWidget, RoofPitchWidget,
     PointVectorWidget, VectorAddWidget, UnitVectorWidget, DotProductWidget, CrossProductWidget, Vec3CalcWidget,
-    ParamLineWidget, ClosestPointWidget, LineIntersectWidget, ThreePointArcWidget, PolylineLabWidget, BezierWidget
+    ParamLineWidget, ClosestPointWidget, LineIntersectWidget, ThreePointArcWidget, PolylineLabWidget, BezierWidget,
+    PlaneEqWidget, PointPlaneWidget, LinePlaneWidget, ShoelaceWidget, PipTriangulateWidget, PolyBooleanWidget,
+    Matrix2dWidget, RotationWidget, HomogeneousWidget, ComposeWidget, LocalWorldWidget, MirrorWidget, GimbalWidget, QuaternionWidget, SlerpWidget,
+    BboxWidget, MeshWidget, RayTriangleWidget, SatWidget, VolumeWidget, SectionWidget,
+    RobustWidget, GeorefWidget, CameraWidget, NurbsWidget, SpatialWidget, RoomEngineWidget,
+    DbAnatomyWidget, TypeFitWidget, SelectBuilderWidget, WhereLabWidget, NullLogicWidget, SortPageWidget,
+    TableDesignerWidget, InsertLabWidget, UpdateDeleteWidget, ConstraintGuardWidget, IdentityGapsWidget, AlterImpactWidget,
+    SqlStringWidget, RoundLabWidget, DatediffLineWidget, CaseFlowWidget, ConvertMatrixWidget,
+    KeyFollowWidget, JoinLabWidget, PairMatrixWidget, SetVennWidget, NormalFormsWidget,
+    AggNullWidget, GroupBucketsWidget, CorrelatedWidget, ExistsProbeWidget, CteChainWidget, BomExplodeWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -168,7 +233,7 @@ import { BezierWidget } from '../widgets/bezier.widget';
         @case ('p') { <p><app-rt [text]="b.text" /></p> }
         @case ('ul') { <ul>@for (i of b.items; track $index) { <li><app-rt [text]="i" /></li> }</ul> }
         @case ('ol') { <ol>@for (i of b.items; track $index) { <li><app-rt [text]="i" /></li> }</ol> }
-        @case ('code') { <app-code [code]="b.code" [title]="b.title ?? 'Program.cs'" [output]="b.output ?? ''" /> }
+        @case ('code') { <app-code [code]="b.code" [title]="b.title ?? (lang() === 'sql' ? 'Query.sql' : 'Program.cs')" [lang]="lang()" [output]="b.output ?? ''" /> }
         @case ('note') {
           <aside class="callout {{ b.kind }}">
             <i class="bi" [class.bi-lightbulb]="b.kind === 'tip'" [class.bi-exclamation-triangle]="b.kind === 'warn'" [class.bi-info-circle]="b.kind === 'info'" aria-hidden="true"></i>
@@ -192,7 +257,7 @@ import { BezierWidget } from '../widgets/bezier.widget';
             @if (b.hint) {
               <details><summary>Show a hint</summary><p><app-rt [text]="b.hint" /></p></details>
             }
-            <details><summary>Show the solution</summary><app-code [code]="b.solution" title="Solution.cs" [output]="b.output ?? ''" /></details>
+            <details><summary>Show the solution</summary><app-code [code]="b.solution" [title]="lang() === 'sql' ? 'Solution.sql' : 'Solution.cs'" [lang]="lang()" [output]="b.output ?? ''" /></details>
           </section>
         }
         @case ('widget') {
@@ -324,6 +389,62 @@ import { BezierWidget } from '../widgets/bezier.widget';
             @case ('three-point-arc') { <w-three-point-arc /> }
             @case ('polyline-lab') { <w-polyline-lab /> }
             @case ('bezier') { <w-bezier /> }
+            @case ('plane-eq') { <w-plane-eq /> }
+            @case ('point-plane') { <w-point-plane /> }
+            @case ('line-plane') { <w-line-plane /> }
+            @case ('shoelace') { <w-shoelace /> }
+            @case ('pip-triangulate') { <w-pip-triangulate /> }
+            @case ('poly-boolean') { <w-poly-boolean /> }
+            @case ('matrix-2d') { <w-matrix-2d /> }
+            @case ('rotation') { <w-rotation /> }
+            @case ('homogeneous') { <w-homogeneous /> }
+            @case ('compose') { <w-compose /> }
+            @case ('local-world') { <w-local-world /> }
+            @case ('mirror') { <w-mirror /> }
+            @case ('gimbal') { <w-gimbal /> }
+            @case ('quaternion') { <w-quaternion /> }
+            @case ('slerp') { <w-slerp /> }
+            @case ('bbox') { <w-bbox /> }
+            @case ('mesh') { <w-mesh /> }
+            @case ('ray-triangle') { <w-ray-triangle /> }
+            @case ('sat') { <w-sat /> }
+            @case ('volume') { <w-volume /> }
+            @case ('section') { <w-section /> }
+            @case ('robust') { <w-robust /> }
+            @case ('georef') { <w-georef /> }
+            @case ('camera') { <w-camera /> }
+            @case ('nurbs') { <w-nurbs /> }
+            @case ('spatial') { <w-spatial /> }
+            @case ('room-engine') { <w-room-engine /> }
+            @case ('db-anatomy') { <w-db-anatomy /> }
+            @case ('type-fit') { <w-type-fit /> }
+            @case ('select-builder') { <w-select-builder /> }
+            @case ('where-lab') { <w-where-lab /> }
+            @case ('null-logic') { <w-null-logic /> }
+            @case ('sort-page') { <w-sort-page /> }
+            @case ('table-designer') { <w-table-designer /> }
+            @case ('insert-lab') { <w-insert-lab /> }
+            @case ('update-delete') { <w-update-delete /> }
+            @case ('constraint-guard') { <w-constraint-guard /> }
+            @case ('identity-gaps') { <w-identity-gaps /> }
+            @case ('alter-impact') { <w-alter-impact /> }
+            @case ('sql-string') { <w-sql-string /> }
+            @case ('round-lab') { <w-round-lab /> }
+            @case ('datediff-line') { <w-datediff-line /> }
+            @case ('case-flow') { <w-case-flow /> }
+            @case ('convert-matrix') { <w-convert-matrix /> }
+            @case ('key-follow') { <w-key-follow /> }
+            @case ('join-inner') { <w-join-lab /> }
+            @case ('join-outer') { <w-join-lab [outer]="true" /> }
+            @case ('pair-matrix') { <w-pair-matrix /> }
+            @case ('set-venn') { <w-set-venn /> }
+            @case ('normal-forms') { <w-normal-forms /> }
+            @case ('agg-null') { <w-agg-null /> }
+            @case ('group-buckets') { <w-group-buckets /> }
+            @case ('correlated') { <w-correlated /> }
+            @case ('exists-probe') { <w-exists-probe /> }
+            @case ('cte-chain') { <w-cte-chain /> }
+            @case ('bom-explode') { <w-bom-explode /> }
           }
         }
       }
@@ -359,6 +480,8 @@ import { BezierWidget } from '../widgets/bezier.widget';
 })
 export class LessonBlocksComponent {
   blocks = input.required<Block[]>();
+  /** Language of the track's code samples: sets highlighting and default file names. */
+  lang = input<CodeLang>('cs');
 
   anchor(text: string) {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

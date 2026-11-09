@@ -74,7 +74,7 @@ import { SeoService } from '../services/seo.service';
                     <p class="lesson-summary">{{ l.summary }}</p>
                   </header>
 
-                  <app-lesson-blocks [blocks]="l.blocks" />
+                  <app-lesson-blocks [blocks]="l.blocks" [lang]="track() === 'sql' ? 'sql' : 'cs'" />
 
                   <section class="recap glass-card" aria-labelledby="recap-title">
                     <h2 id="recap-title"><i class="bi bi-bookmark-star me-2" aria-hidden="true"></i>Remember</h2>

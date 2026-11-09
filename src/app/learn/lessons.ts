@@ -22,12 +22,23 @@ import { MASTER as DSA_MASTER } from './dsa/master';
 import { FOUNDATIONS as BIM_FOUNDATIONS } from './bim/foundations';
 import { VECTORS as BIM_VECTORS } from './bim/vectors';
 import { LINES_CURVES as BIM_LINES } from './bim/lines-curves';
+import { PLANES_POLYGONS as BIM_PLANES } from './bim/planes-polygons';
+import { MATRICES_TRANSFORMS as BIM_MATRICES } from './bim/matrices-transforms';
+import { ROTATIONS_IN_DEPTH as BIM_ROTATIONS } from './bim/rotations-in-depth';
+import { GEOMETRY_SOLIDS as BIM_SOLIDS } from './bim/geometry-solids';
+import { MASTER_GEOMETRY as BIM_MASTER } from './bim/master-geometry';
+import { FOUNDATIONS as SQL_FOUNDATIONS } from './sql/foundations';
+import { CHANGING_DATA as SQL_CHANGING } from './sql/changing-data';
+import { FUNCTIONS as SQL_FUNCTIONS } from './sql/functions';
+import { JOINS as SQL_JOINS } from './sql/joins';
+import { GROUPING as SQL_GROUPING } from './sql/grouping';
 
 /** Written lessons per track. Only the lesson page imports this, so lesson text stays out of other pages. */
 const LESSONS: Record<string, Lesson[]> = {
   csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED, ...MASTER, ...EXPERT],
   dsa: [...FOUNDATIONS, ...LINEAR, ...SEARCH_SORT, ...TECHNIQUES, ...TREES, ...GRAPHS, ...DESIGN, ...DSA_MASTER],
-  'bim-math': [...BIM_FOUNDATIONS, ...BIM_VECTORS, ...BIM_LINES]
+  'bim-math': [...BIM_FOUNDATIONS, ...BIM_VECTORS, ...BIM_LINES, ...BIM_PLANES, ...BIM_MATRICES, ...BIM_ROTATIONS, ...BIM_SOLIDS, ...BIM_MASTER],
+  sql: [...SQL_FOUNDATIONS, ...SQL_CHANGING, ...SQL_FUNCTIONS, ...SQL_JOINS, ...SQL_GROUPING]
 };
 
 export function findLesson(track: string, slug: string): Lesson | undefined {

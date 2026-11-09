@@ -257,57 +257,168 @@ const BIM_MODULES: Module[] = [
     title: 'Planes and polygons',
     level: 'Intermediate',
     topics: [
-      { slug: 'planes', title: 'Planes: point and normal, ax + by + cz + d' },
-      { slug: 'point-plane', title: 'Point-to-plane distance and projection' },
-      { slug: 'plane-intersections', title: 'Line–plane and plane–plane intersection' },
-      { slug: 'polygon-area-normal', title: 'Polygon area, normal and winding' },
-      { slug: 'point-in-polygon-triangulation', title: 'Point in polygon and triangulation' },
-      { slug: 'polygon-offsets-booleans', title: 'Polygon offsets and boolean operations' }
+      { slug: 'planes', title: 'Planes: point and normal, ax + by + cz + d', ready: true },
+      { slug: 'point-plane', title: 'Point-to-plane distance and projection', ready: true },
+      { slug: 'plane-intersections', title: 'Line–plane and plane–plane intersection', ready: true },
+      { slug: 'polygon-area-normal', title: 'Polygon area, normal and winding', ready: true },
+      { slug: 'point-in-polygon-triangulation', title: 'Point in polygon and triangulation', ready: true },
+      { slug: 'polygon-offsets-booleans', title: 'Polygon offsets and boolean operations', ready: true }
     ]
   },
   {
     title: 'Matrices and transforms',
     level: 'Advanced',
     topics: [
-      { slug: 'matrices', title: 'Matrices and matrix multiplication' },
-      { slug: 'rotation', title: 'Rotation in 2D, 3D and about any axis' },
-      { slug: 'homogeneous-transforms', title: 'Homogeneous coordinates and 4×4 transforms' },
-      { slug: 'composing-transforms', title: 'Composing transforms: order and inverses' },
-      { slug: 'local-world', title: 'Local vs world: families, instances and nested placement' },
-      { slug: 'mirroring-handedness', title: 'Mirroring and handedness' }
+      { slug: 'matrices', title: 'Matrices and matrix multiplication', ready: true },
+      { slug: 'rotation', title: 'Rotation in 2D, 3D and about any axis', ready: true },
+      { slug: 'homogeneous-transforms', title: 'Homogeneous coordinates and 4×4 transforms', ready: true },
+      { slug: 'composing-transforms', title: 'Composing transforms: order and inverses', ready: true },
+      { slug: 'local-world', title: 'Local vs world: families, instances and nested placement', ready: true },
+      { slug: 'mirroring-handedness', title: 'Mirroring and handedness', ready: true }
     ]
   },
   {
     title: 'Rotations in depth',
     level: 'Advanced',
     topics: [
-      { slug: 'euler-gimbal-lock', title: 'Euler angles and gimbal lock' },
-      { slug: 'quaternions', title: 'Quaternions without fear' },
-      { slug: 'slerp', title: 'Interpolating rotations: lerp vs slerp' }
+      { slug: 'euler-gimbal-lock', title: 'Euler angles and gimbal lock', ready: true },
+      { slug: 'quaternions', title: 'Quaternions without fear', ready: true },
+      { slug: 'slerp', title: 'Interpolating rotations: lerp vs slerp', ready: true }
     ]
   },
   {
     title: '3D geometry and solids',
     level: 'Advanced',
     topics: [
-      { slug: 'bounding-boxes', title: 'Bounding boxes: AABB and OBB' },
-      { slug: 'meshes', title: 'Meshes: vertices, faces and normals' },
-      { slug: 'ray-triangle', title: 'Ray–triangle intersection' },
-      { slug: 'clash-detection', title: 'Clash detection and the separating-axis theorem' },
-      { slug: 'volumes-areas', title: 'Volumes and surface areas of solids' },
-      { slug: 'sections', title: 'Sections: cutting a mesh with a plane' }
+      { slug: 'bounding-boxes', title: 'Bounding boxes: AABB and OBB', ready: true },
+      { slug: 'meshes', title: 'Meshes: vertices, faces and normals', ready: true },
+      { slug: 'ray-triangle', title: 'Ray–triangle intersection', ready: true },
+      { slug: 'clash-detection', title: 'Clash detection and the separating-axis theorem', ready: true },
+      { slug: 'volumes-areas', title: 'Volumes and surface areas of solids', ready: true },
+      { slug: 'sections', title: 'Sections: cutting a mesh with a plane', ready: true }
     ]
   },
   {
     title: 'Master level',
     level: 'Master',
     topics: [
-      { slug: 'robust-geometry', title: 'Robust geometry: epsilons, snapping and exact predicates' },
-      { slug: 'georeferencing', title: 'Survey points, true north and georeferencing' },
-      { slug: 'cameras-projection', title: 'Cameras: view matrices, perspective and section boxes' },
-      { slug: 'brep-nurbs', title: 'B-rep and NURBS: how BIM kernels store solids' },
-      { slug: 'spatial-queries-scale', title: 'Spatial queries at scale' },
-      { slug: 'mini-geometry-engine', title: 'Putting it together: a mini room-and-wall geometry engine' }
+      { slug: 'robust-geometry', title: 'Robust geometry: epsilons, snapping and exact predicates', ready: true },
+      { slug: 'georeferencing', title: 'Survey points, true north and georeferencing', ready: true },
+      { slug: 'cameras-projection', title: 'Cameras: view matrices, perspective and section boxes', ready: true },
+      { slug: 'brep-nurbs', title: 'B-rep and NURBS: how BIM kernels store solids', ready: true },
+      { slug: 'spatial-queries-scale', title: 'Spatial queries at scale', ready: true },
+      { slug: 'mini-geometry-engine', title: 'Putting it together: a mini room-and-wall geometry engine', ready: true }
+    ]
+  }
+];
+
+const SQL_MODULES: Module[] = [
+  {
+    title: 'Foundations',
+    level: 'Beginner',
+    topics: [
+      { slug: 'what-is-a-database', title: 'What is a database? SQL Server, SSMS and the BuildMart sample', ready: true },
+      { slug: 'tables-and-data-types', title: 'Tables, rows, columns and data types', ready: true },
+      { slug: 'select-basics', title: 'Your first SELECT: columns, aliases and expressions', ready: true },
+      { slug: 'where-filtering', title: 'Filtering rows with WHERE', ready: true },
+      { slug: 'null-values', title: 'NULL and three-valued logic', ready: true },
+      { slug: 'sorting-and-paging', title: 'Sorting and paging: ORDER BY, TOP, OFFSET and DISTINCT', ready: true }
+    ]
+  },
+  {
+    title: 'Creating and changing data',
+    level: 'Beginner',
+    topics: [
+      { slug: 'create-table', title: 'Creating tables and choosing types', ready: true },
+      { slug: 'insert', title: 'Adding rows with INSERT', ready: true },
+      { slug: 'update-delete', title: 'Changing and removing rows: UPDATE and DELETE', ready: true },
+      { slug: 'constraints', title: 'Constraints: primary keys, UNIQUE, CHECK and DEFAULT', ready: true },
+      { slug: 'identity-sequences', title: 'IDENTITY, sequences and generated keys', ready: true },
+      { slug: 'alter-drop', title: 'Changing tables safely: ALTER and DROP', ready: true }
+    ]
+  },
+  {
+    title: 'Functions and expressions',
+    level: 'Beginner',
+    topics: [
+      { slug: 'string-functions', title: 'Working with text: string functions', ready: true },
+      { slug: 'numbers-and-maths', title: 'Numbers: integer division, rounding and decimal precision', ready: true },
+      { slug: 'dates-and-times', title: 'Dates and times', ready: true },
+      { slug: 'case-expressions', title: 'Decisions inside a query: CASE and IIF', ready: true },
+      { slug: 'conversion', title: 'Converting types: CAST, CONVERT and TRY_CAST', ready: true }
+    ]
+  },
+  {
+    title: 'Joins and combining tables',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'relationships-keys', title: 'Relationships and foreign keys', ready: true },
+      { slug: 'inner-join', title: 'INNER JOIN: matching rows across tables', ready: true },
+      { slug: 'outer-joins', title: 'LEFT, RIGHT and FULL OUTER JOIN', ready: true },
+      { slug: 'self-cross-joins', title: 'Self joins and CROSS JOIN', ready: true },
+      { slug: 'set-operators', title: 'UNION, INTERSECT and EXCEPT', ready: true },
+      { slug: 'normalisation', title: 'Designing tables: normalisation', ready: true }
+    ]
+  },
+  {
+    title: 'Grouping and subqueries',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'aggregates', title: 'Aggregates: COUNT, SUM, AVG, MIN and MAX', ready: true },
+      { slug: 'group-by-having', title: 'GROUP BY and HAVING', ready: true },
+      { slug: 'subqueries', title: 'Subqueries: scalar, list and correlated', ready: true },
+      { slug: 'exists', title: 'EXISTS and NOT EXISTS', ready: true },
+      { slug: 'ctes', title: 'Common table expressions (WITH)', ready: true },
+      { slug: 'recursive-ctes', title: 'Recursive CTEs: hierarchies and bills of materials', ready: true }
+    ]
+  },
+  {
+    title: 'Advanced querying',
+    level: 'Advanced',
+    topics: [
+      { slug: 'window-ranking', title: 'Window functions: ROW_NUMBER, RANK and NTILE' },
+      { slug: 'window-aggregates', title: 'Running totals, moving averages, LAG and LEAD' },
+      { slug: 'pivot-unpivot', title: 'PIVOT and UNPIVOT' },
+      { slug: 'apply', title: 'CROSS APPLY and OUTER APPLY' },
+      { slug: 'json-in-sql', title: 'JSON in SQL Server' },
+      { slug: 'merge-upsert', title: 'MERGE, upserts and the OUTPUT clause' }
+    ]
+  },
+  {
+    title: 'Programmability',
+    level: 'Advanced',
+    topics: [
+      { slug: 'views', title: 'Views' },
+      { slug: 'tsql-batches-variables', title: 'T-SQL batches, variables and control flow' },
+      { slug: 'stored-procedures', title: 'Stored procedures and parameters' },
+      { slug: 'user-defined-functions', title: 'Scalar and table-valued functions' },
+      { slug: 'error-handling', title: 'Error handling: TRY...CATCH and THROW' },
+      { slug: 'triggers', title: 'Triggers' }
+    ]
+  },
+  {
+    title: 'Indexes and performance',
+    level: 'Advanced',
+    topics: [
+      { slug: 'how-data-is-stored', title: 'How SQL Server stores data: pages, heaps and B-trees' },
+      { slug: 'clustered-indexes', title: 'Clustered indexes' },
+      { slug: 'nonclustered-indexes', title: 'Nonclustered and covering indexes' },
+      { slug: 'execution-plans', title: 'Reading execution plans' },
+      { slug: 'sargability-statistics', title: 'Sargable queries and statistics' },
+      { slug: 'query-tuning', title: 'Finding and fixing slow queries' }
+    ]
+  },
+  {
+    title: 'Master level',
+    level: 'Master',
+    topics: [
+      { slug: 'transactions-acid', title: 'Transactions and ACID' },
+      { slug: 'isolation-locking', title: 'Isolation levels, locking and blocking' },
+      { slug: 'deadlocks-snapshot', title: 'Deadlocks and row versioning (snapshot isolation)' },
+      { slug: 'temporal-tables', title: 'Temporal tables: history and point-in-time queries' },
+      { slug: 'security-injection', title: 'Security: logins, roles, permissions and SQL injection' },
+      { slug: 'csharp-data-access', title: 'Calling SQL Server from C#: ADO.NET, Dapper and EF Core' },
+      { slug: 'database-capstone', title: 'Putting it together: designing an order-management database' }
     ]
   }
 ];
@@ -351,9 +462,11 @@ export const TRACKS: Track[] = [
     title: 'SQL Server',
     short: 'SQL',
     icon: 'bi-database',
-    description: 'Tables, queries, joins, indexes, stored procedures and database design.',
-    live: false,
-    modules: []
+    description:
+      'Query, change and design databases with T-SQL, from your first SELECT to indexes, execution plans and ' +
+      'transactions. Every query runs against one sample database, with interactive diagrams of what SQL Server does.',
+    live: true,
+    modules: SQL_MODULES
   },
   {
     slug: 'wpf',
