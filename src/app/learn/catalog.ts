@@ -376,49 +376,49 @@ const SQL_MODULES: Module[] = [
     title: 'Advanced querying',
     level: 'Advanced',
     topics: [
-      { slug: 'window-ranking', title: 'Window functions: ROW_NUMBER, RANK and NTILE' },
-      { slug: 'window-aggregates', title: 'Running totals, moving averages, LAG and LEAD' },
-      { slug: 'pivot-unpivot', title: 'PIVOT and UNPIVOT' },
-      { slug: 'apply', title: 'CROSS APPLY and OUTER APPLY' },
-      { slug: 'json-in-sql', title: 'JSON in SQL Server' },
-      { slug: 'merge-upsert', title: 'MERGE, upserts and the OUTPUT clause' }
+      { slug: 'window-ranking', title: 'Window functions: ROW_NUMBER, RANK and NTILE', ready: true },
+      { slug: 'window-aggregates', title: 'Running totals, moving averages, LAG and LEAD', ready: true },
+      { slug: 'pivot-unpivot', title: 'PIVOT and UNPIVOT', ready: true },
+      { slug: 'apply', title: 'CROSS APPLY and OUTER APPLY', ready: true },
+      { slug: 'json-in-sql', title: 'JSON in SQL Server', ready: true },
+      { slug: 'merge-upsert', title: 'MERGE, upserts and the OUTPUT clause', ready: true }
     ]
   },
   {
     title: 'Programmability',
     level: 'Advanced',
     topics: [
-      { slug: 'views', title: 'Views' },
-      { slug: 'tsql-batches-variables', title: 'T-SQL batches, variables and control flow' },
-      { slug: 'stored-procedures', title: 'Stored procedures and parameters' },
-      { slug: 'user-defined-functions', title: 'Scalar and table-valued functions' },
-      { slug: 'error-handling', title: 'Error handling: TRY...CATCH and THROW' },
-      { slug: 'triggers', title: 'Triggers' }
+      { slug: 'views', title: 'Views', ready: true },
+      { slug: 'tsql-batches-variables', title: 'T-SQL batches, variables and control flow', ready: true },
+      { slug: 'stored-procedures', title: 'Stored procedures and parameters', ready: true },
+      { slug: 'user-defined-functions', title: 'Scalar and table-valued functions', ready: true },
+      { slug: 'error-handling', title: 'Error handling: TRY...CATCH and THROW', ready: true },
+      { slug: 'triggers', title: 'Triggers', ready: true }
     ]
   },
   {
     title: 'Indexes and performance',
     level: 'Advanced',
     topics: [
-      { slug: 'how-data-is-stored', title: 'How SQL Server stores data: pages, heaps and B-trees' },
-      { slug: 'clustered-indexes', title: 'Clustered indexes' },
-      { slug: 'nonclustered-indexes', title: 'Nonclustered and covering indexes' },
-      { slug: 'execution-plans', title: 'Reading execution plans' },
-      { slug: 'sargability-statistics', title: 'Sargable queries and statistics' },
-      { slug: 'query-tuning', title: 'Finding and fixing slow queries' }
+      { slug: 'how-data-is-stored', title: 'How SQL Server stores data: pages, heaps and B-trees', ready: true },
+      { slug: 'clustered-indexes', title: 'Clustered indexes', ready: true },
+      { slug: 'nonclustered-indexes', title: 'Nonclustered and covering indexes', ready: true },
+      { slug: 'execution-plans', title: 'Reading execution plans', ready: true },
+      { slug: 'sargability-statistics', title: 'Sargable queries and statistics', ready: true },
+      { slug: 'query-tuning', title: 'Finding and fixing slow queries', ready: true }
     ]
   },
   {
     title: 'Master level',
     level: 'Master',
     topics: [
-      { slug: 'transactions-acid', title: 'Transactions and ACID' },
-      { slug: 'isolation-locking', title: 'Isolation levels, locking and blocking' },
-      { slug: 'deadlocks-snapshot', title: 'Deadlocks and row versioning (snapshot isolation)' },
-      { slug: 'temporal-tables', title: 'Temporal tables: history and point-in-time queries' },
-      { slug: 'security-injection', title: 'Security: logins, roles, permissions and SQL injection' },
-      { slug: 'csharp-data-access', title: 'Calling SQL Server from C#: ADO.NET, Dapper and EF Core' },
-      { slug: 'database-capstone', title: 'Putting it together: designing an order-management database' }
+      { slug: 'transactions-acid', title: 'Transactions and ACID', ready: true },
+      { slug: 'isolation-locking', title: 'Isolation levels, locking and blocking', ready: true },
+      { slug: 'deadlocks-snapshot', title: 'Deadlocks and row versioning (snapshot isolation)', ready: true },
+      { slug: 'temporal-tables', title: 'Temporal tables: history and point-in-time queries', ready: true },
+      { slug: 'security-injection', title: 'Security: logins, roles, permissions and SQL injection', ready: true },
+      { slug: 'csharp-data-access', title: 'Calling SQL Server from C#: ADO.NET, Dapper and EF Core', ready: true },
+      { slug: 'database-capstone', title: 'Putting it together: designing an order-management database', ready: true }
     ]
   }
 ];

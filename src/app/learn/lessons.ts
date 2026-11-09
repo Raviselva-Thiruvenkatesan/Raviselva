@@ -32,13 +32,17 @@ import { CHANGING_DATA as SQL_CHANGING } from './sql/changing-data';
 import { FUNCTIONS as SQL_FUNCTIONS } from './sql/functions';
 import { JOINS as SQL_JOINS } from './sql/joins';
 import { GROUPING as SQL_GROUPING } from './sql/grouping';
+import { ADVANCED as SQL_ADVANCED } from './sql/advanced';
+import { PROGRAMMABILITY as SQL_PROGRAMMABILITY } from './sql/programmability';
+import { PERFORMANCE as SQL_PERFORMANCE } from './sql/performance';
+import { MASTER as SQL_MASTER } from './sql/master';
 
 /** Written lessons per track. Only the lesson page imports this, so lesson text stays out of other pages. */
 const LESSONS: Record<string, Lesson[]> = {
   csharp: [...GETTING_STARTED, ...CONTROL_FLOW, ...LOOPS_ARRAYS_METHODS, ...OOP_BASICS, ...OOP_ADVANCED, ...WORKING_WITH_DATA, ...DATA_AND_DELEGATES, ...FUNCTIONAL, ...PATTERNS_MEMORY, ...ADVANCED, ...MASTER, ...EXPERT],
   dsa: [...FOUNDATIONS, ...LINEAR, ...SEARCH_SORT, ...TECHNIQUES, ...TREES, ...GRAPHS, ...DESIGN, ...DSA_MASTER],
   'bim-math': [...BIM_FOUNDATIONS, ...BIM_VECTORS, ...BIM_LINES, ...BIM_PLANES, ...BIM_MATRICES, ...BIM_ROTATIONS, ...BIM_SOLIDS, ...BIM_MASTER],
-  sql: [...SQL_FOUNDATIONS, ...SQL_CHANGING, ...SQL_FUNCTIONS, ...SQL_JOINS, ...SQL_GROUPING]
+  sql: [...SQL_FOUNDATIONS, ...SQL_CHANGING, ...SQL_FUNCTIONS, ...SQL_JOINS, ...SQL_GROUPING, ...SQL_ADVANCED, ...SQL_PROGRAMMABILITY, ...SQL_PERFORMANCE, ...SQL_MASTER]
 };
 
 export function findLesson(track: string, slug: string): Lesson | undefined {

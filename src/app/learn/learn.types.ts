@@ -187,19 +187,23 @@ export type WidgetName =
   | 'pair-matrix'
   | 'set-venn'
   | 'normal-forms'
-  | 'agg-null' | 'group-buckets' | 'correlated' | 'exists-probe' | 'cte-chain' | 'bom-explode';
+  | 'agg-null' | 'group-buckets' | 'correlated' | 'exists-probe' | 'cte-chain' | 'bom-explode'
+  | 'rank-ties' | 'window-frame' | 'pivot-turn' | 'apply-runner' | 'json-path' | 'merge-sync'
+  | 'view-check' | 'batch-split' | 'proc-call' | 'udf-kinds' | 'try-catch-flow' | 'trigger-audit'
+  | 'btree-pages' | 'page-split' | 'lookup-tipping' | 'plan-reader' | 'sarg-check' | 'param-sniff'
+  | 'tx-stepper' | 'isolation-lab' | 'deadlock-cycle' | 'temporal-timeline' | 'injection-lab' | 'schema-map' | 'round-trips';
 
 export type Block =
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
   | { type: 'ul'; items: string[] }
   | { type: 'ol'; items: string[] }
-  | { type: 'code'; code: string; title?: string; output?: string }
+  | { type: 'code'; code: string; title?: string; output?: string; /** Overrides the track's language (a C# sample in the SQL track). */ lang?: 'cs' | 'sql' }
   | { type: 'note'; kind: 'tip' | 'warn' | 'info'; text: string }
   | { type: 'table'; head: string[]; rows: string[][] }
   | { type: 'widget'; name: WidgetName }
   | { type: 'quiz'; question: string; options: string[]; answer: number; explain: string }
-  | { type: 'exercise'; task: string; hint?: string; solution: string; output?: string };
+  | { type: 'exercise'; task: string; hint?: string; solution: string; output?: string; lang?: 'cs' | 'sql' };
 
 export interface Lesson {
   slug: string;

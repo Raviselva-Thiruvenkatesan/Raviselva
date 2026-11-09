@@ -186,6 +186,31 @@ import { CorrelatedWidget } from '../widgets/correlated.widget';
 import { ExistsProbeWidget } from '../widgets/exists-probe.widget';
 import { CteChainWidget } from '../widgets/cte-chain.widget';
 import { BomExplodeWidget } from '../widgets/bom-explode.widget';
+import { RankTiesWidget } from '../widgets/rank-ties.widget';
+import { WindowFrameWidget } from '../widgets/window-frame.widget';
+import { PivotTurnWidget } from '../widgets/pivot-turn.widget';
+import { ApplyRunnerWidget } from '../widgets/apply-runner.widget';
+import { JsonPathWidget } from '../widgets/json-path.widget';
+import { MergeSyncWidget } from '../widgets/merge-sync.widget';
+import { ViewCheckWidget } from '../widgets/view-check.widget';
+import { BatchSplitWidget } from '../widgets/batch-split.widget';
+import { ProcCallWidget } from '../widgets/proc-call.widget';
+import { UdfKindsWidget } from '../widgets/udf-kinds.widget';
+import { TryCatchFlowWidget } from '../widgets/try-catch-flow.widget';
+import { TriggerAuditWidget } from '../widgets/trigger-audit.widget';
+import { BtreePagesWidget } from '../widgets/btree-pages.widget';
+import { PageSplitWidget } from '../widgets/page-split.widget';
+import { LookupTippingWidget } from '../widgets/lookup-tipping.widget';
+import { PlanReaderWidget } from '../widgets/plan-reader.widget';
+import { SargCheckWidget } from '../widgets/sarg-check.widget';
+import { ParamSniffWidget } from '../widgets/param-sniff.widget';
+import { TxStepperWidget } from '../widgets/tx-stepper.widget';
+import { IsolationLabWidget } from '../widgets/isolation-lab.widget';
+import { DeadlockCycleWidget } from '../widgets/deadlock-cycle.widget';
+import { TemporalTimelineWidget } from '../widgets/temporal-timeline.widget';
+import { InjectionLabWidget } from '../widgets/injection-lab.widget';
+import { SchemaMapWidget } from '../widgets/schema-map.widget';
+import { RoundTripsWidget } from '../widgets/round-trips.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -224,7 +249,11 @@ import { BomExplodeWidget } from '../widgets/bom-explode.widget';
     TableDesignerWidget, InsertLabWidget, UpdateDeleteWidget, ConstraintGuardWidget, IdentityGapsWidget, AlterImpactWidget,
     SqlStringWidget, RoundLabWidget, DatediffLineWidget, CaseFlowWidget, ConvertMatrixWidget,
     KeyFollowWidget, JoinLabWidget, PairMatrixWidget, SetVennWidget, NormalFormsWidget,
-    AggNullWidget, GroupBucketsWidget, CorrelatedWidget, ExistsProbeWidget, CteChainWidget, BomExplodeWidget
+    AggNullWidget, GroupBucketsWidget, CorrelatedWidget, ExistsProbeWidget, CteChainWidget, BomExplodeWidget,
+    RankTiesWidget, WindowFrameWidget, PivotTurnWidget, ApplyRunnerWidget, JsonPathWidget, MergeSyncWidget,
+    ViewCheckWidget, BatchSplitWidget, ProcCallWidget, UdfKindsWidget, TryCatchFlowWidget, TriggerAuditWidget,
+    BtreePagesWidget, PageSplitWidget, LookupTippingWidget, PlanReaderWidget, SargCheckWidget, ParamSniffWidget,
+    TxStepperWidget, IsolationLabWidget, DeadlockCycleWidget, TemporalTimelineWidget, InjectionLabWidget, SchemaMapWidget, RoundTripsWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -233,7 +262,7 @@ import { BomExplodeWidget } from '../widgets/bom-explode.widget';
         @case ('p') { <p><app-rt [text]="b.text" /></p> }
         @case ('ul') { <ul>@for (i of b.items; track $index) { <li><app-rt [text]="i" /></li> }</ul> }
         @case ('ol') { <ol>@for (i of b.items; track $index) { <li><app-rt [text]="i" /></li> }</ol> }
-        @case ('code') { <app-code [code]="b.code" [title]="b.title ?? (lang() === 'sql' ? 'Query.sql' : 'Program.cs')" [lang]="lang()" [output]="b.output ?? ''" /> }
+        @case ('code') { <app-code [code]="b.code" [title]="b.title ?? ((b.lang ?? lang()) === 'sql' ? 'Query.sql' : 'Program.cs')" [lang]="b.lang ?? lang()" [output]="b.output ?? ''" /> }
         @case ('note') {
           <aside class="callout {{ b.kind }}">
             <i class="bi" [class.bi-lightbulb]="b.kind === 'tip'" [class.bi-exclamation-triangle]="b.kind === 'warn'" [class.bi-info-circle]="b.kind === 'info'" aria-hidden="true"></i>
@@ -257,7 +286,7 @@ import { BomExplodeWidget } from '../widgets/bom-explode.widget';
             @if (b.hint) {
               <details><summary>Show a hint</summary><p><app-rt [text]="b.hint" /></p></details>
             }
-            <details><summary>Show the solution</summary><app-code [code]="b.solution" [title]="lang() === 'sql' ? 'Solution.sql' : 'Solution.cs'" [lang]="lang()" [output]="b.output ?? ''" /></details>
+            <details><summary>Show the solution</summary><app-code [code]="b.solution" [title]="(b.lang ?? lang()) === 'sql' ? 'Solution.sql' : 'Solution.cs'" [lang]="b.lang ?? lang()" [output]="b.output ?? ''" /></details>
           </section>
         }
         @case ('widget') {
@@ -445,6 +474,31 @@ import { BomExplodeWidget } from '../widgets/bom-explode.widget';
             @case ('exists-probe') { <w-exists-probe /> }
             @case ('cte-chain') { <w-cte-chain /> }
             @case ('bom-explode') { <w-bom-explode /> }
+            @case ('rank-ties') { <w-rank-ties /> }
+            @case ('window-frame') { <w-window-frame /> }
+            @case ('pivot-turn') { <w-pivot-turn /> }
+            @case ('apply-runner') { <w-apply-runner /> }
+            @case ('json-path') { <w-json-path /> }
+            @case ('merge-sync') { <w-merge-sync /> }
+            @case ('view-check') { <w-view-check /> }
+            @case ('batch-split') { <w-batch-split /> }
+            @case ('proc-call') { <w-proc-call /> }
+            @case ('udf-kinds') { <w-udf-kinds /> }
+            @case ('try-catch-flow') { <w-try-catch-flow /> }
+            @case ('trigger-audit') { <w-trigger-audit /> }
+            @case ('btree-pages') { <w-btree-pages /> }
+            @case ('page-split') { <w-page-split /> }
+            @case ('lookup-tipping') { <w-lookup-tipping /> }
+            @case ('plan-reader') { <w-plan-reader /> }
+            @case ('sarg-check') { <w-sarg-check /> }
+            @case ('param-sniff') { <w-param-sniff /> }
+            @case ('tx-stepper') { <w-tx-stepper /> }
+            @case ('isolation-lab') { <w-isolation-lab /> }
+            @case ('deadlock-cycle') { <w-deadlock-cycle /> }
+            @case ('temporal-timeline') { <w-temporal-timeline /> }
+            @case ('injection-lab') { <w-injection-lab /> }
+            @case ('schema-map') { <w-schema-map /> }
+            @case ('round-trips') { <w-round-trips /> }
           }
         }
       }
