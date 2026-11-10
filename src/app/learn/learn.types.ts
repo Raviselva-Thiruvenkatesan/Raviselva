@@ -191,7 +191,9 @@ export type WidgetName =
   | 'rank-ties' | 'window-frame' | 'pivot-turn' | 'apply-runner' | 'json-path' | 'merge-sync'
   | 'view-check' | 'batch-split' | 'proc-call' | 'udf-kinds' | 'try-catch-flow' | 'trigger-audit'
   | 'btree-pages' | 'page-split' | 'lookup-tipping' | 'plan-reader' | 'sarg-check' | 'param-sniff'
-  | 'tx-stepper' | 'isolation-lab' | 'deadlock-cycle' | 'temporal-timeline' | 'injection-lab' | 'schema-map' | 'round-trips';
+  | 'tx-stepper' | 'isolation-lab' | 'deadlock-cycle' | 'temporal-timeline' | 'injection-lab' | 'schema-map' | 'round-trips'
+  // Vulkan
+  | 'gpu-frame' | 'version-bits' | 'enumerate-twice' | 'vk-loader' | 'device-picker' | 'queue-families' | 'vk-lifetime';
 
 export type Block =
   | { type: 'p'; text: string }

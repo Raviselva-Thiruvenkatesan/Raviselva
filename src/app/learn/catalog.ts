@@ -423,6 +423,114 @@ const SQL_MODULES: Module[] = [
   }
 ];
 
+const VULKAN_MODULES: Module[] = [
+  {
+    title: 'Foundations: talking to the GPU',
+    level: 'Beginner',
+    topics: [
+      { slug: 'what-is-vulkan', title: 'What Vulkan is, and how a GPU draws a frame', ready: true },
+      { slug: 'setup-silk-net', title: 'Setting up: .NET, Silk.NET and your first Vulkan call', ready: true },
+      { slug: 'api-patterns', title: 'How the API works: create-info structs, handles and results', ready: true },
+      { slug: 'instance', title: 'The instance, extensions and layers', ready: true },
+      { slug: 'physical-devices', title: 'Choosing a GPU: properties, features, limits and memory', ready: true },
+      { slug: 'queue-families', title: 'Queue families: graphics, compute and transfer', ready: true },
+      { slug: 'logical-device', title: 'The logical device, queues and cleaning up', ready: true }
+    ]
+  },
+  {
+    title: 'Your first triangle',
+    level: 'Beginner',
+    topics: [
+      { slug: 'validation-layers', title: 'Validation layers and debug messages' },
+      { slug: 'window-surface', title: 'A window and its surface' },
+      { slug: 'swapchain', title: 'The swapchain: images to draw into' },
+      { slug: 'image-views', title: 'Image views' },
+      { slug: 'shaders-spirv', title: 'Shaders: GLSL, SPIR-V and shader modules' },
+      { slug: 'graphics-pipeline', title: 'The graphics pipeline, stage by stage' },
+      { slug: 'dynamic-rendering', title: 'Dynamic rendering: where the pixels go' },
+      { slug: 'command-buffers', title: 'Command pools and command buffers' },
+      { slug: 'frames-in-flight', title: 'Drawing a frame: semaphores, fences and frames in flight' },
+      { slug: 'swapchain-recreation', title: 'Resizing: recreating the swapchain' }
+    ]
+  },
+  {
+    title: 'Buffers, memory and descriptors',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'vertex-buffers', title: 'Vertex buffers and vertex input' },
+      { slug: 'memory-types', title: 'GPU memory: heaps, types and allocation' },
+      { slug: 'staging-buffers', title: 'Staging buffers and transfers' },
+      { slug: 'index-buffers', title: 'Index buffers' },
+      { slug: 'uniform-buffers', title: 'Uniform buffers and descriptor sets' },
+      { slug: 'push-constants', title: 'Push constants' },
+      { slug: 'memory-allocator', title: 'Writing a simple memory allocator' }
+    ]
+  },
+  {
+    title: 'Images and 3D',
+    level: 'Intermediate',
+    topics: [
+      { slug: 'camera-transforms', title: 'Model, view and projection matrices for Vulkan' },
+      { slug: 'depth-buffer', title: 'The depth buffer' },
+      { slug: 'textures-samplers', title: 'Textures, image layouts and samplers' },
+      { slug: 'loading-models', title: 'Loading meshes: OBJ and glTF' },
+      { slug: 'mipmaps', title: 'Mipmaps' },
+      { slug: 'msaa', title: 'Multisampling (MSAA)' },
+      { slug: 'camera-controls', title: 'An orbit camera for navigating a model' }
+    ]
+  },
+  {
+    title: 'Engine architecture',
+    level: 'Advanced',
+    topics: [
+      { slug: 'engine-structure', title: 'Structuring a render engine in C#' },
+      { slug: 'resource-lifetime', title: 'Resource lifetime and deletion queues' },
+      { slug: 'materials-pipelines', title: 'Materials, pipeline caches and pipeline variants' },
+      { slug: 'descriptor-management', title: 'Descriptor management and bindless resources' },
+      { slug: 'shader-hot-reload', title: 'Shader compilation, reflection and hot reload' },
+      { slug: 'render-graph', title: 'A simple render graph: passes and barriers' },
+      { slug: 'multithreaded-recording', title: 'Recording commands on several threads' }
+    ]
+  },
+  {
+    title: 'Lighting and shading',
+    level: 'Advanced',
+    topics: [
+      { slug: 'blinn-phong', title: 'Lighting basics: normals and Blinn-Phong' },
+      { slug: 'pbr', title: 'Physically based rendering (PBR)' },
+      { slug: 'shadow-mapping', title: 'Shadow mapping' },
+      { slug: 'image-based-lighting', title: 'Environment maps and image-based lighting' },
+      { slug: 'deferred-shading', title: 'Deferred shading' },
+      { slug: 'post-processing', title: 'HDR, tone mapping and post-processing' }
+    ]
+  },
+  {
+    title: 'Large scenes and performance',
+    level: 'Master',
+    topics: [
+      { slug: 'gpu-profiling', title: 'Measuring the GPU: timestamp queries and statistics' },
+      { slug: 'frustum-culling', title: 'Frustum culling' },
+      { slug: 'instancing', title: 'Instancing repeated elements' },
+      { slug: 'indirect-drawing', title: 'Indirect drawing and GPU-driven culling' },
+      { slug: 'level-of-detail', title: 'Level of detail' },
+      { slug: 'compute-shaders', title: 'Compute shaders in depth' },
+      { slug: 'synchronization-deep-dive', title: 'Synchronisation in depth: barriers and timeline semaphores' }
+    ]
+  },
+  {
+    title: 'Master level: a BIM viewer engine',
+    level: 'Master',
+    topics: [
+      { slug: 'bim-model-rendering', title: 'Rendering a large BIM model' },
+      { slug: 'object-picking', title: 'Picking elements with an ID buffer' },
+      { slug: 'section-planes', title: 'Section planes and section boxes' },
+      { slug: 'edges-outlines', title: 'Edges, outlines and selection highlights' },
+      { slug: 'transparency', title: 'Transparency: glass and order-independent methods' },
+      { slug: 'engine-capstone', title: 'Putting it together: a BIM viewer on your engine' }
+    ]
+  }
+];
+
 export const TRACKS: Track[] = [
   {
     slug: 'csharp',
@@ -474,6 +582,50 @@ export const TRACKS: Track[] = [
     short: 'WPF',
     icon: 'bi-window-stack',
     description: 'Build Windows desktop apps with XAML, data binding, commands and the MVVM pattern.',
+    live: false,
+    modules: []
+  },
+  {
+    slug: 'vulkan',
+    title: 'Vulkan Render Engine',
+    short: 'Vulkan',
+    icon: 'bi-gpu-card',
+    description:
+      'Build a real-time 3D render engine on Vulkan in C# with Silk.NET: devices, swapchains, pipelines, buffers, ' +
+      'descriptors and synchronisation, up to lighting and drawing large BIM models. Every sample runs on a real GPU.',
+    live: true,
+    modules: VULKAN_MODULES
+  },
+  {
+    slug: 'csg',
+    title: 'Constructive Solid Geometry (CSG)',
+    short: 'CSG',
+    icon: 'bi-intersect',
+    description:
+      'Model solids by combining simple shapes with union, difference and intersection: CSG trees, ' +
+      'mesh booleans and the robustness problems behind them, coded in C#.',
+    live: false,
+    modules: []
+  },
+  {
+    slug: 'aspnet-core',
+    title: 'ASP.NET Core Web APIs',
+    short: 'ASP.NET Core',
+    icon: 'bi-cloud-arrow-up',
+    description:
+      'Build and ship web APIs with ASP.NET Core: routing, minimal APIs and controllers, EF Core, validation, ' +
+      'authentication, testing and deployment.',
+    live: false,
+    modules: []
+  },
+  {
+    slug: 'design-patterns',
+    title: 'Design Patterns & Clean Architecture in C#',
+    short: 'Patterns',
+    icon: 'bi-bricks',
+    description:
+      'Write code that stays easy to change: SOLID, the classic design patterns, dependency injection, ' +
+      'and Clean Architecture layers, with C# examples and tests.',
     live: false,
     modules: []
   }

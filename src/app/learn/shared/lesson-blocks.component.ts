@@ -211,6 +211,13 @@ import { TemporalTimelineWidget } from '../widgets/temporal-timeline.widget';
 import { InjectionLabWidget } from '../widgets/injection-lab.widget';
 import { SchemaMapWidget } from '../widgets/schema-map.widget';
 import { RoundTripsWidget } from '../widgets/round-trips.widget';
+import { GpuFrameWidget } from '../widgets/gpu-frame.widget';
+import { VersionBitsWidget } from '../widgets/version-bits.widget';
+import { EnumerateTwiceWidget } from '../widgets/enumerate-twice.widget';
+import { VkLoaderWidget } from '../widgets/vk-loader.widget';
+import { DevicePickerWidget } from '../widgets/device-picker.widget';
+import { QueueFamiliesWidget } from '../widgets/queue-families.widget';
+import { VkLifetimeWidget } from '../widgets/vk-lifetime.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -253,7 +260,8 @@ import { RoundTripsWidget } from '../widgets/round-trips.widget';
     RankTiesWidget, WindowFrameWidget, PivotTurnWidget, ApplyRunnerWidget, JsonPathWidget, MergeSyncWidget,
     ViewCheckWidget, BatchSplitWidget, ProcCallWidget, UdfKindsWidget, TryCatchFlowWidget, TriggerAuditWidget,
     BtreePagesWidget, PageSplitWidget, LookupTippingWidget, PlanReaderWidget, SargCheckWidget, ParamSniffWidget,
-    TxStepperWidget, IsolationLabWidget, DeadlockCycleWidget, TemporalTimelineWidget, InjectionLabWidget, SchemaMapWidget, RoundTripsWidget
+    TxStepperWidget, IsolationLabWidget, DeadlockCycleWidget, TemporalTimelineWidget, InjectionLabWidget, SchemaMapWidget, RoundTripsWidget,
+    GpuFrameWidget, VersionBitsWidget, EnumerateTwiceWidget, VkLoaderWidget, DevicePickerWidget, QueueFamiliesWidget, VkLifetimeWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -499,6 +507,13 @@ import { RoundTripsWidget } from '../widgets/round-trips.widget';
             @case ('injection-lab') { <w-injection-lab /> }
             @case ('schema-map') { <w-schema-map /> }
             @case ('round-trips') { <w-round-trips /> }
+            @case ('gpu-frame') { <w-gpu-frame /> }
+            @case ('version-bits') { <w-version-bits /> }
+            @case ('enumerate-twice') { <w-enumerate-twice /> }
+            @case ('vk-loader') { <w-vk-loader /> }
+            @case ('device-picker') { <w-device-picker /> }
+            @case ('queue-families') { <w-queue-families /> }
+            @case ('vk-lifetime') { <w-vk-lifetime /> }
           }
         }
       }
