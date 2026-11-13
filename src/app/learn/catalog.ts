@@ -441,55 +441,55 @@ const VULKAN_MODULES: Module[] = [
     title: 'Your first triangle',
     level: 'Beginner',
     topics: [
-      { slug: 'validation-layers', title: 'Validation layers and debug messages' },
-      { slug: 'window-surface', title: 'A window and its surface' },
-      { slug: 'swapchain', title: 'The swapchain: images to draw into' },
-      { slug: 'image-views', title: 'Image views' },
-      { slug: 'shaders-spirv', title: 'Shaders: GLSL, SPIR-V and shader modules' },
-      { slug: 'graphics-pipeline', title: 'The graphics pipeline, stage by stage' },
-      { slug: 'dynamic-rendering', title: 'Dynamic rendering: where the pixels go' },
-      { slug: 'command-buffers', title: 'Command pools and command buffers' },
-      { slug: 'frames-in-flight', title: 'Drawing a frame: semaphores, fences and frames in flight' },
-      { slug: 'swapchain-recreation', title: 'Resizing: recreating the swapchain' }
+      { slug: 'validation-layers', title: 'Validation layers and debug messages', ready: true },
+      { slug: 'window-surface', title: 'A window and a surface', ready: true },
+      { slug: 'swapchain', title: 'The swapchain: images for the screen', ready: true },
+      { slug: 'image-views', title: 'Image views', ready: true },
+      { slug: 'shaders-spirv', title: 'Shaders: GLSL, SPIR-V and shader modules', ready: true },
+      { slug: 'graphics-pipeline', title: 'The graphics pipeline object', ready: true },
+      { slug: 'command-buffers', title: 'Command buffers, queues and your first clear', ready: true },
+      { slug: 'dynamic-rendering', title: 'Dynamic rendering: drawing the triangle', ready: true },
+      { slug: 'frames-in-flight', title: 'The render loop and frames in flight', ready: true },
+      { slug: 'swapchain-recreation', title: 'Resizing: recreating the swapchain', ready: true }
     ]
   },
   {
     title: 'Buffers, memory and descriptors',
     level: 'Intermediate',
     topics: [
-      { slug: 'vertex-buffers', title: 'Vertex buffers and vertex input' },
-      { slug: 'memory-types', title: 'GPU memory: heaps, types and allocation' },
-      { slug: 'staging-buffers', title: 'Staging buffers and transfers' },
-      { slug: 'index-buffers', title: 'Index buffers' },
-      { slug: 'uniform-buffers', title: 'Uniform buffers and descriptor sets' },
-      { slug: 'push-constants', title: 'Push constants' },
-      { slug: 'memory-allocator', title: 'Writing a simple memory allocator' }
+      { slug: 'vertex-buffers', title: 'Vertex buffers and vertex input', ready: true },
+      { slug: 'memory-types', title: 'GPU memory: heaps, types and allocation', ready: true },
+      { slug: 'staging-buffers', title: 'Staging buffers and transfers', ready: true },
+      { slug: 'index-buffers', title: 'Index buffers', ready: true },
+      { slug: 'uniform-buffers', title: 'Uniform buffers and descriptor sets', ready: true },
+      { slug: 'push-constants', title: 'Push constants', ready: true },
+      { slug: 'memory-allocator', title: 'Writing a simple memory allocator', ready: true }
     ]
   },
   {
     title: 'Images and 3D',
     level: 'Intermediate',
     topics: [
-      { slug: 'camera-transforms', title: 'Model, view and projection matrices for Vulkan' },
-      { slug: 'depth-buffer', title: 'The depth buffer' },
-      { slug: 'textures-samplers', title: 'Textures, image layouts and samplers' },
-      { slug: 'loading-models', title: 'Loading meshes: OBJ and glTF' },
-      { slug: 'mipmaps', title: 'Mipmaps' },
-      { slug: 'msaa', title: 'Multisampling (MSAA)' },
-      { slug: 'camera-controls', title: 'An orbit camera for navigating a model' }
+      { slug: 'camera-transforms', title: 'Model, view and projection matrices for Vulkan', ready: true },
+      { slug: 'depth-buffer', title: 'The depth buffer', ready: true },
+      { slug: 'textures-samplers', title: 'Textures, image layouts and samplers', ready: true },
+      { slug: 'loading-models', title: 'Loading meshes: OBJ and glTF', ready: true },
+      { slug: 'mipmaps', title: 'Mipmaps', ready: true },
+      { slug: 'msaa', title: 'Multisampling (MSAA)', ready: true },
+      { slug: 'camera-controls', title: 'An orbit camera for navigating a model', ready: true }
     ]
   },
   {
     title: 'Engine architecture',
     level: 'Advanced',
     topics: [
-      { slug: 'engine-structure', title: 'Structuring a render engine in C#' },
-      { slug: 'resource-lifetime', title: 'Resource lifetime and deletion queues' },
-      { slug: 'materials-pipelines', title: 'Materials, pipeline caches and pipeline variants' },
-      { slug: 'descriptor-management', title: 'Descriptor management and bindless resources' },
-      { slug: 'shader-hot-reload', title: 'Shader compilation, reflection and hot reload' },
-      { slug: 'render-graph', title: 'A simple render graph: passes and barriers' },
-      { slug: 'multithreaded-recording', title: 'Recording commands on several threads' }
+      { slug: 'engine-structure', title: 'Structuring a render engine in C#', ready: true },
+      { slug: 'resource-lifetime', title: 'Resource lifetime and deletion queues', ready: true },
+      { slug: 'materials-pipelines', title: 'Materials, pipeline caches and pipeline variants', ready: true },
+      { slug: 'descriptor-management', title: 'Descriptor management and bindless resources', ready: true },
+      { slug: 'shader-hot-reload', title: 'Shader compilation, reflection and hot reload', ready: true },
+      { slug: 'render-graph', title: 'A simple render graph: passes and barriers', ready: true },
+      { slug: 'multithreaded-recording', title: 'Recording commands on several threads', ready: true }
     ]
   },
   {

@@ -218,6 +218,35 @@ import { VkLoaderWidget } from '../widgets/vk-loader.widget';
 import { DevicePickerWidget } from '../widgets/device-picker.widget';
 import { QueueFamiliesWidget } from '../widgets/queue-families.widget';
 import { VkLifetimeWidget } from '../widgets/vk-lifetime.widget';
+import { ValidationCatchWidget } from '../widgets/validation-catch.widget';
+import { PresentModesWidget } from '../widgets/present-modes.widget';
+import { ImageViewWidget } from '../widgets/image-view.widget';
+import { NdcCoordsWidget } from '../widgets/ndc-coords.widget';
+import { PipelineStateWidget } from '../widgets/pipeline-state.widget';
+import { CmdLifecycleWidget } from '../widgets/cmd-lifecycle.widget';
+import { ImageLayoutsWidget } from '../widgets/image-layouts.widget';
+import { FramesInFlightWidget } from '../widgets/frames-in-flight.widget';
+import { VertexLayoutWidget } from '../widgets/vertex-layout.widget';
+import { MemoryTypesWidget } from '../widgets/memory-types.widget';
+import { StagingFlowWidget } from '../widgets/staging-flow.widget';
+import { IndexGridWidget } from '../widgets/index-grid.widget';
+import { Std140LayoutWidget } from '../widgets/std140-layout.widget';
+import { PerDrawDataWidget } from '../widgets/per-draw-data.widget';
+import { AllocatorSimWidget } from '../widgets/allocator-sim.widget';
+import { MvpPipelineWidget } from '../widgets/mvp-pipeline.widget';
+import { DepthPrecisionWidget } from '../widgets/depth-precision.widget';
+import { TextureSamplerWidget } from '../widgets/texture-sampler.widget';
+import { ObjParserWidget } from '../widgets/obj-parser.widget';
+import { MipChainWidget } from '../widgets/mip-chain.widget';
+import { MsaaCoverageWidget } from '../widgets/msaa-coverage.widget';
+import { OrbitCameraWidget } from '../widgets/orbit-camera.widget';
+import { EngineLayersWidget } from '../widgets/engine-layers.widget';
+import { DeletionTimelineWidget } from '../widgets/deletion-timeline.widget';
+import { DrawSortWidget } from '../widgets/draw-sort.widget';
+import { BindlessTableWidget } from '../widgets/bindless-table.widget';
+import { SpirvWordsWidget } from '../widgets/spirv-words.widget';
+import { RenderGraphWidget } from '../widgets/render-graph.widget';
+import { ParallelRecordingWidget } from '../widgets/parallel-recording.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -261,7 +290,10 @@ import { VkLifetimeWidget } from '../widgets/vk-lifetime.widget';
     ViewCheckWidget, BatchSplitWidget, ProcCallWidget, UdfKindsWidget, TryCatchFlowWidget, TriggerAuditWidget,
     BtreePagesWidget, PageSplitWidget, LookupTippingWidget, PlanReaderWidget, SargCheckWidget, ParamSniffWidget,
     TxStepperWidget, IsolationLabWidget, DeadlockCycleWidget, TemporalTimelineWidget, InjectionLabWidget, SchemaMapWidget, RoundTripsWidget,
-    GpuFrameWidget, VersionBitsWidget, EnumerateTwiceWidget, VkLoaderWidget, DevicePickerWidget, QueueFamiliesWidget, VkLifetimeWidget
+    GpuFrameWidget, VersionBitsWidget, EnumerateTwiceWidget, VkLoaderWidget, DevicePickerWidget, QueueFamiliesWidget, VkLifetimeWidget, ValidationCatchWidget, PresentModesWidget, ImageViewWidget, NdcCoordsWidget, PipelineStateWidget, CmdLifecycleWidget, ImageLayoutsWidget, FramesInFlightWidget,
+    VertexLayoutWidget, MemoryTypesWidget, StagingFlowWidget, IndexGridWidget, Std140LayoutWidget, PerDrawDataWidget, AllocatorSimWidget,
+    MvpPipelineWidget, DepthPrecisionWidget, TextureSamplerWidget, ObjParserWidget, MipChainWidget, MsaaCoverageWidget, OrbitCameraWidget,
+    EngineLayersWidget, DeletionTimelineWidget, DrawSortWidget, BindlessTableWidget, SpirvWordsWidget, RenderGraphWidget, ParallelRecordingWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -514,6 +546,35 @@ import { VkLifetimeWidget } from '../widgets/vk-lifetime.widget';
             @case ('device-picker') { <w-device-picker /> }
             @case ('queue-families') { <w-queue-families /> }
             @case ('vk-lifetime') { <w-vk-lifetime /> }
+            @case ('validation-catch') { <w-validation-catch /> }
+            @case ('present-modes') { <w-present-modes /> }
+            @case ('image-view') { <w-image-view /> }
+            @case ('ndc-coords') { <w-ndc-coords /> }
+            @case ('pipeline-state') { <w-pipeline-state /> }
+            @case ('cmd-lifecycle') { <w-cmd-lifecycle /> }
+            @case ('image-layouts') { <w-image-layouts /> }
+            @case ('frames-in-flight') { <w-frames-in-flight /> }
+            @case ('vertex-layout') { <w-vertex-layout /> }
+            @case ('memory-types') { <w-memory-types /> }
+            @case ('staging-flow') { <w-staging-flow /> }
+            @case ('index-grid') { <w-index-grid /> }
+            @case ('std140-layout') { <w-std140-layout /> }
+            @case ('per-draw-data') { <w-per-draw-data /> }
+            @case ('allocator-sim') { <w-allocator-sim /> }
+            @case ('mvp-pipeline') { <w-mvp-pipeline /> }
+            @case ('depth-precision') { <w-depth-precision /> }
+            @case ('texture-sampler') { <w-texture-sampler /> }
+            @case ('obj-parser') { <w-obj-parser /> }
+            @case ('mip-chain') { <w-mip-chain /> }
+            @case ('msaa-coverage') { <w-msaa-coverage /> }
+            @case ('orbit-camera') { <w-orbit-camera /> }
+            @case ('engine-layers') { <w-engine-layers /> }
+            @case ('deletion-timeline') { <w-deletion-timeline /> }
+            @case ('draw-sort') { <w-draw-sort /> }
+            @case ('bindless-table') { <w-bindless-table /> }
+            @case ('spirv-words') { <w-spirv-words /> }
+            @case ('render-graph') { <w-render-graph /> }
+            @case ('parallel-recording') { <w-parallel-recording /> }
           }
         }
       }

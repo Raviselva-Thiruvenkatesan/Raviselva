@@ -39,7 +39,11 @@ for (const file of htmlFiles(OUT)) {
   if (!cspMeta.test(html)) throw new Error(`No CSP <meta> found in ${file}`);
 
   html = html.replace(cspMeta, (_, start, policy, end) => {
-    const tightened = policy.replace(/script-src[^;]*/i, `script-src 'self' ${[...hashes].join(' ')}`.trim());
+    // Keep the sources listed in index.html (such as the analytics host); swap 'unsafe-inline' for the hashes.
+    const tightened = policy.replace(/script-src([^;]*)/i, (_, sources) => {
+      const kept = sources.trim().split(/\s+/).filter(s => s && s !== "'unsafe-inline'");
+      return `script-src ${[...kept, ...hashes].join(' ')}`;
+    });
     if (/script-src[^;]*'unsafe-inline'/i.test(tightened)) throw new Error(`unsafe-inline left in ${file}`);
     return start + tightened + end;
   });

@@ -37,6 +37,10 @@ import { PROGRAMMABILITY as SQL_PROGRAMMABILITY } from './sql/programmability';
 import { PERFORMANCE as SQL_PERFORMANCE } from './sql/performance';
 import { MASTER as SQL_MASTER } from './sql/master';
 import { FOUNDATIONS as VK_FOUNDATIONS } from './vulkan/foundations';
+import { FIRST_TRIANGLE as VK_FIRST_TRIANGLE } from './vulkan/first-triangle';
+import { BUFFERS_MEMORY as VK_BUFFERS_MEMORY } from './vulkan/buffers-memory';
+import { IMAGES_3D as VK_IMAGES_3D } from './vulkan/images-3d';
+import { ENGINE_ARCHITECTURE as VK_ENGINE_ARCHITECTURE } from './vulkan/engine-architecture';
 
 /** Written lessons per track. Only the lesson page imports this, so lesson text stays out of other pages. */
 const LESSONS: Record<string, Lesson[]> = {
@@ -44,7 +48,7 @@ const LESSONS: Record<string, Lesson[]> = {
   dsa: [...FOUNDATIONS, ...LINEAR, ...SEARCH_SORT, ...TECHNIQUES, ...TREES, ...GRAPHS, ...DESIGN, ...DSA_MASTER],
   'bim-math': [...BIM_FOUNDATIONS, ...BIM_VECTORS, ...BIM_LINES, ...BIM_PLANES, ...BIM_MATRICES, ...BIM_ROTATIONS, ...BIM_SOLIDS, ...BIM_MASTER],
   sql: [...SQL_FOUNDATIONS, ...SQL_CHANGING, ...SQL_FUNCTIONS, ...SQL_JOINS, ...SQL_GROUPING, ...SQL_ADVANCED, ...SQL_PROGRAMMABILITY, ...SQL_PERFORMANCE, ...SQL_MASTER],
-  vulkan: [...VK_FOUNDATIONS]
+  vulkan: [...VK_FOUNDATIONS, ...VK_FIRST_TRIANGLE, ...VK_BUFFERS_MEMORY, ...VK_IMAGES_3D, ...VK_ENGINE_ARCHITECTURE]
 };
 
 export function findLesson(track: string, slug: string): Lesson | undefined {

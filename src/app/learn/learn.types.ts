@@ -193,7 +193,11 @@ export type WidgetName =
   | 'btree-pages' | 'page-split' | 'lookup-tipping' | 'plan-reader' | 'sarg-check' | 'param-sniff'
   | 'tx-stepper' | 'isolation-lab' | 'deadlock-cycle' | 'temporal-timeline' | 'injection-lab' | 'schema-map' | 'round-trips'
   // Vulkan
-  | 'gpu-frame' | 'version-bits' | 'enumerate-twice' | 'vk-loader' | 'device-picker' | 'queue-families' | 'vk-lifetime';
+  | 'gpu-frame' | 'version-bits' | 'enumerate-twice' | 'vk-loader' | 'device-picker' | 'queue-families' | 'vk-lifetime'
+  | 'validation-catch' | 'present-modes' | 'image-view' | 'ndc-coords' | 'pipeline-state' | 'cmd-lifecycle' | 'image-layouts' | 'frames-in-flight'
+  | 'vertex-layout' | 'memory-types' | 'staging-flow' | 'index-grid' | 'std140-layout' | 'per-draw-data' | 'allocator-sim'
+  | 'mvp-pipeline' | 'depth-precision' | 'texture-sampler' | 'obj-parser' | 'mip-chain' | 'msaa-coverage' | 'orbit-camera'
+  | 'engine-layers' | 'deletion-timeline' | 'draw-sort' | 'bindless-table' | 'spirv-words' | 'render-graph' | 'parallel-recording';
 
 export type Block =
   | { type: 'p'; text: string }

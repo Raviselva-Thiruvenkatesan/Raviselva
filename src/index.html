@@ -11,14 +11,16 @@
     Content Security Policy. Production builds also get a strict script policy with hashes
     added automatically after the build (scripts/csp-hashes.mjs replaces 'unsafe-inline').
     If you add a new third-party service (analytics, embeds…), allow its host here.
+    Cloudflare Web Analytics: the beacon script loads from static.cloudflareinsights.com and
+    reports to cloudflareinsights.com. Cloudflare Pages injects it when Web Analytics is on.
   -->
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
-    script-src 'self' 'unsafe-inline';
+    script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     font-src 'self' https://fonts.gstatic.com;
     img-src 'self' data:;
-    connect-src 'self' https://api.emailjs.com;
+    connect-src 'self' https://api.emailjs.com https://cloudflareinsights.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
