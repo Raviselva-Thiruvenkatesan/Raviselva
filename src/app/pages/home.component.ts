@@ -9,6 +9,7 @@ import { ExperienceComponent } from '../components/experience/experience.compone
 import { ProjectsComponent } from '../components/projects/projects.component';
 import { AchievementsComponent } from '../components/achievements/achievements.component';
 import { ContactComponent } from '../components/contact/contact.component';
+import { LevelRailComponent } from '../components/level-rail/level-rail.component';
 import { ScrollRevealDirective } from '../directives/scroll-reveal.directive';
 import { POSTS, readingMinutes } from '../blog/posts';
 import { SeoService } from '../services/seo.service';
@@ -18,7 +19,7 @@ import { SeoService } from '../services/seo.service';
   standalone: true,
   imports: [
     HeroComponent, AboutComponent, SkillsComponent, ExperienceComponent, ProjectsComponent,
-    AchievementsComponent, ContactComponent, ScrollRevealDirective, RouterLink, DatePipe
+    AchievementsComponent, ContactComponent, LevelRailComponent, ScrollRevealDirective, RouterLink, DatePipe
   ],
   template: `
     <!-- Animated background blobs -->
@@ -27,6 +28,8 @@ import { SeoService } from '../services/seo.service';
       style="top: 40%; right: 5%; width: 400px; height: 400px; background: var(--indigo); animation-delay: 2s;"></div>
     <div class="bg-blob" aria-hidden="true"
       style="top: 70%; left: 20%; width: 350px; height: 350px; background: var(--blue-neon); animation-delay: 4s;"></div>
+
+    <app-level-rail></app-level-rail>
 
     <app-hero id="home"></app-hero>
     <app-about id="about"></app-about>
@@ -38,6 +41,7 @@ import { SeoService } from '../services/seo.service';
     <section id="notes" class="py-5" aria-labelledby="notes-title">
       <div class="container">
         <div class="text-center mb-5" appScrollReveal="reveal-up">
+          <p class="eyebrow"><span class="sheet-no" aria-hidden="true">A-06</span>From the blog</p>
           <h2 id="notes-title" class="display-5 fw-bold mb-3">Latest <span class="text-gradient">Notes</span></h2>
           <div class="divider mx-auto"></div>
         </div>
@@ -63,10 +67,7 @@ import { SeoService } from '../services/seo.service';
 
     <app-contact id="contact"></app-contact>
   `,
-  styleUrls: ['../blog/blog.styles.scss'],
-  styles: [`
-    .divider { width: 60px; height: 4px; background: var(--gradient-primary); border-radius: 2px; }
-  `]
+  styleUrls: ['../blog/blog.styles.scss']
 })
 export class HomeComponent {
   latest = POSTS.slice(0, 3);

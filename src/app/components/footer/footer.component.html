@@ -1,23 +1,51 @@
-<footer class="footer position-relative py-4 border-top" style="border-color: var(--border-color) !important;">
+<footer class="footer position-relative">
   <div class="container">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
-
-      <!-- Brand -->
-      <div class="text-center text-md-start">
-        <a routerLink="/" fragment="home" class="h5 fw-bold text-gradient mb-0" style="text-decoration: none;">Raviselva T.</a>
-        <p class="text-muted small mb-0 mt-1">© {{ currentYear }} Raviselva Thiruvenkatesan. All rights reserved.</p>
+    <!-- Laid out like the title block in the corner of a drawing sheet -->
+    <div class="title-block">
+      <div class="cell cell-project">
+        <span class="cell-label mono">Project</span>
+        <a routerLink="/" fragment="home" class="h5 fw-bold text-gradient mb-0">Raviselva T.</a>
+        <span class="cell-sub">Portfolio</span>
       </div>
 
-      <!-- Socials -->
-      <div class="d-flex gap-3">
-        <a href="https://www.linkedin.com/in/raviselva/" class="footer-social-link" target="_blank" rel="noopener noreferrer"
-          aria-label="LinkedIn (opens in new tab)"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
-        <a href="https://github.com/Raviselva-Thiruvenkatesan" class="footer-social-link" target="_blank" rel="noopener noreferrer"
-          aria-label="GitHub (opens in new tab)"><i class="bi bi-github" aria-hidden="true"></i></a>
-        <a href="mailto:raviselva.t@gmail.com" class="footer-social-link" aria-label="Email Raviselva"><i
-            class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+      <div class="cell">
+        <span class="cell-label mono">Drawn by</span>
+        <span class="cell-value">Raviselva Thiruvenkatesan</span>
       </div>
 
+      <div class="cell">
+        <span class="cell-label mono">Discipline</span>
+        <span class="cell-value">BIM Software Development</span>
+      </div>
+
+      <div class="cell">
+        <span class="cell-label mono">Location</span>
+        <span class="cell-value">Salem, Tamil Nadu</span>
+      </div>
+
+      <div class="cell cell-small">
+        <span class="cell-label mono">Scale</span>
+        <span class="cell-value mono">1 : 1</span>
+      </div>
+
+      <div class="cell cell-small">
+        <span class="cell-label mono">Issued</span>
+        <span class="cell-value mono">{{ currentYear }}</span>
+      </div>
+
+      <div class="cell cell-contact">
+        <span class="cell-label mono">Contact</span>
+        <div class="d-flex gap-2">
+          <a href="https://www.linkedin.com/in/raviselva/" class="footer-social-link" target="_blank" rel="noopener noreferrer"
+            aria-label="LinkedIn (opens in new tab)"><i class="bi bi-linkedin" aria-hidden="true"></i></a>
+          <a href="https://github.com/Raviselva-Thiruvenkatesan" class="footer-social-link" target="_blank" rel="noopener noreferrer"
+            aria-label="GitHub (opens in new tab)"><i class="bi bi-github" aria-hidden="true"></i></a>
+          <a href="mailto:raviselva.t@gmail.com" class="footer-social-link" aria-label="Email Raviselva"><i
+              class="bi bi-envelope-fill" aria-hidden="true"></i></a>
+        </div>
+      </div>
     </div>
+
+    <p class="text-muted small text-center mb-0 mt-3">© {{ currentYear }} Raviselva Thiruvenkatesan. All rights reserved.</p>
   </div>
 </footer>

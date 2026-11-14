@@ -31,12 +31,12 @@ import { MotionService } from '../../services/motion.service';
     .scroll-progress-bar {
       height: 100%; width: 100%; transform-origin: 0 50%; transform: scaleX(0);
       background: linear-gradient(90deg, var(--blue-neon), var(--purple), var(--indigo));
-      box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+      box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.6);
     }
     .cursor-glow {
       position: fixed; top: 0; left: 0; width: 420px; height: 420px; margin: -210px 0 0 -210px;
       border-radius: 50%; pointer-events: none; z-index: 0; opacity: 0;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(var(--accent-rgb), 0.14) 0%, transparent 65%);
       transition: opacity 0.4s ease; will-change: transform;
     }
     :host-context([data-theme="dark"]) .cursor-glow {
@@ -74,6 +74,14 @@ export class ScrollFxComponent implements OnInit, OnDestroy {
     const glow = this.glow.nativeElement;
     glow.style.opacity = '1';
     glow.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+
+    // Spotlight edge on cards: tell the hovered .glass-card where the pointer is (see styles.scss).
+    const card = (e.target as Element | null)?.closest?.<HTMLElement>('.glass-card');
+    if (card) {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--sx', `${Math.round(e.clientX - rect.left)}px`);
+      card.style.setProperty('--sy', `${Math.round(e.clientY - rect.top)}px`);
+    }
   };
 
   private readonly onLeave = () => (this.glow.nativeElement.style.opacity = '0');

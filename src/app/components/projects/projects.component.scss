@@ -2,13 +2,6 @@
   position: relative;
 }
 
-.divider {
-  width: 60px;
-  height: 4px;
-  background: var(--gradient-primary);
-  border-radius: 2px;
-}
-
 /* Filter chips */
 .filter-chip {
   border: 1px solid var(--border-color);
@@ -28,12 +21,13 @@
     padding: 0 0.35rem;
     border-radius: 999px;
     font-size: 0.75rem;
-    background: rgba(139, 92, 246, 0.12);
+    background: rgba(var(--accent-rgb), 0.12);
     color: var(--purple);
   }
 
   &:hover {
-    border-color: var(--purple);
+    border-color: rgba(var(--accent-rgb), 0.6);
+    transform: translateY(-2px);
   }
 
   &.active {
@@ -92,11 +86,23 @@
 
 .project-image {
   height: 200px;
-  border-radius: 20px 20px 0 0;
+  border-radius: 19px 19px 0 0;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Soft light from the top-left and a blueprint grid over each gradient */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(120% 90% at 0% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
+      linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px) 0 0 / 20px 20px,
+      linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px) 0 0 / 20px 20px;
+    pointer-events: none;
+  }
 
   &.bg-gradient-1 { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
   &.bg-gradient-2 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
@@ -154,9 +160,10 @@
   margin: 0;
 
   .badge {
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(var(--accent-rgb), 0.1);
     color: var(--purple);
-    border: 1px solid rgba(139, 92, 246, 0.2);
+    border: 1px solid rgba(var(--accent-rgb), 0.22);
+    border-radius: 999px;
     font-weight: 500;
     padding: 6px 12px;
   }
@@ -203,6 +210,7 @@
 
 .project-meta {
   font-size: 0.82rem;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--purple);
 }

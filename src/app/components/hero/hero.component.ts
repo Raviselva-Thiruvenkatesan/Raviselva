@@ -30,12 +30,34 @@ export class HeroComponent implements OnInit, OnDestroy {
   /** Interactive 3D model takes over the hero while true. */
   exploring = signal(false);
   @ViewChild('exploreBtn') exploreBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('coords', { static: true }) coords!: ElementRef<HTMLElement>;
 
   private timer?: ReturnType<typeof setTimeout>;
   private motion = inject(MotionService);
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+  private frame = 0;
+
+  /**
+   * CAD status bar: writes the pointer position (in "mm", 10 per pixel, origin bottom-left as in
+   * a model view) straight to the DOM, so moving the mouse never triggers change detection.
+   */
+  private readonly onPointer = (e: PointerEvent) => {
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(() => {
+      const rect = this.host.getBoundingClientRect();
+      const bar = this.coords.nativeElement;
+      const set = (axis: string, px: number) => {
+        const el = bar.querySelector(`[data-axis="${axis}"]`);
+        if (el) el.textContent = String(Math.max(0, Math.round(px) * 10)).padStart(4, '0');
+      };
+      set('x', e.clientX - rect.left);
+      set('y', rect.bottom - e.clientY);
+    });
+  };
 
   ngOnInit() {
+    if (this.isBrowser) this.host.addEventListener('pointermove', this.onPointer, { passive: true });
     // Pre-rendered HTML (and reduced-motion visitors) show the first role without typing.
     if (!this.isBrowser || this.motion.reducedMotion()) {
       this.currentRole.set(this.roles[0]);
@@ -102,6 +124,10 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     clearTimeout(this.timer);
+    if (this.isBrowser) {
+      cancelAnimationFrame(this.frame);
+      this.host.removeEventListener('pointermove', this.onPointer);
+    }
     if (this.exploring()) this.lockScroll(false);
   }
 }

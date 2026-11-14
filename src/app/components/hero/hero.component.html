@@ -40,9 +40,21 @@
       <div class="col-lg-6" appScrollReveal="reveal-left">
         <div class="profile-container position-relative mx-auto">
           <!-- Floating Icons -->
-          <div class="floating-icon icon-angular" aria-hidden="true"><i class="bi bi-browser-chrome"></i></div>
-          <div class="floating-icon icon-dotnet" aria-hidden="true"><i class="bi bi-braces"></i></div>
-          <div class="floating-icon icon-sql" aria-hidden="true"><i class="bi bi-database"></i></div>
+          <div class="floating-icon icon-model" aria-hidden="true"><i class="bi bi-building-gear"></i></div>
+          <div class="floating-icon icon-measure" aria-hidden="true"><i class="bi bi-rulers"></i></div>
+
+          <!-- Dimension lines, as on a drawing: they measure the portrait frame -->
+          <div class="dim dim-h" aria-hidden="true"><span class="mono"></span></div>
+          <div class="dim dim-v" aria-hidden="true"><span class="mono"></span></div>
+
+          <!-- Element properties, like the palette a BIM tool shows for a selected object -->
+          <dl class="props-panel mono" aria-hidden="true">
+            <div class="props-head"><i class="bi bi-box"></i> Properties</div>
+            <div><dt>Category</dt><dd>BIM Developer</dd></div>
+            <div><dt>Stack</dt><dd>C# · WPF · VTK</dd></div>
+            <div><dt>Suite</dt><dd>Viskar</dd></div>
+            <div><dt>Base</dt><dd>Salem, IN</dd></div>
+          </dl>
 
           <div class="profile-image-wrapper">
             <div class="profile-placeholder d-flex align-items-center justify-content-center">
@@ -59,6 +71,16 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- CAD status bar: live pointer coordinates over the hero (mouse users only) -->
+  <div #coords class="cad-bar mono d-none d-lg-flex" aria-hidden="true">
+    <span><b>X</b> <span data-axis="x">0000</span></span>
+    <span><b>Y</b> <span data-axis="y">0000</span></span>
+    <span><b>Z</b> 0000</span>
+    <span class="cad-flag on">SNAP</span>
+    <span class="cad-flag on">GRID</span>
+    <span class="cad-flag">ORTHO</span>
   </div>
 
   <a href="#about" class="scroll-cue d-none d-md-flex" aria-label="Scroll to About section"

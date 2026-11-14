@@ -64,7 +64,7 @@
 }
 
 .soon .track-icon {
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(var(--accent-rgb), 0.15);
   color: var(--purple);
 }
 
@@ -76,7 +76,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   color: var(--purple);
-  background: rgba(139, 92, 246, 0.12);
+  background: rgba(var(--accent-rgb), 0.12);
 
   &.live {
     color: #059669;
@@ -87,7 +87,7 @@
 .progress-line {
   height: 8px;
   border-radius: 999px;
-  background: rgba(139, 92, 246, 0.14);
+  background: rgba(var(--accent-rgb), 0.14);
   overflow: hidden;
 
   span {
@@ -160,7 +160,7 @@
   border-radius: 8px;
 
   &.ready:hover {
-    background: rgba(139, 92, 246, 0.07);
+    background: rgba(var(--accent-rgb), 0.07);
     color: var(--purple);
   }
 
@@ -273,13 +273,13 @@
 
   a:hover {
     color: var(--purple);
-    background: rgba(139, 92, 246, 0.06);
+    background: rgba(var(--accent-rgb), 0.06);
   }
 
   a.current {
     color: var(--purple);
     font-weight: 700;
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(var(--accent-rgb), 0.1);
   }
 
   span.locked {

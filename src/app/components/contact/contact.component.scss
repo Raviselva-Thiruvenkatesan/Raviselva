@@ -1,15 +1,8 @@
-.divider {
-  width: 60px;
-  height: 4px;
-  background: var(--gradient-primary);
-  border-radius: 2px;
-}
-
 .custom-input {
   .form-control {
     color: var(--text-main);
     border-bottom-color: var(--border-color) !important;
-    
+
     &:focus {
       box-shadow: none;
       background: transparent;
@@ -22,7 +15,8 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--gradient-primary);
+    background: var(--gradient-accent);
+    box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.6);
     transition: width 0.4s ease;
   }
 
@@ -46,8 +40,10 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(139, 92, 246, 0.1);
-  color: var(--purple);
+  flex: none;
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 12px 26px -10px rgba(var(--accent-rgb), 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,21 +52,21 @@
 
 .social-card {
   transition: all 0.3s ease;
-  
+
   i {
     font-size: 2rem;
     color: var(--text-main);
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, transform 0.5s var(--ease-spring);
   }
-  
+
   &:hover {
     transform: translateY(-5px);
-    background: var(--purple);
-    color: white;
+    color: var(--purple);
     box-shadow: var(--shadow-neon);
-    
+
     i {
-      color: white;
+      color: var(--purple);
+      transform: scale(1.15) rotate(-6deg);
     }
   }
 }

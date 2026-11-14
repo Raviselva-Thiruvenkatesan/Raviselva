@@ -1,6 +1,6 @@
 import {
   AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnDestroy, Output,
-  PLATFORM_ID, ViewChild, inject, signal
+  PLATFORM_ID, ViewChild, computed, inject, signal
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import type * as THREE_NS from 'three';
@@ -56,6 +56,26 @@ interface Member {
   quat: THREE_NS.Quaternion;
   length: number;
   delay: number;
+  storey: number;   // 0-based storey it is erected with (drives the exploded view)
+}
+
+type ViewId = 'iso' | 'front' | 'side' | 'top';
+type DisplayId = 'shaded' | 'wire' | 'xray';
+
+/** One row of the Layers panel: a category of parts that can be hidden. */
+interface Layer {
+  id: string;
+  label: string;
+  color: string;
+  keys: string[];     // geometry sets that belong to this category
+  count: number;
+  visible: boolean;
+}
+
+/** Result of the measure tool, in metres along the building's own axes. */
+interface Measurement {
+  distance: string;
+  rows: Array<[string, string]>;
 }
 
 interface Tween {
@@ -71,14 +91,29 @@ const BUILD_STEP = 0.42;      // seconds between storeys
 const MEMBER_ANIM = 0.75;     // seconds for one member to drop into place
 const CAM_DIST = 30;          // resting camera distance (layout maths assume it)
 const UNIT_M = 2;             // one scene unit = 2 m in the info panel
+const FLOORS = 6;
+const HOME_PITCH = 0.18;      // resting tilt of the structure towards the camera
+const HOME_YAW = -0.65;       // resting turn of the structure (spin is added to it)
+const EXPLODE_GAP = 1.1;      // extra gap per storey at 100 % explode (scene units)
+const SEQ_STRETCH = 0.6;      // extra seconds per storey on the scrubber, so storeys go up one at a time
+
+/** Structure orientation for each preset view: [spin, pitch]. The camera always resets to the front. */
+const VIEW_ANGLES: Record<ViewId, [number, number]> = {
+  iso: [0, HOME_PITCH],
+  front: [-HOME_YAW, 0],
+  side: [-HOME_YAW - Math.PI / 2, 0],
+  top: [-HOME_YAW, Math.PI / 2]
+};
 
 /**
  * WebGL scene for the hero: a steel-framed building (I-section columns and beams with bolted end
  * plates and weld beads, base plates with anchor bolts, splice plates, gusseted X-bracing) that
  * erects itself storey by storey and turns slowly behind the profile photo.
  *
- * In explore mode (`[exploring]="true"`) it takes over the hero: orbit / zoom / pan with
- * OrbitControls, hover highlight, and click a member to see its details.
+ * In explore mode (`[exploring]="true"`) it takes over the hero and becomes a small model viewer:
+ * orbit / zoom / pan, preset views, shaded / wireframe / X-ray display, layer visibility, a
+ * construction-sequence scrubber, an exploded view, a measure tool, a screenshot, and click a
+ * member to see its details.
  *
  * Three.js is lazy-loaded, rendering pauses off-screen / in hidden tabs, and reduced-motion
  * visitors get the finished structure as a still frame (explore mode still works, without easing).
@@ -87,7 +122,7 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
   selector: 'app-hero-scene',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.exploring]': 'explore()' },
+  host: { '[class.exploring]': 'explore()', '[class.measuring]': 'measuring()' },
   template: `
     <canvas #canvas [class.ready]="ready()" aria-hidden="true"></canvas>
 
@@ -99,11 +134,21 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
             <span>6 storeys · 5 × 3 bays · {{ partCount() }} parts</span>
           </div>
           <div class="actions">
-            <button type="button" class="ui-btn" (click)="resetView()">
-              <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i><span>Reset view</span>
+            <button type="button" class="ui-btn" (click)="resetView()" title="Reset view (R)">
+              <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i><span>Reset</span>
             </button>
-            <button type="button" class="ui-btn" (click)="toggleSpin()" [attr.aria-pressed]="autoRotate()">
+            <button type="button" class="ui-btn" (click)="toggleSpin()" [attr.aria-pressed]="autoRotate()" title="Spin">
               <i class="bi bi-arrow-repeat" aria-hidden="true"></i><span>Spin</span>
+            </button>
+            <button type="button" class="ui-btn" (click)="toggleMeasure()" [attr.aria-pressed]="measuring()" title="Measure (M)">
+              <i class="bi bi-rulers" aria-hidden="true"></i><span>Measure</span>
+            </button>
+            <button type="button" class="ui-btn" (click)="toggleLayersPanel()" [attr.aria-pressed]="layersOpen()"
+              [attr.aria-expanded]="layersOpen()" aria-controls="model-layers" title="Layers (L)">
+              <i class="bi bi-layers" aria-hidden="true"></i><span>Layers</span>
+            </button>
+            <button type="button" class="ui-btn" (click)="screenshot()" title="Save a PNG of this view">
+              <i class="bi bi-camera" aria-hidden="true"></i><span>Screenshot</span>
             </button>
             <button #exitBtn type="button" class="ui-btn exit" (click)="exitExplore.emit()" aria-label="Close 3D model">
               <i class="bi bi-x-lg" aria-hidden="true"></i>
@@ -111,37 +156,121 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
           </div>
         </div>
 
-        <p class="hint">{{ touch ? 'Drag to rotate · Pinch to zoom · Tap a member' : 'Drag to rotate · Scroll to zoom · Right-drag to pan · Click a member' }}</p>
-
-        <aside class="info" aria-live="polite">
-          @if (loadError()) {
-            <div class="info-head"><span class="kind">Viewer unavailable</span></div>
-            <h3>The 3D controls couldn't load</h3>
-            <p class="sub">Please refresh the page and try again. If you're running the dev server, restart it.</p>
-          } @else if (selected(); as s) {
-            <div class="info-head">
-              <span class="kind">{{ s.kind }}</span>
-              <button type="button" class="close-info" (click)="clearSelection()" aria-label="Clear selection">
-                <i class="bi bi-x" aria-hidden="true"></i>
+        <div class="toolbar">
+          <div class="seg" role="group" aria-label="Camera view">
+            @for (v of views; track v.id) {
+              <button type="button" class="seg-btn" [attr.aria-pressed]="view() === v.id" (click)="setView(v.id)"
+                [title]="v.label + ' view (' + v.key + ')'">
+                <i class="bi {{ v.icon }}" aria-hidden="true"></i><span>{{ v.label }}</span>
               </button>
-            </div>
-            <h3>{{ s.title }}</h3>
-            <p class="sub">{{ s.subtitle }}</p>
-            <dl>
-              @for (row of s.rows; track row[0]) {
-                <div><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></div>
-              }
-            </dl>
+            }
+          </div>
+          <div class="seg" role="group" aria-label="Display style">
+            @for (d of displays; track d.id) {
+              <button type="button" class="seg-btn" [attr.aria-pressed]="display() === d.id" (click)="setDisplay(d.id)">
+                <i class="bi {{ d.icon }}" aria-hidden="true"></i><span>{{ d.label }}</span>
+              </button>
+            }
+          </div>
+        </div>
+
+        <p class="hint">
+          @if (measuring()) {
+            Measure: {{ touch ? 'tap' : 'click' }} two points on the model
           } @else {
-            <div class="info-head"><span class="kind">Model summary</span></div>
-            <dl>
-              @for (row of summary(); track row[0]) {
-                <div><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></div>
-              }
-            </dl>
-            <p class="sub mt">Select any member to see its details.</p>
+            {{ touch ? 'Drag to rotate · Pinch to zoom · Tap a member' : 'Drag to rotate · Scroll to zoom · Right-drag to pan · Click a member' }}
           }
-        </aside>
+        </p>
+
+        @if (layersOpen()) {
+          <aside id="model-layers" class="layers" aria-label="Layers">
+            <div class="panel-head">
+              <span class="kind">Layers</span>
+              <button type="button" class="link-btn" (click)="showAllLayers()" [disabled]="allLayersVisible()">Show all</button>
+            </div>
+            @for (l of layers(); track l.id) {
+              <label class="layer" [class.off]="!l.visible">
+                <input type="checkbox" [checked]="l.visible" (change)="toggleLayer(l.id)">
+                <span class="swatch" [style.background]="l.color" aria-hidden="true"></span>
+                <span class="name">{{ l.label }}</span>
+                <span class="count">{{ l.count }}</span>
+              </label>
+            }
+          </aside>
+        }
+
+        <div class="bottom">
+          <aside class="info" aria-live="polite">
+            @if (loadError()) {
+              <div class="info-head"><span class="kind">Viewer unavailable</span></div>
+              <h3>The 3D controls couldn't load</h3>
+              <p class="sub">Please refresh the page and try again. If you're running the dev server, restart it.</p>
+            } @else if (measuring()) {
+              <div class="info-head">
+                <span class="kind">Measure</span>
+                <button type="button" class="close-info" (click)="toggleMeasure()" aria-label="Stop measuring">
+                  <i class="bi bi-x" aria-hidden="true"></i>
+                </button>
+              </div>
+              @if (measure(); as m) {
+                <h3>{{ m.distance }}</h3>
+                <p class="sub">Straight-line distance between the two points</p>
+                <dl>
+                  @for (row of m.rows; track row[0]) {
+                    <div><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></div>
+                  }
+                </dl>
+              } @else {
+                <h3>Pick two points</h3>
+                <p class="sub">{{ touch ? 'Tap' : 'Click' }} any two spots on the steel to measure between them.</p>
+              }
+            } @else if (selected(); as s) {
+              <div class="info-head">
+                <span class="kind">{{ s.kind }}</span>
+                <button type="button" class="close-info" (click)="clearSelection()" aria-label="Clear selection">
+                  <i class="bi bi-x" aria-hidden="true"></i>
+                </button>
+              </div>
+              <h3>{{ s.title }}</h3>
+              <p class="sub">{{ s.subtitle }}</p>
+              <dl>
+                @for (row of s.rows; track row[0]) {
+                  <div><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></div>
+                }
+              </dl>
+            } @else {
+              <div class="info-head"><span class="kind">Model summary</span></div>
+              <dl>
+                @for (row of summary(); track row[0]) {
+                  <div><dt>{{ row[0] }}</dt><dd>{{ row[1] }}</dd></div>
+                }
+              </dl>
+              <p class="sub mt">Select any member to see its details.</p>
+            }
+          </aside>
+
+          <div class="timeline">
+            <div class="tl-row">
+              <button type="button" class="play" (click)="togglePlay()"
+                [attr.aria-label]="playing() ? 'Pause construction sequence' : 'Play construction sequence'">
+                <i class="bi" [class.bi-pause-fill]="playing()" [class.bi-play-fill]="!playing()" aria-hidden="true"></i>
+              </button>
+              <label for="model-stage">Construction sequence</label>
+              <input id="model-stage" type="range" min="0" max="100" step="1" [value]="stage()"
+                (input)="setStage(+$any($event.target).value)">
+              <output for="model-stage">{{ stageLabel() }}</output>
+            </div>
+            <div class="tl-row">
+              <span class="tl-icon" aria-hidden="true"><i class="bi bi-arrows-expand"></i></span>
+              <label for="model-explode">Explode storeys</label>
+              <input id="model-explode" type="range" min="0" max="100" step="1" [value]="explode()"
+                (input)="setExplode(+$any($event.target).value)">
+              <output for="model-explode">{{ explode() }}%</output>
+            </div>
+          </div>
+        </div>
+
+        <div #measureLabel class="measure-label" [hidden]="!measure()" aria-hidden="true">{{ measure()?.distance }}</div>
       </div>
     }
   `,
@@ -167,7 +296,7 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
     .model-title { display: flex; flex-direction: column; }
     .model-title strong { font-family: var(--font-heading); font-size: 1.25rem; color: var(--text-main); }
     .model-title span { font-size: 0.85rem; color: var(--text-muted); }
-    .actions { display: flex; gap: 8px; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
     .ui-btn {
       display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px;
       border: 1px solid var(--border-color); background: var(--bg-glass); color: var(--text-main);
@@ -179,8 +308,68 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
     .ui-btn.exit { padding: 8px 11px; }
     .hint { margin: 0; font-size: 0.8rem; color: var(--text-muted); pointer-events: none; }
 
+    /* Segmented controls: camera view and display style */
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; pointer-events: auto; align-self: flex-start; max-width: 100%; }
+    .seg {
+      display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px;
+      border: 1px solid var(--border-color); background: var(--bg-glass); backdrop-filter: blur(10px);
+    }
+    .seg-btn {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border: none; border-radius: 9px;
+      background: transparent; color: var(--text-muted); font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .seg-btn:hover { color: var(--text-main); background: rgba(var(--accent-rgb), 0.1); }
+    .seg-btn[aria-pressed="true"] { color: #fff; background: var(--gradient-primary); }
+
+    /* Layers panel */
+    .layers {
+      position: absolute; top: 168px; right: clamp(16px, 4vw, 48px); width: 214px; pointer-events: auto;
+      padding: 12px 14px; border-radius: 16px; border: 1px solid var(--border-color);
+      background: var(--bg-glass); backdrop-filter: blur(14px); box-shadow: var(--shadow-lg); color: var(--text-main);
+      animation: ui-in 0.25s ease both;
+    }
+    .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .link-btn { border: none; background: none; padding: 0; font-size: 0.78rem; font-weight: 600; color: var(--purple); cursor: pointer; }
+    .link-btn:disabled { opacity: 0.4; cursor: default; }
+    .layer {
+      display: flex; align-items: center; gap: 9px; padding: 5px 0; font-size: 0.875rem; cursor: pointer;
+      border-top: 1px dashed var(--border-color); transition: opacity 0.2s ease;
+    }
+    .layer.off { opacity: 0.5; }
+    .layer input { width: 15px; height: 15px; accent-color: var(--purple); cursor: pointer; }
+    .swatch { width: 10px; height: 10px; border-radius: 3px; box-shadow: 0 0 0 1px var(--border-strong); }
+    .layer .name { flex: 1; font-weight: 500; }
+    .layer .count { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); }
+
+    /* Bottom row: info panel + construction timeline */
+    .bottom { margin-top: auto; display: flex; align-items: flex-end; gap: 16px; }
+    .timeline {
+      flex: 1; min-width: 0; max-width: 640px; pointer-events: auto; display: grid; gap: 8px;
+      padding: 12px 16px; border-radius: 16px; border: 1px solid var(--border-color);
+      background: var(--bg-glass); backdrop-filter: blur(14px); box-shadow: var(--shadow-lg); color: var(--text-main);
+    }
+    .tl-row { display: grid; grid-template-columns: 30px 158px minmax(0, 1fr) 92px; align-items: center; gap: 10px; }
+    .tl-row label { font-size: 0.82rem; font-weight: 600; margin: 0; }
+    .tl-row output { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-muted); text-align: right; }
+    .tl-row input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer; }
+    .play, .tl-icon {
+      width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-size: 0.95rem;
+    }
+    .play { border: none; color: #fff; background: var(--gradient-primary); cursor: pointer; transition: transform 0.2s ease; }
+    .play:hover { transform: scale(1.08); }
+    .tl-icon { color: var(--purple); background: rgba(var(--accent-rgb), 0.12); }
+
+    /* Floating distance tag (positioned every frame from the 3D midpoint) */
+    .measure-label {
+      position: absolute; left: 0; top: 0; pointer-events: none; white-space: nowrap;
+      padding: 3px 9px; border-radius: 6px; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700;
+      color: #04121f; background: #22d3ee; box-shadow: 0 6px 18px -6px rgba(34, 211, 238, 0.9);
+    }
+    :host(.measuring) canvas { cursor: crosshair; }
+
     .info {
-      margin-top: auto; align-self: flex-start; width: min(340px, 100%);
+      flex: none; width: min(340px, 100%);
       padding: 16px 18px; border-radius: 16px; border: 1px solid var(--border-color);
       background: var(--bg-glass); backdrop-filter: blur(14px); box-shadow: var(--shadow-lg);
       color: var(--text-main);
@@ -206,6 +395,16 @@ const UNIT_M = 2;             // one scene unit = 2 m in the info panel
       .ui-btn { padding: 8px 11px; }
       .info { width: 100%; padding: 12px 14px; }
       .hint { font-size: 0.75rem; }
+      .seg-btn { padding: 6px 9px; }
+      .bottom { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+      .timeline { max-width: none; padding: 8px 12px; gap: 4px; }
+      .tl-row { grid-template-columns: 26px 96px minmax(0, 1fr) 66px; gap: 8px; }
+      .tl-row label { font-size: 0.74rem; }
+      .play, .tl-icon { width: 26px; height: 26px; }
+      .layers { top: 176px; right: 16px; width: 190px; }
+      /* Keep the summary short on phones so the model stays visible */
+      .info dl div:nth-child(n+4) { display: none; }
+      .info .sub.mt { display: none; }
     }
   `]
 })
@@ -225,6 +424,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('exitBtn') exitBtn?: ElementRef<HTMLButtonElement>;
+  @ViewChild('measureLabel') measureLabel?: ElementRef<HTMLElement>;
 
   ready = signal(false);
   explore = signal(false);
@@ -234,6 +434,37 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   partCount = signal(0);
   /** The OrbitControls chunk failed to download: explain instead of failing silently. */
   loadError = signal(false);
+
+  /* ---- viewer options ---- */
+  readonly views: Array<{ id: ViewId; label: string; icon: string; key: string }> = [
+    { id: 'iso', label: '3D', icon: 'bi-box', key: '1' },
+    { id: 'front', label: 'Front', icon: 'bi-square', key: '2' },
+    { id: 'side', label: 'Side', icon: 'bi-layout-sidebar-inset', key: '3' },
+    { id: 'top', label: 'Plan', icon: 'bi-grid-3x3', key: '4' }
+  ];
+  readonly displays: Array<{ id: DisplayId; label: string; icon: string }> = [
+    { id: 'shaded', label: 'Shaded', icon: 'bi-circle-fill' },
+    { id: 'wire', label: 'Wireframe', icon: 'bi-bounding-box' },
+    { id: 'xray', label: 'X-ray', icon: 'bi-eye' }
+  ];
+  view = signal<ViewId>('iso');
+  display = signal<DisplayId>('shaded');
+  layers = signal<Layer[]>([]);
+  layersOpen = signal(false);
+  allLayersVisible = computed(() => this.layers().every(l => l.visible));
+  /** Construction sequence position, 0–100 % of the build animation. */
+  stage = signal(100);
+  playing = signal(false);
+  stageLabel = computed(() => {
+    const pct = this.stage();
+    if (pct >= 100) return 'Complete';
+    const storey = Math.min(FLOORS, Math.floor(((pct / 100) * this.seqDuration()) / (BUILD_STEP + SEQ_STRETCH)) + 1);
+    return `Storey ${storey} of ${FLOORS}`;
+  });
+  /** Exploded view, 0–100 %: lifts each storey away from the one below. */
+  explode = signal(0);
+  measuring = signal(false);
+  measure = signal<Measurement | null>(null);
 
   private THREE?: Three;
   private renderer?: THREE_NS.WebGLRenderer;
@@ -253,6 +484,22 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private members: Member[] = [];
   private pickables: THREE_NS.InstancedMesh[] = [];
   private memberInfo = new Map<THREE_NS.InstancedMesh, MemberInfo[]>();
+  private meshByKey: Record<string, THREE_NS.InstancedMesh> = {};
+  /** Length of the scrubber's timeline: the build animation with the storeys spaced further apart. */
+  private seqDuration = signal(1);
+  private membersDirty = false;     // stage / explode changed: re-place the members next frame
+  private boundsDirty = false;      // members moved: picking bounds need recomputing
+
+  // Preset views ease the structure's own orientation and bring the camera back to the front.
+  private pitch = HOME_PITCH;
+  private pitchTarget = HOME_PITCH;
+  private spinTarget: number | null = null;
+  private camReset = false;
+
+  // Measure tool (points are stored in the structure's local space, so they turn with it)
+  private measurePts: THREE_NS.Vector3[] = [];
+  private measureLine?: THREE_NS.Line;
+  private measureDots: THREE_NS.Mesh[] = [];
   private buildDone = false;
   private buildDuration = 0;
   private structureHeight = 0;
@@ -448,7 +695,9 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
 
     /* ---- collect every part first so each InstancedMesh gets an exact count ---- */
     type Key = keyof typeof geos;
-    type Part = { pos: THREE_NS.Vector3; quat: THREE_NS.Quaternion; len: number; delay: number; info: MemberInfo };
+    type Part = {
+      pos: THREE_NS.Vector3; quat: THREE_NS.Quaternion; len: number; delay: number; info: MemberInfo; storey: number;
+    };
     const parts: Record<Key, Part[]> = {
       column: [], beam: [], brace: [], endPlate: [], basePlate: [], capPlate: [],
       splice: [], gusset: [], bolt: [], weldV: [], weldH: []
@@ -457,8 +706,9 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     const qFor = (dir: THREE_NS.Vector3) => new THREE.Quaternion().setFromUnitVectors(Zaxis, dir.clone().normalize());
     const qId = new THREE.Quaternion();
     const qUp = qFor(V(0, 1, 0));
+    let storeyNow = 0;   // every part added while a storey is being generated belongs to that storey
     const add = (set: Key, pos: THREE_NS.Vector3, quat: THREE_NS.Quaternion, delay: number, info: MemberInfo, len = 1) =>
-      parts[set].push({ pos, quat, len, delay, info });
+      parts[set].push({ pos, quat, len, delay, info, storey: storeyNow });
     /** A point at a local offset inside a frame given by (origin, quat). */
     const local = (origin: THREE_NS.Vector3, quat: THREE_NS.Quaternion, x: number, y: number, z: number) =>
       V(x, y, z).applyQuaternion(quat).add(origin);
@@ -544,6 +794,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
 
     for (let f = 0; f < floors; f++) {
       const t = f * BUILD_STEP;
+      storeyNow = f;
       for (let i = 0; i < nx; i++) for (let k = 0; k < nz; k++) {
         const base = P(i, f, k);
         const top = P(i, f + 1, k);
@@ -624,12 +875,16 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
       const mesh = new THREE.InstancedMesh(geos[key], matFor[key], list.length);
       mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       mesh.frustumCulled = false;
-      list.forEach((p, index) => this.members.push({ mesh, index, pos: p.pos, quat: p.quat, length: p.len, delay: p.delay }));
+      list.forEach((p, index) => this.members.push({
+        mesh, index, pos: p.pos, quat: p.quat, length: p.len, delay: p.delay, storey: p.storey
+      }));
+      this.meshByKey[key] = mesh;
       this.memberInfo.set(mesh, list.map(p => p.info));
       this.pickables.push(mesh);
       structure.add(mesh);
     });
     this.buildDuration = Math.max(...this.members.map(m => m.delay)) + MEMBER_ANIM;
+    this.seqDuration.set(this.buildDuration + (FLOORS - 1) * SEQ_STRETCH);
 
     const plates = parts.endPlate.length + parts.basePlate.length + parts.capPlate.length + parts.splice.length + parts.gusset.length;
     this.summary.set([
@@ -641,6 +896,18 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
       ['Weld beads', `${parts.weldV.length + parts.weldH.length}`]
     ]);
     this.partCount.set(this.members.length);
+
+    const count = (...keys: Key[]) => keys.reduce((n, k) => n + parts[k].length, 0);
+    const layer = (id: string, label: string, color: string, ...keys: Key[]): Layer =>
+      ({ id, label, color, keys, count: count(...keys), visible: true });
+    this.layers.set([
+      layer('columns', 'Columns', '#64748b', 'column'),
+      layer('beams', 'Beams', '#5a5fc8', 'beam'),
+      layer('bracing', 'Bracing', '#e09a22', 'brace'),
+      layer('plates', 'Plates', '#9aa5b8', 'endPlate', 'basePlate', 'capPlate', 'splice', 'gusset'),
+      layer('fasteners', 'Bolts', '#e5e7eb', 'bolt'),
+      layer('welds', 'Welds', '#f97316', 'weldV', 'weldH')
+    ]);
 
     // Site grid under the building
     this.grid = new THREE.GridHelper(15, 15);
@@ -662,7 +929,7 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     structure.add(this.scanRing);
     this.disposables.push(ringGeo);
 
-    structure.rotation.set(0.18, -0.65, 0);
+    structure.rotation.set(HOME_PITCH, HOME_YAW, 0);
     this.structure = structure;
     this.pivot!.add(structure);
     this.updateMembers();
@@ -685,6 +952,27 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     this.selectHl = make(0.7);
     this.mats['highlightHover'] = this.hoverHl.material as THREE_NS.MeshBasicMaterial;
     this.mats['highlightSelect'] = this.selectHl.material as THREE_NS.MeshBasicMaterial;
+
+    // Measure tool: two dots and the line between them, always drawn on top of the steel.
+    const lineMat = new THREE.LineBasicMaterial({ depthTest: false, transparent: true });
+    const dotMat = new THREE.MeshBasicMaterial({ depthTest: false, transparent: true });
+    const lineGeo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]);
+    const dotGeo = new THREE.SphereGeometry(0.055, 12, 8);
+    this.measureLine = new THREE.Line(lineGeo, lineMat);
+    this.measureLine.visible = false;
+    this.measureLine.frustumCulled = false;
+    this.measureLine.renderOrder = 20;
+    this.structure!.add(this.measureLine);
+    this.measureDots = [0, 1].map(() => {
+      const dot = new THREE.Mesh(dotGeo, dotMat);
+      dot.visible = false;
+      dot.renderOrder = 21;
+      this.structure!.add(dot);
+      return dot;
+    });
+    this.mats['measureLine'] = lineMat;
+    this.mats['measureDot'] = dotMat;
+    this.disposables.push(lineMat, dotMat, lineGeo, dotGeo);
   }
 
   private buildDust() {
@@ -742,6 +1030,8 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     color('scan', pal.accent);
     color('highlightHover', pal.highlight);
     color('highlightSelect', pal.highlight);
+    color('measureLine', 0x22d3ee);
+    color('measureDot', 0x22d3ee);
     color('dust', pal.dust);
     (this.mats['dust'] as THREE_NS.PointsMaterial).opacity = pal.dustOpacity;
     (this.mats['dust'] as THREE_NS.PointsMaterial).blending = dark ? this.THREE.AdditiveBlending : this.THREE.NormalBlending;
@@ -864,14 +1154,15 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
   private explorePlacement(w: number, h: number) {
     const narrow = w < 768;
     // Screen space taken by the UI: toolbar on top, panel on the left (desktop) or bottom (phone).
-    const top = narrow ? 120 : 110;
+    const top = narrow ? 196 : 150;
     const panelLeft = narrow ? 0 : Math.min(340, w * 0.4) + 64;
-    const panelBottom = narrow ? Math.min(250, h * 0.36) : 0;
-    const freeW = w - panelLeft;
+    const panelBottom = narrow ? Math.min(300, h * 0.4) : 110;
+    const panelRight = !narrow && this.layersOpen() ? 230 : 0;
+    const freeW = w - panelLeft - panelRight;
     const freeH = h - top - panelBottom;
 
     // Shift the image so the model's centre lands in the middle of the free area.
-    const dx = panelLeft / 2;
+    const dx = (panelLeft - panelRight) / 2;
     const dy = (top - panelBottom) / 2;
     this.camera!.setViewOffset(w, h, -dx, -dy, w, h);
 
@@ -955,8 +1246,18 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     this.loadError.set(false);
     // Escape works even before (or without) the controls loading.
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') this.exitExplore.emit();
+      if (e.key === 'Escape') {
+        this.exitExplore.emit();
+        return;
+      }
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const preset = this.views.find(v => v.key === e.key);
+      if (preset) this.setView(preset.id);
+      else if (e.key === 'r' || e.key === 'R') this.resetView();
+      else if (e.key === 'm' || e.key === 'M') this.toggleMeasure();
+      else if (e.key === 'l' || e.key === 'L') this.toggleLayersPanel();
     };
+    this.layersOpen.set(w >= 992);   // open by default where there is room beside the model
     document.addEventListener('keydown', onKey);
     this.exploreCleanup.push(() => document.removeEventListener('keydown', onKey));
     this.tweenTo(this.explorePlacement(w, h), reduced ? 0 : 0.7);
@@ -999,6 +1300,23 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     this.setHighlight(this.hoverHl, null);
     this.autoRotate.set(false);
     this.canvasRef.nativeElement.style.cursor = '';
+
+    // Put the model back the way the hero shows it: complete, shaded, everything visible.
+    this.playing.set(false);
+    this.stage.set(100);
+    this.explode.set(0);
+    this.measuring.set(false);
+    this.clearMeasure();
+    this.view.set('iso');
+    this.spinTarget = null;
+    this.pitchTarget = HOME_PITCH;
+    this.camReset = false;
+    this.membersDirty = false;
+    if (this.structure) {
+      this.setDisplay('shaded');
+      this.showAllLayers();
+      this.updateMembers();
+    }
     if (!this.camera || !this.pivot) return;
 
     this.camera.clearViewOffset();
@@ -1035,13 +1353,21 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
       this.setHighlight(this.hoverHl, null);
       canvas.style.cursor = '';
     };
-    const onDown = (e: PointerEvent) => (this.downAt = { x: e.clientX, y: e.clientY, t: performance.now() });
+    const onDown = (e: PointerEvent) => {
+      this.downAt = { x: e.clientX, y: e.clientY, t: performance.now() };
+      this.camReset = false;   // the visitor took over the camera
+    };
     const onUp = (e: PointerEvent) => {
       const d = this.downAt;
       this.downAt = null;
       // A click/tap, not the end of a drag
       if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 6 || performance.now() - d.t > 500) return;
       const hit = this.pick(e.clientX, e.clientY);
+      if (this.measuring()) {
+        if (hit) this.addMeasurePoint(hit.point);
+        if (!this.running) this.renderFrame(0);
+        return;
+      }
       if (hit) {
         this.selected.set(this.memberInfo.get(hit.mesh)?.[hit.id] ?? null);
         this.setHighlight(this.selectHl, hit);
@@ -1062,13 +1388,19 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     });
   }
 
-  private pick(clientX: number, clientY: number): { mesh: THREE_NS.InstancedMesh; id: number } | null {
+  private pick(clientX: number, clientY: number): { mesh: THREE_NS.InstancedMesh; id: number; point: THREE_NS.Vector3 } | null {
     if (!this.raycaster || !this.camera) return null;
+    if (this.boundsDirty) {
+      this.pickables.forEach(m => m.computeBoundingSphere());
+      this.boundsDirty = false;
+    }
     const rect = this.canvasRef.nativeElement.getBoundingClientRect();
     this.ndc!.set(((clientX - rect.left) / rect.width) * 2 - 1, -((clientY - rect.top) / rect.height) * 2 + 1);
     this.raycaster.setFromCamera(this.ndc!, this.camera);
-    const hit = this.raycaster.intersectObjects(this.pickables, false).find(h => h.instanceId !== undefined);
-    return hit ? { mesh: hit.object as THREE_NS.InstancedMesh, id: hit.instanceId! } : null;
+    // Hidden layers must not be clickable (the raycaster does not check `visible` itself).
+    const targets = this.pickables.filter(m => m.visible);
+    const hit = this.raycaster.intersectObjects(targets, false).find(h => h.instanceId !== undefined);
+    return hit ? { mesh: hit.object as THREE_NS.InstancedMesh, id: hit.instanceId!, point: hit.point } : null;
   }
 
   /** Overlay a highlight shell on one instance (slightly enlarged so it wraps the member). */
@@ -1085,17 +1417,172 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     hl.visible = true;
   }
 
+  /** Back to the opening 3/4 view, with the camera in front of the model. */
   resetView() {
-    if (!this.controls || !this.camera) return;
-    this.camera.position.set(0, 0, CAM_DIST);
-    this.controls.target.set(0, 0, 0);
-    this.controls.update();
-    this.spin = 0;
+    this.setView('iso');
+  }
+
+  /** Turn the structure to a preset view and ease the camera back to the front. */
+  setView(id: ViewId) {
+    this.view.set(id);
+    this.autoRotate.set(false);
+    const [spin, pitch] = VIEW_ANGLES[id];
+    // Take the short way round from wherever the model has been spun to.
+    this.spinTarget = spin + Math.round((this.spin - spin) / (Math.PI * 2)) * Math.PI * 2;
+    this.pitchTarget = pitch;
+    this.camReset = true;
     if (!this.running) this.renderFrame(0);
+  }
+
+  setDisplay(id: DisplayId) {
+    this.display.set(id);
+    for (const key of ['column', 'beam', 'brace', 'plate', 'bolt', 'weld']) {
+      const mat = this.mats[key] as THREE_NS.MeshStandardMaterial | undefined;
+      if (!mat) continue;
+      mat.wireframe = id === 'wire';
+      mat.transparent = id === 'xray';
+      mat.opacity = id === 'xray' ? 0.22 : 1;
+      mat.depthWrite = id !== 'xray';
+      mat.needsUpdate = true;
+    }
+    if (!this.running) this.renderFrame(0);
+  }
+
+  /** Open / close the Layers panel and re-centre the model in the space that is left. */
+  toggleLayersPanel() {
+    this.layersOpen.update(v => !v);
+    if (!this.explore() || !this.camera) return;
+    const { w, h } = this.viewport();
+    this.tweenTo(this.explorePlacement(w, h), this.motion.reducedMotion() ? 0 : 0.4);
+    if (!this.running) this.renderFrame(0);
+  }
+
+  toggleLayer(id: string) {
+    this.layers.update(list => list.map(l => (l.id === id ? { ...l, visible: !l.visible } : l)));
+    this.applyLayers();
+  }
+
+  showAllLayers() {
+    this.layers.update(list => list.map(l => (l.visible ? l : { ...l, visible: true })));
+    this.applyLayers();
+  }
+
+  private applyLayers() {
+    for (const l of this.layers()) for (const key of l.keys) {
+      const mesh = this.meshByKey[key];
+      if (mesh) mesh.visible = l.visible;
+    }
+    // A selected or hovered part may just have been hidden.
+    this.clearSelection();
+    this.setHighlight(this.hoverHl, null);
+    if (!this.running) this.renderFrame(0);
+  }
+
+  /** Scrub the construction sequence (0–100 %). */
+  setStage(pct: number) {
+    this.playing.set(false);
+    this.stage.set(Math.min(100, Math.max(0, pct)));
+    this.onMembersChanged();
+  }
+
+  /** Play the erection sequence from the current position (or from the start when complete). */
+  togglePlay() {
+    if (this.playing()) {
+      this.playing.set(false);
+      return;
+    }
+    if (this.stage() >= 100) this.stage.set(0);
+    this.playing.set(true);
+    this.onMembersChanged();
+  }
+
+  setExplode(pct: number) {
+    this.explode.set(Math.min(100, Math.max(0, pct)));
+    this.onMembersChanged();
+  }
+
+  /** Members are about to move: anything pinned to their old positions is dropped. */
+  private onMembersChanged() {
+    this.membersDirty = true;
+    this.clearSelection();
+    this.clearMeasure();
+    if (!this.running) this.renderFrame(0);
+  }
+
+  toggleMeasure() {
+    this.measuring.update(v => !v);
+    this.clearMeasure();
+    if (this.measuring()) this.clearSelection();
+    if (!this.running) this.renderFrame(0);
+  }
+
+  private clearMeasure() {
+    this.measurePts = [];
+    this.measure.set(null);
+    if (this.measureLine) this.measureLine.visible = false;
+    this.measureDots.forEach(d => (d.visible = false));
+  }
+
+  /** Add a picked point (world space); the second one completes the measurement, a third starts over. */
+  private addMeasurePoint(world: THREE_NS.Vector3) {
+    if (!this.structure || !this.measureLine) return;
+    if (this.measurePts.length >= 2) this.clearMeasure();
+    const p = this.structure.worldToLocal(world.clone());
+    this.measurePts.push(p);
+    const dot = this.measureDots[this.measurePts.length - 1];
+    dot.position.copy(p);
+    dot.visible = true;
+    if (this.measurePts.length < 2) return;
+
+    const [a, b] = this.measurePts;
+    this.measureLine.geometry.setFromPoints([a, b]);
+    this.measureLine.visible = true;
+    const m = (u: number) => `${(Math.abs(u) * UNIT_M).toFixed(2)} m`;
+    this.measure.set({
+      distance: m(a.distanceTo(b)),
+      rows: [['Along grid A–E', m(b.x - a.x)], ['Height', m(b.y - a.y)], ['Along grid 1–3', m(b.z - a.z)]]
+    });
+  }
+
+  /** Keep the distance tag over the middle of the measured line. */
+  private updateMeasureLabel() {
+    const el = this.measureLabel?.nativeElement;
+    if (!el || this.measurePts.length < 2 || !this.structure || !this.camera) return;
+    const mid = this.v3!.copy(this.measurePts[0]).add(this.measurePts[1]).multiplyScalar(0.5);
+    this.structure.localToWorld(mid).project(this.camera);
+    const canvas = this.canvasRef.nativeElement;
+    const x = ((mid.x + 1) / 2) * canvas.clientWidth;
+    const y = ((1 - mid.y) / 2) * canvas.clientHeight;
+    el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -160%)`;
+  }
+
+  /** Save the current view as a PNG (drawn over the page background, since the canvas is transparent). */
+  screenshot() {
+    if (!this.renderer) return;
+    this.renderFrame(0);   // the drawing buffer is only readable in the same task as a render
+    const src = this.canvasRef.nativeElement;
+    const out = document.createElement('canvas');
+    out.width = src.width;
+    out.height = src.height;
+    const ctx = out.getContext('2d');
+    if (!ctx) return;
+    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-main').trim() || '#020617';
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.drawImage(src, 0, 0);
+    out.toBlob(blob => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'steel-frame-model.png';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/png');
   }
 
   toggleSpin() {
     this.autoRotate.update(v => !v);
+    this.spinTarget = null;   // spinning takes over from a preset view
   }
 
   clearSelection() {
@@ -1136,16 +1623,22 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     cancelAnimationFrame(this.frameId);
   }
 
-  /** Place every member according to the build timeline (drop in from above + grow). */
-  private updateMembers() {
+  /**
+   * Place every member according to the build timeline (drop in from above + grow).
+   * `time` is the position on that timeline; `gap` lifts each storey for the exploded view;
+   * `stretch` delays each storey a little more so the scrubber shows them going up one by one.
+   */
+  private updateMembers(time = this.elapsed, gap = 0, stretch = 0) {
     const m4 = this.m4!, v = this.v3!, s = this.s3!;
     const touched = new Set<THREE_NS.InstancedMesh>();
+    // Keep the exploded stack centred on the origin so it stays in view.
+    const lift = -(gap * (FLOORS - 1)) / 2;
     for (const mem of this.members) {
-      const t = Math.min(Math.max((this.elapsed - mem.delay) / MEMBER_ANIM, 0), 1);
+      const t = Math.min(Math.max((time - mem.delay - mem.storey * stretch) / MEMBER_ANIM, 0), 1);
       const e = 1 - Math.pow(1 - t, 3);
       const k = Math.max(e, 0.0001);
       v.copy(mem.pos);
-      v.y += (1 - e) * 2.2;
+      v.y += (1 - e) * 2.2 + (gap ? mem.storey * gap + lift : 0);
       s.set(k, k, mem.length * k);
       m4.compose(v, mem.quat, s);
       mem.mesh.setMatrixAt(mem.index, m4);
@@ -1165,6 +1658,21 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     }
     if (this.scanRing) this.scanRing.visible = this.buildDone && !exploring;
 
+    // Explore mode: the construction sequence and exploded view drive the members instead.
+    if (exploring) {
+      if (this.playing()) {
+        const next = Math.min(100, this.stage() + (dt / this.seqDuration()) * 100);
+        this.stage.set(next);
+        this.membersDirty = true;
+        if (next >= 100) this.playing.set(false);
+      }
+      if (this.membersDirty) {
+        this.updateMembers((this.stage() / 100) * this.seqDuration(), (this.explode() / 100) * EXPLODE_GAP, SEQ_STRETCH);
+        this.membersDirty = false;
+        this.boundsDirty = true;
+      }
+    }
+
     if (this.tween && this.pivot) {
       const tw = this.tween;
       tw.t = Math.min(tw.t + dt / tw.duration, 1);
@@ -1183,9 +1691,26 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
     if (!exploring) this.spin += dt * 0.09;
     else if (this.autoRotate()) this.spin += dt * 0.3;
 
+    // Preset views: ease the structure round and bring the camera back in front of it.
+    const k = this.motion.reducedMotion() ? 1 : Math.min(1, dt * 6);
+    if (exploring && this.spinTarget !== null) {
+      this.spin += (this.spinTarget - this.spin) * k;
+      if (Math.abs(this.spinTarget - this.spin) < 0.001) {
+        this.spin = this.spinTarget;
+        this.spinTarget = null;
+      }
+    }
+    this.pitch += (this.pitchTarget - this.pitch) * (exploring ? k : ease);
+    if (this.camReset && this.controls) {
+      const home = this.v3!.set(0, 0, CAM_DIST);
+      this.camera.position.lerp(home, k);
+      this.controls.target.lerp(this.s3!.set(0, 0, 0), k);
+      if (this.camera.position.distanceTo(home) < 0.02) this.camReset = false;
+    }
+
     if (this.structure) {
-      this.structure.rotation.y = -0.65 + this.spin + this.tilt.y;
-      this.structure.rotation.x = 0.18 + this.tilt.x;
+      this.structure.rotation.y = HOME_YAW + this.spin + this.tilt.y;
+      this.structure.rotation.x = this.pitch + this.tilt.x;
       this.structure.position.y = this.buildDone && !exploring ? Math.sin(this.elapsed * 0.6) * 0.08 : 0;
     }
     if (this.scanRing?.visible) {
@@ -1206,8 +1731,9 @@ export class HeroSceneComponent implements AfterViewInit, OnDestroy {
       this.scene.updateMatrixWorld();
       const hit = this.pick(this.hoverAt.x, this.hoverAt.y);
       this.setHighlight(this.hoverHl, hit);
-      this.canvasRef.nativeElement.style.cursor = hit ? 'pointer' : '';
+      this.canvasRef.nativeElement.style.cursor = hit && !this.measuring() ? 'pointer' : '';
     }
+    if (exploring) this.updateMeasureLabel();
 
     this.renderer.render(this.scene, this.camera);
   }
