@@ -496,25 +496,25 @@ const VULKAN_MODULES: Module[] = [
     title: 'Lighting and shading',
     level: 'Advanced',
     topics: [
-      { slug: 'blinn-phong', title: 'Lighting basics: normals and Blinn-Phong' },
-      { slug: 'pbr', title: 'Physically based rendering (PBR)' },
-      { slug: 'shadow-mapping', title: 'Shadow mapping' },
-      { slug: 'image-based-lighting', title: 'Environment maps and image-based lighting' },
-      { slug: 'deferred-shading', title: 'Deferred shading' },
-      { slug: 'post-processing', title: 'HDR, tone mapping and post-processing' }
+      { slug: 'blinn-phong', title: 'Lighting basics: normals and Blinn-Phong', ready: true },
+      { slug: 'pbr', title: 'Physically based rendering (PBR)', ready: true },
+      { slug: 'shadow-mapping', title: 'Shadow mapping', ready: true },
+      { slug: 'image-based-lighting', title: 'Environment maps and image-based lighting', ready: true },
+      { slug: 'deferred-shading', title: 'Deferred shading', ready: true },
+      { slug: 'post-processing', title: 'HDR, tone mapping and post-processing', ready: true }
     ]
   },
   {
     title: 'Large scenes and performance',
     level: 'Master',
     topics: [
-      { slug: 'gpu-profiling', title: 'Measuring the GPU: timestamp queries and statistics' },
-      { slug: 'frustum-culling', title: 'Frustum culling' },
-      { slug: 'instancing', title: 'Instancing repeated elements' },
-      { slug: 'indirect-drawing', title: 'Indirect drawing and GPU-driven culling' },
-      { slug: 'level-of-detail', title: 'Level of detail' },
-      { slug: 'compute-shaders', title: 'Compute shaders in depth' },
-      { slug: 'synchronization-deep-dive', title: 'Synchronisation in depth: barriers and timeline semaphores' }
+      { slug: 'gpu-profiling', title: 'Measuring the GPU: timestamp queries and statistics', ready: true },
+      { slug: 'frustum-culling', title: 'Frustum culling', ready: true },
+      { slug: 'instancing', title: 'Instancing repeated elements', ready: true },
+      { slug: 'indirect-drawing', title: 'Indirect drawing and GPU-driven culling', ready: true },
+      { slug: 'level-of-detail', title: 'Level of detail', ready: true },
+      { slug: 'compute-shaders', title: 'Compute shaders in depth', ready: true },
+      { slug: 'synchronization-deep-dive', title: 'Synchronisation in depth: barriers and timeline semaphores', ready: true }
     ]
   },
   {

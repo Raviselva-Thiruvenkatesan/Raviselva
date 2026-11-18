@@ -125,7 +125,7 @@ Result result = vk.EnumerateInstanceVersion(ref packed);
 var version = (Version32)packed;
 Console.WriteLine($"Result: {result}");
 Console.WriteLine($"Vulkan {version.Major}.{version.Minor}.{version.Patch} is available");
-Console.WriteLine($"Packed as one number: {packed} (0x{packed:X8})");`, output: 'Result: Success\nVulkan 1.4.304 is available\nPacked as one number: 4210992 (0x00404130)' },
+Console.WriteLine($"Packed as one number: {packed} (0x{packed:X8})");`, output: 'Result: Success\nVulkan 1.4.363 is available\nPacked as one number: 4211051 (0x0040416B)' },
       { type: 'p', text: 'Run it with `dotnet run`. Your version will depend on your driver. Three things to notice:' },
       { type: 'ul', items: [
         'Vulkan functions return a **`Result`** instead of throwing exceptions. `Success` is 0; the next lesson shows the others and how to check them.',
@@ -163,7 +163,7 @@ uint loader = 0;
 Vk.GetApi().EnumerateInstanceVersion(ref loader);
 
 Console.WriteLine(Unpack(Vk.MakeVersion(1, 3, 280)));
-Console.WriteLine(Unpack(loader));`, output: '(0, 1, 3, 280)\n(0, 1, 4, 304)' }
+Console.WriteLine(Unpack(loader));`, output: '(0, 1, 3, 280)\n(0, 1, 4, 363)' }
     ],
     keyPoints: [
       'The Vulkan loader (vulkan-1.dll on Windows) comes with the GPU driver; the Vulkan SDK adds validation layers and tools.',
@@ -384,8 +384,8 @@ unsafe
     Console.WriteLine($"{l} layers:");
     foreach (var layer in layers)
         Console.WriteLine($"  {SilkMarshal.PtrToString((nint)layer.LayerName)}: {SilkMarshal.PtrToString((nint)layer.Description)}");
-}`, output: '13 instance extensions:\n  VK_KHR_surface\n  VK_KHR_win32_surface\n  VK_KHR_external_memory_capabilities\n  VK_KHR_external_semaphore_capabilities\n  VK_KHR_external_fence_capabilities\n  VK_KHR_get_physical_device_properties2\n  VK_KHR_get_surface_capabilities2\n  VK_KHR_device_group_creation\n  VK_EXT_swapchain_colorspace\n  VK_EXT_debug_utils\n  VK_EXT_debug_report\n  VK_KHR_portability_enumeration\n  VK_LUNARG_direct_driver_loading\n0 layers:' },
-      { type: 'p', text: 'That output is from a Windows laptop with an Intel GPU and no Vulkan SDK, so there are **no layers** at all. Yours will differ. With the SDK installed you would see `VK_LAYER_KHRONOS_validation` and several others; tools such as Steam or OBS can add layers of their own.' },
+}`, output: '13 instance extensions:\n  VK_KHR_surface\n  VK_KHR_win32_surface\n  VK_KHR_external_memory_capabilities\n  VK_KHR_external_semaphore_capabilities\n  VK_KHR_external_fence_capabilities\n  VK_KHR_get_physical_device_properties2\n  VK_KHR_get_surface_capabilities2\n  VK_KHR_device_group_creation\n  VK_EXT_swapchain_colorspace\n  VK_EXT_debug_utils\n  VK_EXT_debug_report\n  VK_KHR_portability_enumeration\n  VK_LUNARG_direct_driver_loading\n9 layers:\n  VK_LAYER_LUNARG_api_dump: LunarG API dump layer\n  VK_LAYER_LUNARG_gfxreconstruct: GFXReconstruct Capture Layer Version 1.0.5\n  VK_LAYER_KHRONOS_synchronization2: Khronos Synchronization2 layer\n  VK_LAYER_KHRONOS_validation: Khronos Validation Layer\n  VK_LAYER_LUNARG_monitor: Execution Monitoring Layer\n  VK_LAYER_LUNARG_screenshot: LunarG image capture layer\n  VK_LAYER_KHRONOS_profiles: Khronos Profiles layer\n  VK_LAYER_KHRONOS_shader_object: Khronos Shader object layer\n  VK_LAYER_LUNARG_crash_diagnostic: Crash Diagnostic Layer is a crash/hang debugging tool that helps determines GPU progress in a Vulkan application.' },
+      { type: 'p', text: 'That output is from a Windows laptop with an Intel GPU and the Vulkan SDK installed. The nine layers all come from the SDK; `VK_LAYER_KHRONOS_validation` is the one the next module uses. Yours will differ: without the SDK there are usually **no layers** at all, and tools such as Steam or OBS can add layers of their own.' },
       { type: 'h2', text: 'Creating the instance properly' },
       { type: 'p', text: '`ApplicationInfo` tells the driver who you are. Drivers sometimes recognise well-known engines and applications and apply fixes for them, so give real names. The important field is `ApiVersion`: the **highest Vulkan version your program uses**. Asking for 1.3 on a 1.4 driver is fine; you get 1.3 behaviour.' },
       { type: 'code', title: 'CreateInstance.cs', code: cs`
@@ -444,7 +444,7 @@ using Silk.NET.Vulkan;
 Vk vk = Vk.GetApi();
 
 Console.WriteLine($"Unknown extension: {Try(extension: "VK_KHR_not_a_real_extension")}");
-Console.WriteLine($"Validation layer:  {Try(layer: "VK_LAYER_KHRONOS_validation")}");
+Console.WriteLine($"Unknown layer:     {Try(layer: "VK_LAYER_EXAMPLE_not_installed")}");
 
 unsafe Result Try(string? extension = null, string? layer = null)
 {
@@ -466,8 +466,8 @@ unsafe Result Try(string? extension = null, string? layer = null)
     SilkMarshal.Free(ext);
     SilkMarshal.Free(lay);
     return r;
-}`, output: 'Unknown extension: ErrorExtensionNotPresent\nValidation layer:  ErrorLayerNotPresent' },
-      { type: 'p', text: 'The validation layer is reported missing here because this PC has no Vulkan SDK. On yours it may succeed. That is the general rule: **check what is available, then enable only what is there**, and decide what to do when something you would like is missing. Validation is optional (useful in development, absent on users’ machines); a surface extension is required for a window.' },
+}`, output: 'Unknown extension: ErrorExtensionNotPresent\nUnknown layer:     ErrorLayerNotPresent' },
+      { type: 'p', text: 'A real layer behaves the same way when it is not installed: on a PC without the Vulkan SDK, asking for `VK_LAYER_KHRONOS_validation` returns `ErrorLayerNotPresent` too. That is the general rule: **check what is available, then enable only what is there**, and decide what to do when something you would like is missing. Validation is optional (useful in development, absent on users’ machines); a surface extension is required for a window.' },
       { type: 'note', kind: 'info', text: 'On macOS, Vulkan runs on top of Metal through MoltenVK, which does not fully meet the specification. There you must also enable `VK_KHR_portability_enumeration` and set the `EnumeratePortabilityBitKhr` flag in `InstanceCreateInfo.Flags`, or no GPU is listed.' },
       { type: 'quiz', question: 'Your program asks for VK_EXT_debug_utils and VK_LAYER_KHRONOS_validation on a user’s PC that has no Vulkan SDK. What happens?', options: ['The instance is created without the layer', 'CreateInstance returns ErrorLayerNotPresent and no instance is created', 'The loader downloads the layer', 'The program crashes on the first draw call'], answer: 1, explain: 'Instance creation is all or nothing. Check the available layers first and only enable validation when it is installed, typically only in debug builds.' },
       { type: 'exercise', task: 'Write `string[] Enable(Vk vk, string[] required, string[] optional)` that lists the available instance extensions, throws an exception naming any missing **required** ones, and returns the required ones plus whichever optional ones exist. Call it with required `VK_KHR_surface` and optional `VK_EXT_debug_utils` and `VK_EXT_not_there`, and print the result.', hint: 'Get the names with the two-call pattern into a `HashSet<string>`, then filter both lists with it.', solution: cs`
@@ -544,7 +544,7 @@ unsafe
 }`, output: '1 GPU(s)\nName:    Intel(R) Iris(R) Xe Graphics\nType:    IntegratedGpu\nVulkan:  1.4.312\nVendor:  0x8086, device 0x9A49\nDriver:  101.6881 (Intel\'s Windows numbering)' },
       { type: 'ul', items: [
         '**DeviceType** is `DiscreteGpu` (a separate card with its own memory), `IntegratedGpu` (part of the CPU, sharing system memory), `VirtualGpu`, `Cpu` (a software renderer such as llvmpipe) or `Other`.',
-        '**ApiVersion** is the highest Vulkan version this GPU’s driver supports. Here it is 1.4.312, newer than the loader’s 1.4.304: you can use the lower of your requested version and this one.',
+        '**ApiVersion** is the highest Vulkan version this GPU’s driver supports. Here it is 1.4.312, while the loader (lesson 1) reports 1.4.363: the two are updated separately. On this device you can use the lower of your requested version and the device’s.',
         '**VendorID** identifies the maker: 0x10DE NVIDIA, 0x1002 AMD, 0x8086 Intel, 0x13B5 Arm, 0x5143 Qualcomm.',
         '**DriverVersion** is packed in a vendor-specific way. Only for display: never compare it across vendors.'
       ] },

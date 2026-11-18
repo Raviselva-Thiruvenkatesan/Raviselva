@@ -247,6 +247,19 @@ import { BindlessTableWidget } from '../widgets/bindless-table.widget';
 import { SpirvWordsWidget } from '../widgets/spirv-words.widget';
 import { RenderGraphWidget } from '../widgets/render-graph.widget';
 import { ParallelRecordingWidget } from '../widgets/parallel-recording.widget';
+import { BlinnPhongWidget } from '../widgets/blinn-phong.widget';
+import { PbrBrdfWidget } from '../widgets/pbr-brdf.widget';
+import { ShadowBiasWidget } from '../widgets/shadow-bias.widget';
+import { ShIrradianceWidget } from '../widgets/sh-irradiance.widget';
+import { GbufferViewWidget } from '../widgets/gbuffer-view.widget';
+import { ToneCurvesWidget } from '../widgets/tone-curves.widget';
+import { GpuTimelineWidget } from '../widgets/gpu-timeline.widget';
+import { FrustumCullWidget } from '../widgets/frustum-cull.widget';
+import { InstancingCostWidget } from '../widgets/instancing-cost.widget';
+import { IndirectCommandsWidget } from '../widgets/indirect-commands.widget';
+import { LodErrorWidget } from '../widgets/lod-error.widget';
+import { WorkgroupReduceWidget } from '../widgets/workgroup-reduce.widget';
+import { BarrierBuilderWidget } from '../widgets/barrier-builder.widget';
 
 /** Renders a lesson's content blocks, including interactive widgets, quizzes and exercises. */
 @Component({
@@ -293,7 +306,9 @@ import { ParallelRecordingWidget } from '../widgets/parallel-recording.widget';
     GpuFrameWidget, VersionBitsWidget, EnumerateTwiceWidget, VkLoaderWidget, DevicePickerWidget, QueueFamiliesWidget, VkLifetimeWidget, ValidationCatchWidget, PresentModesWidget, ImageViewWidget, NdcCoordsWidget, PipelineStateWidget, CmdLifecycleWidget, ImageLayoutsWidget, FramesInFlightWidget,
     VertexLayoutWidget, MemoryTypesWidget, StagingFlowWidget, IndexGridWidget, Std140LayoutWidget, PerDrawDataWidget, AllocatorSimWidget,
     MvpPipelineWidget, DepthPrecisionWidget, TextureSamplerWidget, ObjParserWidget, MipChainWidget, MsaaCoverageWidget, OrbitCameraWidget,
-    EngineLayersWidget, DeletionTimelineWidget, DrawSortWidget, BindlessTableWidget, SpirvWordsWidget, RenderGraphWidget, ParallelRecordingWidget
+    EngineLayersWidget, DeletionTimelineWidget, DrawSortWidget, BindlessTableWidget, SpirvWordsWidget, RenderGraphWidget, ParallelRecordingWidget,
+    BlinnPhongWidget, PbrBrdfWidget, ShadowBiasWidget, ShIrradianceWidget, GbufferViewWidget, ToneCurvesWidget,
+    GpuTimelineWidget, FrustumCullWidget, InstancingCostWidget, IndirectCommandsWidget, LodErrorWidget, WorkgroupReduceWidget, BarrierBuilderWidget
   ],
   template: `
     @for (b of blocks(); track $index) {
@@ -575,6 +590,19 @@ import { ParallelRecordingWidget } from '../widgets/parallel-recording.widget';
             @case ('spirv-words') { <w-spirv-words /> }
             @case ('render-graph') { <w-render-graph /> }
             @case ('parallel-recording') { <w-parallel-recording /> }
+            @case ('blinn-phong') { <w-blinn-phong /> }
+            @case ('pbr-brdf') { <w-pbr-brdf /> }
+            @case ('shadow-bias') { <w-shadow-bias /> }
+            @case ('sh-irradiance') { <w-sh-irradiance /> }
+            @case ('gbuffer-view') { <w-gbuffer-view /> }
+            @case ('tone-curves') { <w-tone-curves /> }
+            @case ('gpu-timeline') { <w-gpu-timeline /> }
+            @case ('frustum-cull') { <w-frustum-cull /> }
+            @case ('instancing-cost') { <w-instancing-cost /> }
+            @case ('indirect-commands') { <w-indirect-commands /> }
+            @case ('lod-error') { <w-lod-error /> }
+            @case ('workgroup-reduce') { <w-workgroup-reduce /> }
+            @case ('barrier-builder') { <w-barrier-builder /> }
           }
         }
       }

@@ -197,7 +197,9 @@ export type WidgetName =
   | 'validation-catch' | 'present-modes' | 'image-view' | 'ndc-coords' | 'pipeline-state' | 'cmd-lifecycle' | 'image-layouts' | 'frames-in-flight'
   | 'vertex-layout' | 'memory-types' | 'staging-flow' | 'index-grid' | 'std140-layout' | 'per-draw-data' | 'allocator-sim'
   | 'mvp-pipeline' | 'depth-precision' | 'texture-sampler' | 'obj-parser' | 'mip-chain' | 'msaa-coverage' | 'orbit-camera'
-  | 'engine-layers' | 'deletion-timeline' | 'draw-sort' | 'bindless-table' | 'spirv-words' | 'render-graph' | 'parallel-recording';
+  | 'engine-layers' | 'deletion-timeline' | 'draw-sort' | 'bindless-table' | 'spirv-words' | 'render-graph' | 'parallel-recording'
+  | 'blinn-phong' | 'pbr-brdf' | 'shadow-bias' | 'sh-irradiance' | 'gbuffer-view' | 'tone-curves'
+  | 'gpu-timeline' | 'frustum-cull' | 'instancing-cost' | 'indirect-commands' | 'lod-error' | 'workgroup-reduce' | 'barrier-builder';
 
 export type Block =
   | { type: 'p'; text: string }

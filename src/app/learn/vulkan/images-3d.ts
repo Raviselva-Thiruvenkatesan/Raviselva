@@ -1854,8 +1854,9 @@ foreach (var (label, eye) in new[]
 {
     var view = Camera.LookAt(eye, Vector3.Zero);
     bool broken = float.IsNaN(view.M11) || float.IsNaN(view.M12) || float.IsNaN(view.M13);
-    Console.WriteLine($"{label}: first row ({view.M11:F3}, {view.M12:F3}, {view.M13:F3}){(broken ? "  <- NaN: the view is undefined" : "")}");
-}`, output: 'Pitch 89: first row (1.000, 0.000, -0.000)\nPitch 90: first row (NaN, NaN, -0.000)  <- NaN: the view is undefined' }
+    static float Tidy(float v) => MathF.Round(v, 3) + 0f;   // + 0 turns -0 into 0, so tiny negatives print as 0.000
+    Console.WriteLine($"{label}: first row ({Tidy(view.M11):F3}, {Tidy(view.M12):F3}, {Tidy(view.M13):F3}){(broken ? "  <- NaN: the view is undefined" : "")}");
+}`, output: 'Pitch 89: first row (1.000, 0.000, 0.000)\nPitch 90: first row (NaN, NaN, 0.000)  <- NaN: the view is undefined' }
     ],
     keyPoints: [
       'An orbit camera stores a target, yaw, pitch and distance; the eye is computed from them.',

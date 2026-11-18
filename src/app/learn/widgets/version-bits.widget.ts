@@ -10,7 +10,7 @@ const FIELDS: Field[] = [
 const PRESETS = [
   { label: '1.0.0', v: [0, 1, 0, 0] },
   { label: '1.3.0 (Vk.Version13)', v: [0, 1, 3, 0] },
-  { label: '1.4.304 (the test PC’s loader)', v: [0, 1, 4, 304] }
+  { label: '1.4.363 (the test PC’s loader)', v: [0, 1, 4, 363] }
 ];
 
 /** Pack a Vulkan version into 32 bits and see where each part goes. */

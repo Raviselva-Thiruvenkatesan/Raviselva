@@ -133,8 +133,9 @@ unsafe
     debugUtils.DestroyDebugUtilsMessenger(instance, messenger, null);
     vk.DestroyInstance(instance, null);
     Console.WriteLine($"Messages received: {DebugMessenger.MessageCount}");
-}`, output: 'Validation layer installed: False\nMessages received: 0' },
-      { type: 'p', text: 'On the PC used for this course the SDK is not installed, so this is the honest result: the mistake goes completely unnoticed. Every call returned `Success`. That is exactly why you develop with the layer on. With the SDK installed, the same program prints an `[ERROR]` line naming `vkDestroyDevice`, the command pool still alive, and the **VUID** (valid usage ID) of the rule, a code you can search for in the specification.' },
+}`, output: 'Validation layer installed: True\n[ERROR] vkDestroyDevice(): VkDevice 0x1990bd275e8 has 1 leaked objects that have not been destroyed.\nVkCommandPool 0x20000000002\nThe Vulkan spec states: All child objects created on device that can be destroyed or freed must have been destroyed or freed prior to destroying device (https://docs.vulkan.org/spec/latest/chapters/devsandqueues.html#VUID-vkDestroyDevice-device-05137)\nMessages received: 1' },
+      { type: 'p', text: 'The layer catches it at once. The `[ERROR]` line names the call (`vkDestroyDevice`), the object still alive (the command pool, by its handle) and the **VUID** (valid usage ID) of the broken rule, `VUID-vkDestroyDevice-device-05137`, a code you can search for in the specification. The handle numbers change from run to run.' },
+      { type: 'note', kind: 'warn', text: 'Without the SDK the same program prints `Validation layer installed: False` and `Messages received: 0`, and every call returns `Success`. The mistake goes completely unnoticed, which is exactly why you develop with the layer on.' },
       { type: 'widget', name: 'validation-catch' },
       { type: 'h2', text: 'Reading a validation message' },
       { type: 'p', text: 'Validation messages are long, but they follow a pattern: the VUID first, then the objects involved (with their handles, and names if you gave them names), then the text of the rule from the specification. Fix the **first** message first: one early mistake often causes a cascade of later ones.' },
@@ -149,7 +150,7 @@ const bool UseValidation = false;
 #endif` },
       { type: 'quiz', question: 'A program makes an invalid call, but the validation layer is not enabled. What does the driver do?', options: ['Returns ErrorValidationFailed', 'Fixes the arguments and carries on', 'Nothing is guaranteed: it may work, misdraw, hang or crash, possibly much later', 'Prints a warning to the console'], answer: 2, explain: 'Drivers assume your calls are valid and skip the checks. Breaking a rule is undefined behaviour, which is why the sample above returned Success throughout.' },
       { type: 'quiz', question: 'Why does the sample put the messenger settings in the PNext chain of InstanceCreateInfo as well as creating a messenger object?', options: ['The object alone does not receive errors', 'The object can only exist once the instance does, so it cannot report on CreateInstance or DestroyInstance', 'PNext makes validation faster', 'It is required by the loader'], answer: 1, explain: 'A messenger object is created from an instance and destroyed before it. The copy in the PNext chain covers the instance’s own creation and destruction.' },
-      { type: 'exercise', task: 'Extend the program so it also prints how many **layers** are installed in total and lists their names, before checking for the validation layer. Run it: on a PC with the SDK you will see several; on the course PC there are none.', hint: 'The two-call pattern with `EnumerateInstanceLayerProperties`, as in `DebugMessenger.IsLayerAvailable`. Print `SilkMarshal.PtrToString((nint)l.LayerName)` for each.', solution: cs`
+      { type: 'exercise', task: 'Extend the program so it also prints how many **layers** are installed in total and lists their names, before checking for the validation layer. Run it: with the SDK you will see several; without it, none.', hint: 'The two-call pattern with `EnumerateInstanceLayerProperties`, as in `DebugMessenger.IsLayerAvailable`. Print `SilkMarshal.PtrToString((nint)l.LayerName)` for each.', solution: cs`
 using Silk.NET.Core.Native;
 using Silk.NET.Vulkan;
 
@@ -163,7 +164,7 @@ unsafe
     Console.WriteLine($"Layers installed: {count}");
     foreach (var l in layers) Console.WriteLine("  " + SilkMarshal.PtrToString((nint)l.LayerName));
     Console.WriteLine($"Validation available: {DebugMessenger.IsLayerAvailable(vk)}");
-}`, output: 'Layers installed: 0\nValidation available: False' }
+}`, output: 'Layers installed: 9\n  VK_LAYER_LUNARG_api_dump\n  VK_LAYER_LUNARG_gfxreconstruct\n  VK_LAYER_KHRONOS_synchronization2\n  VK_LAYER_KHRONOS_validation\n  VK_LAYER_LUNARG_monitor\n  VK_LAYER_LUNARG_screenshot\n  VK_LAYER_KHRONOS_profiles\n  VK_LAYER_KHRONOS_shader_object\n  VK_LAYER_LUNARG_crash_diagnostic\nValidation available: True' }
     ],
     keyPoints: [
       'Drivers do not check your calls; breaking a valid-usage rule is undefined behaviour.',
@@ -276,8 +277,11 @@ sealed unsafe class GpuContext : IDisposable
         var queueInfos = stackalloc DeviceQueueCreateInfo[families.Length];
         for (int i = 0; i < families.Length; i++)
             queueInfos[i] = new() { SType = StructureType.DeviceQueueCreateInfo, QueueFamilyIndex = families[i], QueueCount = 1, PQueuePriorities = &priority };
+        PhysicalDeviceFeatures has;
+        Vk.GetPhysicalDeviceFeatures(PhysicalDevice, &has);
         var f13 = new PhysicalDeviceVulkan13Features { SType = StructureType.PhysicalDeviceVulkan13Features, DynamicRendering = true, Synchronization2 = true };
         var features = new PhysicalDeviceFeatures2 { SType = StructureType.PhysicalDeviceFeatures2, PNext = &f13 };
+        features.Features.FillModeNonSolid = has.FillModeNonSolid;   // wireframe (PolygonMode.Line), where the GPU has it
         nint deviceExtensions = SilkMarshal.StringArrayToPtr([KhrSwapchain.ExtensionName]);
         var deviceInfo = new DeviceCreateInfo
         {
@@ -339,7 +343,7 @@ using (var gpu = new GpuContext(window))
     Console.WriteLine($"Graphics family {gpu.GraphicsFamily}, present family {gpu.PresentFamily}");
     Console.WriteLine($"Validation: {gpu.Validation}");
     Console.WriteLine($"Window {window.Size}, framebuffer {window.FramebufferSize}");
-}`, output: 'Instance extensions: VK_KHR_surface, VK_KHR_win32_surface\nGPU: Intel(R) Iris(R) Xe Graphics\nGraphics family 0, present family 0\nValidation: False\nWindow <800, 600>, framebuffer <800, 600>' },
+}`, output: 'Instance extensions: VK_KHR_surface, VK_KHR_win32_surface, VK_EXT_debug_utils\nGPU: Intel(R) Iris(R) Xe Graphics\nGraphics family 0, present family 0\nValidation: True\nWindow <800, 600>, framebuffer <800, 600>' },
       { type: 'p', text: 'On Windows the window needs `VK_KHR_surface` and `VK_KHR_win32_surface`. On this GPU, family 0 can both draw and present, so one queue does everything. Family 1 (video decode) cannot present.' },
       { type: 'note', kind: 'info', text: 'The **window size** is in screen coordinates; the **framebuffer size** is in pixels. They are equal at 100% display scaling but differ on high-DPI screens (at 150% scaling an 800 × 600 window can be 1200 × 900 pixels). Vulkan always works in pixels, so the engine sizes everything from `FramebufferSize`.' },
       { type: 'quiz', question: 'Why are VK_KHR_surface and VK_KHR_win32_surface instance extensions, while VK_KHR_swapchain is a device extension?', options: ['It is arbitrary', 'A surface belongs to the windowing system and is created before any device; a swapchain is GPU memory owned by one device', 'Device extensions are faster', 'Windows needs all three at instance level'], answer: 1, explain: 'You need the surface to pick a GPU (to ask which families can present to it), so it must exist before the device. The swapchain’s images are created by a specific device.' },
@@ -927,7 +931,7 @@ using (var pipeline = new TrianglePipeline(gpu, swapchain.Format))
 using (var wire = new TrianglePipeline(gpu, swapchain.Format, CullModeFlags.BackBit, polygon: PolygonMode.Line))
     Console.WriteLine($"A second pipeline, wireframe with back faces culled: {wire.Handle.Handle != 0}");`, output: 'Pipeline for B8G8R8A8Srgb: True\nBuilt in under a second: True\nA second pipeline, wireframe with back faces culled: True' },
       { type: 'p', text: 'Each different combination of state is a separate pipeline. A real engine has many (opaque, transparent, wireframe, one per material type) and builds them at startup or on a loading screen, never in the middle of a frame. Module 5 covers organising them, and **pipeline caches**, which save the compiled results to disk so the next start is faster.' },
-      { type: 'note', kind: 'warn', text: '`PolygonMode.Line` (wireframe) is only allowed if the device feature `fillModeNonSolid` is enabled; the course GPU supports it, and the validation layer would flag it otherwise. Module 5 shows how to draw BIM edges properly, without relying on wireframe mode.' },
+      { type: 'note', kind: 'warn', text: '`PolygonMode.Line` (wireframe) is only allowed if the device feature `fillModeNonSolid` is enabled. `GpuContext` switches it on when the GPU has it (this one does). Without it the pipeline may still build, but the validation layer reports `VUID-VkPipelineRasterizationStateCreateInfo-polygonMode-01507`. Module 5 shows how to draw BIM edges properly, without relying on wireframe mode.' },
       { type: 'quiz', question: 'Why does Vulkan bake state into pipeline objects instead of letting you change it freely?', options: ['To save memory', 'So that GPU code is compiled once, when the pipeline is created, instead of unpredictably in the middle of drawing', 'Because GPUs cannot change state', 'To force one pipeline per program'], answer: 1, explain: 'Shader code and state are often compiled together into GPU instructions. Doing that at creation time removes the hidden compile stutters of older APIs.' },
       { type: 'quiz', question: 'Which settings did the triangle pipeline make dynamic, and why?', options: ['Shaders, so they can be swapped', 'Viewport and scissor, so a window resize does not need a new pipeline', 'Blending, for transparency', 'None'], answer: 1, explain: 'The viewport size follows the window. Making it dynamic means one pipeline works at any size.' }
     ],

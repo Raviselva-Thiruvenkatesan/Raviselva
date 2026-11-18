@@ -329,7 +329,15 @@ struct ObjectPush(Matrix4x4 mvp, Vector4 color)
     public Vector4 Color = color;           // offset 64
     public const uint Size = 80;
     public static readonly PushConstantRange Range = new(ShaderStageFlags.VertexBit | ShaderStageFlags.FragmentBit, 0, Size);
+}
+
+static class VertexLayoutExtensions
+{
+    /// <summary>The same vertex buffer, declaring only the inputs a shader reads.</summary>
+    public static VertexLayout Only(this VertexLayout layout, params uint[] locations) =>
+        layout with { Attributes = layout.Attributes.Where(a => locations.Contains(a.Location)).ToArray() };
 }` },
+      { type: 'note', kind: 'info', text: 'The vertex shader reads locations 0 and 1 but not the UV at location 2, so the renderer passes `MeshVertex.Layout.Only(0, 1)`: the same 32-byte stride, two attributes. Declaring an attribute the shader never reads is legal but wasteful, and the validation layer reports it as a performance warning.' },
       { type: 'code', title: 'Engine/Scene.cs', code: cs`
 using System.Numerics;
 
@@ -371,7 +379,7 @@ sealed unsafe class SceneRenderer : IDisposable
     {
         this.gpu = gpu;
         pipeline = new MeshPipeline(gpu, colorFormat, SceneShaders.Vertex, SceneShaders.Fragment, pushConstants: [ObjectPush.Range],
-                                    depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout);
+                                    depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout.Only(0, 1));
     }
 
     /// <summary>Draws each object with its own matrix and colour. Returns the number of draw calls.</summary>
@@ -599,7 +607,7 @@ dragged!.Dispose();                                                          // 
 deletions.FlushAll();
 Console.WriteLine($"At shutdown: {deletions.Pending} waiting");`, output: 'Frame 0 drew mesh 0; waiting to be destroyed: 0\nFrame 1 drew mesh 1; waiting to be destroyed: 1\nFrame 2 drew mesh 2; waiting to be destroyed: 2\n  destroyed mesh 0: it waited for frame 1, which is finished: True\nFrame 3 drew mesh 3; waiting to be destroyed: 2\n  destroyed mesh 1: it waited for frame 2, which is finished: True\nFrame 4 drew mesh 4; waiting to be destroyed: 2\n  destroyed mesh 2: it waited for frame 3, which is finished: True\nFrame 5 drew mesh 5; waiting to be destroyed: 2\n  destroyed mesh 3: it waited for frame 4, which is finished: True\n  destroyed mesh 4: it waited for frame 5, which is finished: True\nAt shutdown: 0 waiting' },
       { type: 'p', text: 'Mesh 0 was retired while frame 1 was being recorded, so it waited for frame 1, not frame 0: retiring always uses the frame being recorded, which is never too early. It was destroyed when frame 3 began, the first moment the loop knew frame 1 was finished. In steady state two meshes wait at any time, one per frame in flight: that is the memory a deletion queue costs.' },
-      { type: 'note', kind: 'warn', text: 'With the Vulkan SDK installed, the validation layer catches the mistake this lesson avoids: destroying a buffer still used by a pending command buffer is reported as a broken valid-usage rule of `vkDestroyBuffer`. This PC has no SDK, so the sample proves safety with the fence instead. Develop with the layer on whenever you can.' },
+      { type: 'note', kind: 'warn', text: 'With the Vulkan SDK installed, the validation layer catches the mistake this lesson avoids: destroying a buffer still used by a pending command buffer is reported as a broken valid-usage rule of `vkDestroyBuffer`. The sample also proves safety with the fence itself, which works with or without the layer. Develop with the layer on whenever you can.' },
       { type: 'h2', text: 'Who owns a shared mesh?' },
       { type: 'p', text: 'In a BIM model, one window type’s mesh is used by hundreds of scene objects, and maybe by two open models. No single object can dispose of it. Two common designs:' },
       { type: 'ul', items: [
@@ -805,7 +813,7 @@ sealed unsafe class PipelineLibrary : IDisposable
             if (pipelines.TryGetValue(key, out var pipeline)) return pipeline;
             var (vertex, fragment) = shaders[key.Shader];
             pipeline = new MeshPipeline(gpu, colorFormat, vertex, fragment, pushConstants: [ObjectPush.Range],
-                cull: key.Cull, depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout,
+                cull: key.Cull, depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout.Only(0, 1),   // position and normal
                 blend: key.Blend, depthWrite: !key.Blend,                   // transparent surfaces do not hide what is behind them
                 frontFace: FrontFace.CounterClockwise, cache: Cache);
             pipelines[key] = pipeline;
@@ -1413,6 +1421,7 @@ sealed unsafe class GpuContext : IDisposable
         };
         var f13 = new PhysicalDeviceVulkan13Features { SType = StructureType.PhysicalDeviceVulkan13Features, PNext = &f12, DynamicRendering = true, Synchronization2 = true };
         var features = new PhysicalDeviceFeatures2 { SType = StructureType.PhysicalDeviceFeatures2, PNext = &f13 };
+        features.Features.FillModeNonSolid = supported.Features.FillModeNonSolid;   // wireframe, as in version 1
         nint deviceExtensions = SilkMarshal.StringArrayToPtr([KhrSwapchain.ExtensionName]);
         var deviceInfo = new DeviceCreateInfo
         {
@@ -1561,7 +1570,7 @@ using var gpu = new GpuContext(window);
 using var loop = new FrameLoop(gpu, window);
 using var bindless = new BindlessTextures(gpu);
 using var pipeline = new MeshPipeline(gpu, loop.Swapchain.Format, BindlessShaders.Vertex, BindlessShaders.Fragment,
-    setLayouts: [bindless.Layout], pushConstants: [TexturedPush.Range], depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout);
+    setLayouts: [bindless.Layout], pushConstants: [TexturedPush.Range], depthFormat: FrameLoop.DepthFormat, vertexLayout: MeshVertex.Layout.Only(0, 2));   // position and UV
 using var capture = new ReadbackBuffer(gpu, loop.Swapchain.Extent);
 var (vertices, indices) = Shapes.Box(new Vector3(-0.5f), new Vector3(0.5f));
 using var box = new Mesh<MeshVertex>(gpu, vertices, indices);
@@ -1956,7 +1965,7 @@ File.WriteAllText(fragPath, SceneShaders.Fragment);
 using var watcher = new ShaderWatcher(folder, "*.vert", "*.frag");
 using var hot = new HotPipeline(vertPath, fragPath, deletions, (v, f) => new MeshPipeline(gpu, loop.Swapchain.Format, v, f,
     pushConstants: [ObjectPush.Range], cull: CullModeFlags.BackBit, depthFormat: FrameLoop.DepthFormat,
-    vertexLayout: MeshVertex.Layout, frontFace: FrontFace.CounterClockwise));
+    vertexLayout: MeshVertex.Layout.Only(0, 1), frontFace: FrontFace.CounterClockwise));
 
 var camera = new OrbitCamera { Yaw = 30f, Pitch = 30f };
 camera.Frame(new(-0.5f), new(0.5f), 800f / 600f);
@@ -2260,7 +2269,7 @@ var viewProjection = camera.View * camera.Projection(800f / 600f);
 
 var extent = loop.Swapchain.Extent;
 using var sceneColor = new GpuImage(gpu, extent, loop.Swapchain.Format, ImageUsageFlags.ColorAttachmentBit | ImageUsageFlags.TransferSrcBit, ImageAspectFlags.ColorBit);
-using var debugImage = new GpuImage(gpu, extent, Format.R8G8B8A8Unorm, ImageUsageFlags.TransferDstBit, ImageAspectFlags.ColorBit);
+using var debugImage = new GpuImage(gpu, extent, Format.R8G8B8A8Unorm, ImageUsageFlags.TransferDstBit | ImageUsageFlags.SampledBit, ImageAspectFlags.ColorBit);   // sampled: a debug overlay would read it
 using var capture = new ReadbackBuffer(gpu, extent);
 
 loop.Begin(out var frame);
